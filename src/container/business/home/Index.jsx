@@ -30,7 +30,6 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        // store.getEventSourceSelectListForApi();
 
         setInterval(() => {
             if (!common.isEmpty(window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar"))) {
