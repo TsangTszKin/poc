@@ -51,8 +51,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 8s pay_up_to_dowm_rowup linear infinite normal;
-    animation: 8s pay_up_to_dowm_rowup linear infinite normal;
+    -webkit-animation: 0.4s pay_up_to_dowm_rowup linear infinite normal;
+    animation: 0.4s pay_up_to_dowm_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
@@ -86,8 +86,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 4s pay_right_to_left_rowup linear infinite normal;
-    animation: 4s pay_right_to_left_rowup linear infinite normal;
+    -webkit-animation: 0.2s pay_right_to_left_rowup linear infinite normal;
+    animation: 0.2s pay_right_to_left_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
@@ -111,8 +111,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 4s pay_right_to_left_2_rowup linear infinite normal;
-    animation: 4s pay_right_to_left_2_rowup linear infinite normal;
+    -webkit-animation: 0.2s pay_right_to_left_2_rowup linear infinite normal;
+    animation: 0.2s pay_right_to_left_2_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
@@ -141,8 +141,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 4s pay_right_to_left_3_rowup linear infinite normal;
-    animation: 4s pay_right_to_left_3_rowup linear infinite normal;
+    -webkit-animation: 0.2s pay_right_to_left_3_rowup linear infinite normal;
+    animation: 0.2s pay_right_to_left_3_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
@@ -166,8 +166,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 4s pay_up_to_dowm_2_rowup linear infinite normal;
-    animation: 4s pay_up_to_dowm_2_rowup linear infinite normal;
+    -webkit-animation: 0.2s pay_up_to_dowm_2_rowup linear infinite normal;
+    animation: 0.2s pay_up_to_dowm_2_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
@@ -191,8 +191,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 4s pay_up_to_dowm_chain_rowup linear infinite normal;
-    animation: 4s pay_up_to_dowm_chain_rowup linear infinite normal;
+    -webkit-animation: 0.2s pay_up_to_dowm_chain_rowup linear infinite normal;
+    animation: 0.2s pay_up_to_dowm_chain_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
@@ -216,8 +216,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 4s pay_dowm_to_up_chain_rowup linear infinite normal;
-    animation: 4s pay_dowm_to_up_chain_rowup linear infinite normal;
+    -webkit-animation: 0.2s pay_dowm_to_up_chain_rowup linear infinite normal;
+    animation: 0.2s pay_dowm_to_up_chain_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
