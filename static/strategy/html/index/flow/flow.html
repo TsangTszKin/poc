@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>任务流程图</title>
+	<!-- <link type="text/css" rel="stylesheet" href="../../../js/layui/dist/css/layui.css" /> -->
+	<link type="text/css" rel="stylesheet" href="../../../css/font-awesome/css/font-awesome.min.css" />
+	<link type="text/css" rel="stylesheet" href="../../../js/plugin/flow/global.css" type="text/css">
+	<link type="text/css" rel="stylesheet" href="../../../js/plugin/flow/designer.css">
+	<link type="text/css" rel="stylesheet" href="../../../js/plugin/flow/ui.css">
+</head>
+
+<body>
+	<canvas id="support_canvas" style="display: none;"></canvas>
+	<script type="text/javascript">
+		if (!document.getElementById("support_canvas").getContext) {
+			UI.showTip('您的浏览器不支持canvas特性，请使用谷歌或火狐浏览器。');
+		}
+	</script>
+	<div id="designer">
+		<div id="shape_panel" class="layout" style="height: calc(100%);"></div>
+		<div id="designer_viewport">
+			<div id="designer_layout" class="layout">
+				<div id="canvas_container" style="cursor: default;width: 100%;">
+					<div id="designer_canvas" style="background-color: rgb(48, 242, 242);">
+						<ul id="designer_contextmenu" class="menu list options_menu">
+							<li ac="selectall">
+								<div class="ico fa fa-font"></div>全选<div class="extend">Ctrl+A</div>
+							</li>
+							<li ac="delete">
+								<div class="ico remove"></div>删除<div class="extend">Delete/Backspace</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</body>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/analytics.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/jquery.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/util.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/schema.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/themes.js"></script>
+<!-- <script type="text/javascript" charset="UTF-8" src="../../../js/layui/dist/layui.js" js></script> -->
+<script type="text/javascript" charset="UTF-8" src="../../../js/dmp/pub/pub.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/dmp/index/flow/flow.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/collaboration.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.core.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/export.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.methods.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.events.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.ui.js"></script>
+<script>
+	window.throwError = function (error) {
+		console.log('%c抛出异常', 'color:#0f0;background:blue;font-size:20px;', error)
+	}
+	//回调函数
+	function receiveMessageFromIndex(event) {
+		console.log('我是iframe,我接受到了：', event.data);
+		switch (event.data.code) {
+			case 0://code:0更新UI数据
+				if (!event.data.isKeepSelected)
+					Utils.unselect();
+
+				for (var key in event.data.value.elements) {
+					if (event.data.value.elements.hasOwnProperty(key)) {
+						var element = event.data.value.elements[key];
+						event.data.value.elements[key] = resetStyle(element);
+					}
+				}
+
+				sessionStorage["def_local_" + chartId] = JSON.stringify(event.data.value);
+				sessionStorage["def_" + chartId] = JSON.stringify(event.data.value);
+				sessionStorage["title_local_" + chartId] = '';
+				Designer.open(event.data.value);
+				break;
+			case 1://code:1工具栏方法触发
+				switch (event.data.value) {
+					case 'undo':
+						MessageSource.undo();
+						break;
+					case 'redo':
+						MessageSource.redo();
+						break;
+					case 'copy':
+						Designer.clipboard.copy();
+						break;
+					case 'paste':
+						Designer.clipboard.paste();
+						break;
+					case 'cut':
+						Designer.clipboard.cut();
+					case 'delete':
+						Designer.op.removeShape();
+						break;
+					case 'selectAll':
+						Designer.selectAll();
+						break;
+					case 'duplicate':
+						Designer.clipboard.duplicate();
+						break;
+					case 'zoomIn':
+						Designer.zoomIn();
+						break;
+					case 'zoomOut':
+						Designer.zoomOut();
+						break;
+					default:
+						break;
+				}
+				break;
+			case 2://详情模式，隐藏操作菜单
+				window.document.getElementById('shape_panel').style.display = 'none'
+				break;
+			default:
+				break;
+		}
+	}
+
+	//监听message事件
+	window.addEventListener("message", receiveMessageFromIndex, false);
+
+	function resetStyle(node) {
+		for (var key in categorys) {
+			if (categorys.hasOwnProperty(key)) {
+				var category = categorys[key];
+				category.child.forEach(function (item) {
+					if (node.name === item.name) {
+						node.selected = item.selected;
+						node.fontStyle = item.fontStyle;
+						node.lineStyle = item.lineStyle;
+						node.fillStyle = item.fillStyle;
+						node.path = item.path;
+						node.icon = item.icon;
+					}
+				})
+			}
+		}
+		return node
+	}
+
+</script>
+
+</html>

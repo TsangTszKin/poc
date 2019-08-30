@@ -1,0 +1,75 @@
+@online: #00A854;
+@ing: #C9BFBF;
+@ready: #0E77D1;
+@warning: #FFBF00;
+@error: red;
+.status {
+    height: 21px;
+    position: relative;
+    min-width: 62px;
+    .status-label {
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 3px;
+        margin-top: -4px;
+    }
+    .ing {
+        background-color: @ing;
+    }
+    .online {
+        background-color: @online;
+    }
+    .ready {
+        background-color: @ready;
+    }
+    .warning {
+        background-color: @warning;
+    }
+    .error {
+        background-color: @error;
+    }
+    .status-name {
+        position: absolute;
+        left: 17px;
+        color: @ing;
+    }
+    .status-name-active {
+        color: #000;
+    }
+}
+// 用这个一个标签就可以了
+.status-text {
+    position: relative;
+    padding-left: 18px;
+    &::before {
+        content: '';
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 2px;
+        margin-top: -5px;
+    }
+    &.ing {
+        color: #999;
+        &::before {
+            background-color: @ing;
+        }
+    }
+    &.online::before {
+        background-color: @online;
+    }
+    &.ready::before {
+        background-color: @ready;
+    }
+    &.warning::before {
+        background-color: @warning;
+    }
+    &.error::before {
+        background-color: @error;
+    }
+}

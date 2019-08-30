@@ -1,0 +1,42 @@
+.node-panel {
+    margin-left: 19px; // border-left: 1px solid gray;
+    .node {
+        margin-top: 5px;
+        cursor: pointer;
+        .node-bus {
+            height: 21px;
+            min-width: 203px;
+            .node-body {
+                float: left;
+                max-width: 143px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                .node-title {
+                    margin-left: 5px;
+                }
+            }
+            .node-action {
+                float: left;
+                width: fit-content;
+                height: 21px;
+                margin-left: 8px;
+                margin-bottom: 0;
+                display: none;
+                .anticon {
+                    // margin-left: 5px;
+                }
+                .add {
+                    color: #00A854;
+                }
+                .sub {
+                    color: #E44B4E;
+                }
+            }
+        }
+        .node-bus:hover>.node-action {
+            height: 21px;
+            display: block;
+        }
+    }
+}

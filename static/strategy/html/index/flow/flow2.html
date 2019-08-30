@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>任务流程图</title>
+    <!-- <link type="text/css" rel="stylesheet" href="../../../js/layui/dist/css/layui.css" /> -->
+    <link type="text/css" rel="stylesheet" href="../../../css/font-awesome/css/font-awesome.min.css"/>
+    <link type="text/css" rel="stylesheet" href="../../../js/plugin/flow/global.css" type="text/css">
+    <link type="text/css" rel="stylesheet" href="../../../js/plugin/flow/designer.css">
+    <link type="text/css" rel="stylesheet" href="../../../js/plugin/flow/ui.css">
+    <style type="text/css">
+        .icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+<canvas id="support_canvas" style="display: none;"></canvas>
+<script type="text/javascript">
+    if (!document.getElementById("support_canvas").getContext) {
+        UI.showTip('您的浏览器不支持canvas特性，请使用谷歌或火狐浏览器。');
+    }
+</script>
+
+<div id="designer">
+    <!--    <div id="shape_panel" display="none" class="layout" style="height: calc(100%);"></div>-->
+    <div id="designer_viewport">
+        <div id="designer_layout" class="layout">
+            <div id="canvas_container" style="cursor: default;width: 100%;">
+                <div id="designer_canvas" style="background-color: rgb(48, 242, 242);">
+                    <ul id="designer_contextmenu" class="menu list options_menu">
+                        <li ac="selectall">
+                            <div class="ico fa fa-font"></div>
+                            全选
+                            <div class="extend">Ctrl+A</div>
+                        </li>
+                        <li ac="delete">
+                            <div class="ico remove"></div>
+                            删除
+                            <div class="extend">Delete/Backspace</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/analytics.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/jquery.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/util.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/schema.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/themes.js"></script>
+<!-- <script type="text/javascript" charset="UTF-8" src="../../../js/layui/dist/layui.js" js></script> -->
+<script type="text/javascript" charset="UTF-8" src="../../../js/dmp/pub/pub.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/dmp/index/flow/flow.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/collaboration.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.core2.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../../fonts/iconfont.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/export.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.methods.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.events.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../js/plugin/flow/designer.ui.js"></script>
+<script>
+    window.throwError = function (error) {
+        console.log('%c抛出异常', 'color:#0f0;background:blue;font-size:20px;', error)
+    }
+
+    //回调函数
+    function receiveMessageFromIndex(event) {
+        console.log('我是iframe,我接受到了：', event.data);
+        if (event.data.code == 3) {
+            for (const i in event.data.value.elements) {
+                const element = event.data.value.elements[i];
+                event.data.value.elements[i].locked = true;
+                event.data.value.elements[i].fillStyle = {type: "solid", color: "230, 230, 230"};
+                event.data.value.elements[i].path = [{
+                    actions: [{action: "move", x: "Math.min(w,h)/2.5", y: "0"},
+                        {action: "line", x: "w-Math.min(w,h)/2.5", y: "0"},
+                        {
+                            action: "curve",
+                            x1: "w+Math.min(w,h)/2.5/2.5",
+                            y1: "0",
+                            x2: "w+Math.min(w,h)/2.5/2.5",
+                            y2: "h",
+                            x: "w-Math.min(w,h)/2.5",
+                            y: "h"
+                        },
+                        {action: "line", x: "Math.min(w,h)/2.5", y: "h"},
+                        {
+                            action: "curve",
+                            x1: "-Math.min(w,h)/2.5/2.5",
+                            y1: "h",
+                            x2: "-Math.min(w,h)/2.5/2.5",
+                            y2: "0",
+                            x: "Math.min(w,h)/2.5",
+                            y: "0"
+                        },
+                        {action: "close"}]
+                }]
+                event.data.value.elements[i].lineStyle = {
+                    lineColor: "255, 255, 255",
+                    lineStyle: "solid",
+                    lineWidth: 1
+                };
+                event.data.value.elements[i].fontStyle = {
+                    bold: false,
+                    color: "85, 85, 85",
+                    fontFamily: "微软雅黑",
+                    italic: false,
+                    orientation: "vertical",
+                    size: 13,
+                    textAlign: "center",
+                    underline: false,
+                    vAlign: "middle"
+                }
+                if (event.data.ids.length > 0 && element.name == "start") {
+                    event.data.value.elements[i].fillStyle = {type: "solid", color: "228, 75, 78"};
+                    event.data.value.elements[i].fontStyle = {
+                        bold: false,
+                        color: "255,255,255",
+                        fontFamily: "微软雅黑",
+                        italic: false,
+                        orientation: "vertical",
+                        size: 13,
+                        textAlign: "center",
+                        underline: false,
+                        vAlign: "middle"
+                    }
+                    event.data.value.elements[i].icon =
+                        '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/start.png" >'
+                }else{
+                    event.data.value.elements[i].icon =
+                        '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/start1.png" >'
+                }
+                switch (element.name) {
+                    case "output":
+                        event.data.value.elements[i].icon =
+                            '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/output1.png" >'
+                        break;
+
+                    case "sql":
+                        event.data.value.elements[i].icon =
+                            '<img class="icon" style ="left: 30px;transform: scale(1.3);" src="/static/processon/img/node2/sql1.png" >'
+                        break;
+
+                    case "rule":
+                        event.data.value.elements[i].icon =
+                            '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/rule1.png" >'
+                        break;
+
+                    case "ruleSet":
+                        event.data.value.elements[i].icon =
+                            '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/ruleSet1.png" >'
+                        break;
+
+                    case "branch":
+                        event.data.value.elements[i].icon =
+                            '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/branch1.png" >'
+                        break;
+
+                    case "control":
+                        event.data.value.elements[i].icon =
+                            '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/control1.png" >'
+                        break;
+
+                    case "linker":
+                        event.data.value.elements[i].icon =
+                            '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/control1.png" >'
+                        event.data.value.elements[i].lineStyle = {
+                            lineColor: "230, 230, 230",
+                            lineStyle: "solid",
+                            lineWidth: 1
+                        };
+                        event.data.value.elements[i].textColor = "86, 86, 86, 1";
+                        break;
+
+
+                    default:
+
+                        break;
+                }
+
+                for (let j = 0; j < event.data.ids.length; j++) {//命中的节点判断
+                    if (element.name == "linker") {//判断箭头线的from和to是否和命中id一致
+                        if (element.from.id == 'start' && event.data.ids.length > 0) {
+                            event.data.value.elements[i].lineStyle = {
+                                lineColor: "228, 75, 78, 1",
+                                lineStyle: "solid",
+                                lineWidth: 1
+                            };
+                            event.data.value.elements[i].textColor = "228, 75, 78, 1";
+                        }
+                        if (event.data.ids[j] == element.from.id) {
+                            for (let k = 0; k < event.data.ids.length; k++) {
+                                if (event.data.ids[k] == element.to.id) {
+                                    event.data.value.elements[i].lineStyle = {
+                                        lineColor: "228, 75, 78, 1",
+                                        lineStyle: "solid",
+                                        lineWidth: 1
+                                    };
+                                    event.data.value.elements[i].textColor = "228, 75, 78, 1";
+                                }
+                            }
+                        }
+                    }
+                    if (event.data.ids[j] == element.id) {
+                        console.log("element3:", element, "===", event.data.value.elements[i])
+                        event.data.value.elements[i].fillStyle = {type: "solid", color: "228, 75, 78"};
+                        event.data.value.elements[i].fontStyle = {
+                            bold: false,
+                            color: "255,255,255",
+                            fontFamily: "微软雅黑",
+                            italic: false,
+                            orientation: "vertical",
+                            size: 13,
+                            textAlign: "center",
+                            underline: false,
+                            vAlign: "middle"
+                        }
+                        switch (element.name) {
+                            case "output":
+                                event.data.value.elements[i].icon =
+                                    '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/output.png" >'
+                                break;
+
+                            case "sql":
+                                event.data.value.elements[i].icon =
+                                    '<img class="icon" style ="left: 30px;transform: scale(1.3);" src="/static/processon/img/node2/sql.png" >'
+                                break;
+
+
+                            case "rule":
+                                event.data.value.elements[i].icon =
+                                    '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/rule.png" >'
+                                break;
+
+                            case "ruleSet":
+                                event.data.value.elements[i].icon =
+                                    '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/ruleSet.png" >'
+                                break;
+
+                            case "branch":
+                                event.data.value.elements[i].icon =
+                                    '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/branch.png" >'
+                                break;
+
+                            case "control":
+                                event.data.value.elements[i].icon =
+                                    '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/control.png" >'
+                                break;
+
+                            case "linker":
+                                event.data.value.elements[i].icon =
+                                    '<img class="icon" style ="left: 30px" src="/static/processon/img/node2/control.png" >'
+
+                                break;
+
+                            default:
+
+                                break;
+                        }
+                        // console.log("event.data.value:", event.data.value.elements[i].fillStyle)
+                    }
+                }
+            }
+        }
+        let a = event.data.value;
+        console.log("event.data.value:", event.data.value)
+        switch (event.data.code) {
+            case 0://code:0更新UI数据
+                Utils.unselect();
+                sessionStorage["def_local_" + chartId] = JSON.stringify(event.data.value);
+                sessionStorage["def_" + chartId] = JSON.stringify(event.data.value);
+                sessionStorage["title_local_" + chartId] = '';
+                Designer.open(a);
+                break;
+            case 3://code:0更新UI数据
+                Designer.open(a);
+                $("#shape_panel").css("display", "none");
+                $("#designer_viewport").css({marginLeft: '0px'});
+                $(".ant-modal-content").css({height: '70px'});
+                $("#canvas_container").css({width: 'auto', height: 'auto'});
+                $(".status.fa-check").css("display", "none");
+                $("#start p").css({paddingLeft: '20px'});
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    //监听message事件
+    window.addEventListener("message", receiveMessageFromIndex, false);
+</script>
+
+</html>

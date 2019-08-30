@@ -1,0 +1,220 @@
+@import (once) 'base';
+@primary-color : #ec7c31;
+
+// @import (once) '../fonts/iconfont.css';
+.Layouts_wrap {
+    width: 100%;
+    height: 100%;
+
+    >div {
+        // height: 100%;
+    }
+
+    >.left {
+        float: left;
+        height: 100%;
+        max-width: 180px;
+        background-color: #262A34;
+        position: relative;
+        z-index: 1000;
+
+        .userInfo {
+            width: 100%;
+            height: 60px; // box-shadow: 0 3px 3px @primary-color;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+            background-color: @primary-color;
+
+            .left {
+                float: left;
+                width: 60px;
+                background-color: @primary-color;
+            }
+
+            .right {
+                float: left;
+                width: fint-content;
+                text-align: left;
+            }
+        }
+    }
+
+    >.right {
+        overflow: scroll;
+        height: 100%;
+        background-color: #F0F2F5;
+
+        >.header {
+            position: relative;
+            height: 60px;
+            box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+            margin-bottom: 1px;
+            background-color: #fff;
+        }
+
+        .aside-o {
+            width: 10%;
+            height: 60px;
+            float: left;
+
+            .aside-ctr {
+                margin-top: 16px;
+                float: left;
+                color: #000;
+                background-color: #fff;
+                border: none;
+            }
+        }
+
+        .nav-o {
+            width: 75%;
+            height: 60px;
+            float: left;
+            position: relative;
+
+            .nav {
+                float: left;
+                height: 100%;
+                position: absolute;
+                left: 50%;
+                margin-left: -162px;
+
+                .nav-item {
+                    float: left;
+                    height: 100%;
+                    padding: 0 20px;
+                    line-height: 60px;
+                    cursor: pointer;
+                    font-size: 17px;
+                    font-family: "Monospaced Number", "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+                    &:hover {
+                        color: @primary-color;
+                    }
+                }
+
+                .nav-item-selected {
+                    color: @primary-color;
+                    border-bottom: 2px solid @primary-color;
+                }
+            }
+        }
+
+        .user {
+            font-size: 14px;
+            width: fit-content;
+            height: 100%;
+            color: #9ba1ae;
+            float: right;
+            text-align: center;
+            line-height: 60px;
+            position: absolute;
+            top: 0px;
+            right: 9px;
+
+            .name {
+                font-family: '微软雅黑';
+                margin-left: 5px;
+                color: rgba(0, 0, 0, 0.65);
+                text-decoration: none;
+            }
+
+            .font {
+                margin-right: 5px;
+            }
+
+            .ant-popover-open {
+                span {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        .routeWrap {
+            // height: calc(100% - 60px);
+            padding: 0;
+            background-color: #F0F2F5;
+            height: 100%;
+
+            .panel-header {
+                box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+                background-color: #fff;
+                height: 98px;
+                padding: 0 20px;
+
+                .title {
+                    font-size: 18px;
+                    font-family: '微软雅黑';
+                    margin-bottom: 10px;
+                    color: #000;
+                    width: fit-content;
+                    margin: 0;
+                    float: left;
+
+                    .description {
+                        font-size: 14px;
+                        font-family: '微软雅黑';
+                        color: rgba(0, 0, 0, 0.45);
+                    }
+                }
+
+                .ant-breadcrumb {
+                    height: 50px;
+                    line-height: 50px;
+                }
+            }
+
+            .panel {
+                height: 100%;
+
+                .pageContent {
+                    // margin: 24px 0 0 24px; // height: 100%;
+                    margin: 0; // height: 100%;
+                    background-color: #fff;
+                    padding: 32px;
+                    border-radius: 2px;
+                    // overflow: scroll;
+                }
+
+                #edit-panel {
+                    #panel-right {
+                        .ant-collapse-content>.ant-collapse-content-box {
+                            min-width: 260px;
+                            overflow-x: auto;
+                        }
+                    }
+                }
+
+                .TreePanel {
+                    .ant-collapse-content>.ant-collapse-content-box {
+                        min-width: 260px;
+                        overflow-x: auto;
+                    }
+                }
+            }
+        }
+    }
+
+    .ant-table-row-expand-icon {
+        line-height: 17px;
+    }
+}
+
+.home-watch {
+    .ant-table {
+        border: none !important;
+
+        thead>tr>th {
+            color: #ec7c31 !important;
+        }
+
+        tr {
+            &:hover {
+                td>span {
+                    color: #000 !important;
+                }
+            }
+        }
+    }
+}

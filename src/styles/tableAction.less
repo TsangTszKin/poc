@@ -1,0 +1,22 @@
+.table-action {
+    display: -webkit-flex;
+    display: inline-flex;
+    justify-content: space-around;
+    // width: 219px;
+    .anticon  {
+        margin-left: 10px;
+        cursor: pointer;
+        &.disabled {
+            opacity: .4;
+            cursor: default;
+        }
+    }
+}
+
+.table-actions {
+    .iconfont {
+        &:not(:last-child) {
+            margin-right: 15px;
+        }
+    }
+}

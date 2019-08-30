@@ -1,0 +1,241 @@
+// @primary-color : #E44B4E;
+.countExpression-cell-container {
+    float: left;
+    min-height: 45px;
+    // margin: 5px 0;
+    .row {
+        float: left;
+        cursor: pointer;
+        line-height: 24px;
+        padding: 0 5px;
+    }
+
+    .function {
+        &:hover{
+            height: 22px;
+            line-height: 22px;
+            color: #000;
+            border: 1px dashed gainsboro;
+            padding: 0 5px;
+        }
+    }
+
+    .opt {
+        height: 24px;
+        width: fit-content;
+        line-height: 24px;
+        margin-left: 0px;
+        text-align: center;
+
+        &:hover {
+            height: 22px;
+            line-height: 22px;
+            // width: 8px;
+            border: 1px dashed gainsboro;
+        }
+    }
+
+    .type {
+        height: 24px;
+        width: 8px;
+
+        &:hover {
+            height: 22px;
+            line-height: 22px;
+            // width: 6px;
+            border: 1px dashed gainsboro;
+        }
+    }
+
+    .func {
+        margin-left: 5px;
+        height: 24px;
+        width: fit-content;
+        color: rgba(0,0,0,.65);
+    }
+
+    .func-empty {
+        margin-left: 5px;
+        height: 24px;
+        width: fit-content;
+        color: rgb(191, 191, 191);
+        &:hover {
+            color: rgba(0,0,0,.65);
+        }
+    }
+
+    .varList {
+        // max-width: 150px;
+        min-width: 73px;
+        margin: 1px 0 0 0;
+        height: 24px;
+
+        .ant-input {
+            // border: none;
+            position: relative;
+            top: -22px;
+            padding-right: 0;
+        }
+
+        .ant-cascader-picker-label {
+            width: auto;
+            margin-top: 3px;
+            position: relative;
+            top: 2px;
+        }
+
+        i {
+            display: none;
+            top: 11px;
+        }
+
+        .ant-cascader-picker:focus .ant-cascader-input,
+        .ant-input:focus {
+            // box-shadow: none !important;
+        }
+
+    }
+
+    .varlist-empty {
+        max-width: 150px;
+        min-width: 73px;
+        margin: 1px 0 0 0;
+
+        // border: none;
+        ::-webkit-input-placeholder {
+            /* WebKit, Blink, Edge */
+            // color: #E44B4E;
+        }
+
+        :-moz-placeholder {
+            /* Mozilla Firefox 4 to 18 */
+            // color: #E44B4E;
+        }
+
+        ::-moz-placeholder {
+            /* Mozilla Firefox 19+ */
+            // color: #E44B4E;
+        }
+
+        :-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            // color: #E44B4E;
+        }
+
+        .ant-cascader-picker-label {
+            width: auto;
+            margin-top: 3px;
+            position: relative;
+            top: 2px;
+        }
+    }
+
+
+    .ant-select-open .ant-select-selection {
+        box-shadow: none;
+
+        &:focus {
+            box-shadow: none;
+        }
+
+        &:active {
+            box-shadow: none;
+        }
+    }
+
+    .ant-select-focused .ant-select-selection,
+    .ant-select-selection:active,
+    .ant-select-focused:focus {
+        box-shadow: none;
+    }
+
+    .ant-select-sm .ant-select-selection__rendered {
+        line-height: 24px;
+    }
+
+    .ant-cascader-picker:focus .ant-cascader-input {
+        box-shadow: none !important;
+    }
+
+    .ant-select-disabled .ant-select-selection {
+        background: none;
+        color: inherit;
+    }
+
+    .ant-cascader-picker-disabled {
+        background: none;
+    }
+
+    .ant-input-number {
+        background: none;
+        color: inherit;
+    }
+
+
+    .ant-calendar-picker-small .ant-calendar-picker-clear,
+    .ant-calendar-picker-small .ant-calendar-picker-icon {
+        display: none;
+    }
+
+    input {
+        border: none;
+
+        &:hover {
+            border: 1px solid #d9d9d9;
+        }
+    }
+
+    .ant-input-number {
+        border: none;
+
+        &:hover {
+            border: 1px solid #d9d9d9;
+        }
+
+        input {
+            text-align: center;
+        }
+    }
+}
+
+.expression-opt {
+    text-align: center;
+
+    >p {
+        cursor: pointer;
+
+        &:hover {
+            background-color: rgba(245, 34, 45, 0.2);
+        }
+    }
+
+    .action {
+        font-size: 12px;
+    }
+}
+
+.countExpression-cell-container-functiont {
+    // width: 350px;
+    .function {
+        width: 299px;
+        margin: 0 auto;
+    }
+    .params-name {
+        display: inline-block;
+        float: left;
+        line-height: 24px;
+        height: 24px;
+    }
+    .params-type {
+        line-height: 24px;
+        width: 10px;
+        height: 24px;
+        float: left;
+        cursor: pointer;
+        &:hover{
+            height: 22px;
+            line-height: 22px;
+            border: 1px dashed gainsboro;
+        }
+    }
+}

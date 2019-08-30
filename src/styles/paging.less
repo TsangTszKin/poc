@@ -1,0 +1,36 @@
+@primary-color : #ec7c31;
+.container {
+    height: 52px;
+    padding: 10px;
+    .desc {
+        width: max-content;
+        float: left;
+        line-height: 32px;
+    }
+    .page {
+        width: max-content;
+        float: right;
+        .ant-pagination-item {
+            a {
+                color: rgba(0, 0, 0, 0.65);
+            }
+            &:hover {
+                border-color: @primary-color;
+            }
+        }
+        .ant-pagination-item-active {
+            border-color: @primary-color;
+            font-weight: 500;
+            background-color: @primary-color;
+            a {
+                color: #fff;
+                &:hover {
+                    color: #fff;
+                }
+                &:focus {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
