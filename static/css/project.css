@@ -50,7 +50,7 @@ body {
 .pay-up-to-dowm-rowup {
     width: 10px;
     height: 10px;
-    background: red;
+    background: #ec7c31;
     -webkit-animation: 8s pay_up_to_dowm_rowup linear infinite normal;
     animation: 8s pay_up_to_dowm_rowup linear infinite normal;
     position: absolute;
@@ -61,7 +61,7 @@ body {
 
 @keyframes pay_up_to_dowm_rowup {
     0% {
-        background: red;
+        background: #ec7c31;
         left: 48.5%;
         top: 0;
     }
@@ -71,7 +71,7 @@ body {
         top: 90%;
     }
     51% {
-        background: red;
+        background: #ec7c31;
         left: 48.5%;
         top: 90%;
     }
@@ -85,7 +85,7 @@ body {
 .pay-left-to-right-rowup {
     width: 10px;
     height: 10px;
-    background: red;
+    background: #ec7c31;
     -webkit-animation: 4s pay_right_to_left_rowup linear infinite normal;
     animation: 4s pay_right_to_left_rowup linear infinite normal;
     position: absolute;
@@ -96,7 +96,7 @@ body {
 
 @keyframes pay_right_to_left_rowup {
     0% {
-        background: red;
+        background: #ec7c31;
         left: 0;
         top: 47%;
     }
@@ -110,7 +110,7 @@ body {
 .pay-left-to-right-2-rowup {
     width: 10px;
     height: 10px;
-    background: red;
+    background: #ec7c31;
     -webkit-animation: 4s pay_right_to_left_2_rowup linear infinite normal;
     animation: 4s pay_right_to_left_2_rowup linear infinite normal;
     position: absolute;
@@ -121,7 +121,7 @@ body {
 
 @keyframes pay_right_to_left_2_rowup {
     0% {
-        background: red;
+        background: #ec7c31;
         left: 0;
         top: 47%;
     }
@@ -184,5 +184,55 @@ body {
         background: #ec7c31;
         left: -6.5px;
         top: 100%;
+    }
+}
+
+.pay-up-to-dowm-chain-rowup {
+    width: 10px;
+    height: 10px;
+    background: #ec7c31;
+    -webkit-animation: 4s pay_up_to_dowm_chain_rowup linear infinite normal;
+    animation: 4s pay_up_to_dowm_chain_rowup linear infinite normal;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes pay_up_to_dowm_chain_rowup {
+    0% {
+        background: #ec7c31;
+        left: 31.5%;
+        top: 0;
+    }
+    100% {
+        background: #ec7c31;
+        left: 31.5%;
+        top: 90%;
+    }
+}
+
+.pay-dowm-to-up-chain-rowup {
+    width: 10px;
+    height: 10px;
+    background: #ec7c31;
+    -webkit-animation: 4s pay_dowm_to_up_chain_rowup linear infinite normal;
+    animation: 4s pay_dowm_to_up_chain_rowup linear infinite normal;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes pay_dowm_to_up_chain_rowup {
+    0% {
+        background: #ec7c31;
+        left: 64.3%;
+        top: 90%;
+    }
+    100% {
+        background: #ec7c31;
+        left: 64.3%;
+        top: 0;
     }
 }

@@ -23,6 +23,8 @@ class DiagramChainPay extends Component {
                             <p style={style.linker2_1}></p>
                             <Icon type="caret-up" style={style.linker2_1_to} />
 
+                            <span className="pay-up-to-dowm-chain-rowup"></span>
+                            <span className="pay-dowm-to-up-chain-rowup"></span>
 
                             <Tag color="#2db7f5" style={style._1} title="点击查看日志">1</Tag>
                             <Tag color="#87d068" style={style._2} title="点击查看日志">2</Tag>
@@ -41,6 +43,7 @@ class DiagramChainPay extends Component {
                         <p style={style.linker}></p>
                         <Icon type="caret-right" style={style.linker_to} />
                         <Tag color="#5F9EA0" style={style._4} title="点击查看日志">4</Tag>
+                        <span className="pay-left-to-right-rowup"></span>
                     </div>
                     {/* 最右端 */}
                     <div className="clearfix" style={{ float: 'left' }}>
@@ -53,6 +56,7 @@ class DiagramChainPay extends Component {
                         />
                         <div style={style.linker_cell_right}>
                             <p style={style.linker_right}></p>
+                            <span className="pay-left-to-right-2-rowup"></span>
                         </div>
                     </div>
                     <div className="clearfix" style={{ float: 'left' }}>
@@ -88,16 +92,16 @@ const style = {
         margin: '0', width: '1px', height: '100%', position: 'absolute', top: '0', left: '33%', border: '1.5px solid #ec7c31'
     },
     linker2_to: {
-        position: 'absolute', bottom: '-4px', left: '30%', color: '#ec7c31'
+        position: 'absolute', bottom: '-4px', left: '30.5%', color: '#ec7c31'
     },
     linker2_1: {
         margin: '0', width: '1px', height: '100%', position: 'absolute', top: '0', left: '66%', border: '1.5px solid #ec7c31'
     },
     linker2_1_to: {
-        position: 'absolute', top: '-4px', left: '63.2%', color: '#ec7c31'
+        position: 'absolute', top: '-4px', left: '63.5%', color: '#ec7c31'
     },
     linker_cell_right: {
-        width: '80px', height: '96px', float: 'left'
+        width: '80px', height: '96px', float: 'left', position: 'relative'
     },
     linker_right: {
         margin: '0', width: '100%', position: 'relative', top: '50%', border: '1.5px solid #ec7c31'

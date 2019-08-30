@@ -15,6 +15,8 @@ class BranchCell extends Component {
                         </div>
                         :
                         <div style={style.linker_cell2}>
+                            <span className="pay-left-to-right-3-rowup"></span>
+                            <span className="pay-up-to-dowm-2-rowup"></span>
                         </div>
                 }
 
@@ -60,7 +62,8 @@ const style = {
         border: '2px solid rgb(236, 124, 49)',
         borderTop: 'none',
         borderRight: 'none',
-        marginTop: '-46px'
+        marginTop: '-46px',
+        position: 'relative'
     },
     linker: {
         margin: '0', width: '100%', position: 'relative', top: '50%', border: '1.5px solid #ec7c31'

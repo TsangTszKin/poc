@@ -26,6 +26,7 @@ class DiagramChainSms extends Component {
 
                     <div style={style.linker_cell}>
                         <p style={style.linker}></p>
+                        <span className="pay-left-to-right-rowup"></span>
                         <Icon type="caret-right" style={style.linker_to} />
                         <Tag color="#87d068" style={style._4} title="点击查看日志">2</Tag>
                     </div>
@@ -41,6 +42,7 @@ class DiagramChainSms extends Component {
 
                     <div style={style.linker_cell}>
                         <p style={style.linker}></p>
+                        <span className="pay-left-to-right-rowup"></span>
                         <Icon type="caret-right" style={style.linker_to} />
                         <Tag color="#108ee9" style={style._4} title="点击查看日志">3</Tag>
                     </div>
