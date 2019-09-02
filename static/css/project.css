@@ -111,8 +111,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 0.2s pay_right_to_left_2_rowup linear infinite normal;
-    animation: 0.2s pay_right_to_left_2_rowup linear infinite normal;
+    -webkit-animation: 0.4s pay_right_to_left_2_rowup linear infinite normal;
+    animation: 0.4s pay_right_to_left_2_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
