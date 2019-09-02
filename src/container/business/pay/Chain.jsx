@@ -57,20 +57,42 @@ class Chain extends Component {
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
-                                    defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
-                                    format={'YYYY/MM/DD'}
+                                    allowClear={false}
+                                    defaultValue={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm:ss'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm:s')]}
+                                    format={'YYYY-MM-DD'}
+                                    onChange={(date, dateString) => {
+                                        console.log('date, dateString', date, dateString)
+                                        let query = store.list.getData.query;
+                                        query.startTime = `${dateString[0]} 00:00:00`
+                                        query.endTime = `${dateString[1]} 00:00:00`
+                                        store.list.updateData('query', query);
+                                    }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>客户账号 :</span>
-                                <Input size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
+                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.userAccount}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.userAccount = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>客户名称 :</span>
-                                <Input size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
+                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.userName}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.userName = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary">查询</Button>
+                                <Button size="small" type="primary" onClick={store.getChainListForApi}>查询</Button>
                             </div>
                         </div>
 
@@ -83,10 +105,12 @@ class Chain extends Component {
                                     let dataSource = common.deepClone(store.list.getData.dataSource);
                                     dataSource.forEach((el, i) => {
                                         el.index = i + 1;
+                                        el.time = `${el.beginDate}到${el.endDate}`;
                                         el.action = <Fragment>
                                             <a onClick={() => {
                                                 store.detail.updateData('visible', true)
                                                 store.detail.updateData('log', el.log)
+                                                store.getChainDetailForApi(el.tradeNo)
                                             }}>查看</a>
                                         </Fragment>
                                     })
@@ -114,7 +138,7 @@ class Chain extends Component {
                         {/* <p>{store.detail.getData.log}</p> */}
                         {/* <Code sqlCode={store.detail.getData.log} type={1} /> */}
                         <DiagramChainPay />
-                        <div style={{height: '40px'}}></div>
+                        <div style={{ height: '40px' }}></div>
                         <Code sqlCode={sessionStorage.log} type={1} />
                     </Drawer>
 
@@ -136,43 +160,40 @@ const columns = [
     {
         title: '时间',
         dataIndex: 'time',
-        key: 'time.',
-        sorter: (a, b) => {
-            return a.time.localeCompare(b.time)
-        }
+        key: 'time.'
     },
     {
         title: '业务代码',
-        dataIndex: 'businessCode',
-        key: 'businessCode'
+        dataIndex: 'mmsgCd',
+        key: 'mmsgCd'
     },
     {
         title: '客户账号',
-        dataIndex: 'account',
-        key: 'account'
+        dataIndex: 'userAccount',
+        key: 'userAccount'
     },
     {
         title: '客户名称',
-        dataIndex: 'accountName',
-        key: 'accountName'
+        dataIndex: 'userName',
+        key: 'userName'
     },
     {
         title: '涉及渠道',
-        dataIndex: 'channel',
-        key: 'channel',
+        dataIndex: 'bizTp',
+        key: 'bizTp',
         render: (value) => {
             return <Tag>{value}</Tag>
         }
     },
     {
         title: '涉及金额',
-        dataIndex: 'money',
-        key: 'money'
+        dataIndex: 'amt',
+        key: 'amt'
     },
     {
         title: '关联流水号',
-        dataIndex: 'id',
-        key: 'id'
+        dataIndex: 'tradeNo',
+        key: 'tradeNo'
     },
     {
         title: '操作',

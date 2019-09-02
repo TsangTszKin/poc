@@ -1,8 +1,8 @@
 /*
  * @Author: zengzijian
  * @Date: 2018-09-29 11:57:27
- * @LastEditors: zengzijian
- * @LastEditTime: 2019-08-28 11:47:37
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 17:04:24
  * @Description: 通用的api
  */
 
@@ -29,7 +29,41 @@ export default {
             params.push(`${key}=${query[key]}`)
         }
         params = params.join('&')
-        return axios.get(`${http.gwApiPrefix}/api/payChain/list`).catch(errorHandler)
-        // return axios.get(`${http.gwApiPrefix}/api/chain/list?${params}`).catch(errorHandler)
+        // return axios.get(`${http.gwApiPrefix}/api/payChain/list`).catch(errorHandler)
+        return axios.post(`${http.gwApiPrefix}/api/callChain/findAll?${params}`).catch(errorHandler)
+    },
+    getChainDetail(tradeNo) {
+        return axios.post(`${http.gwApiPrefix}/api/callChain/findByTradeNo?tradeNo=${tradeNo}`).catch(errorHandler)
+    },
+    getPayGroupData(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        // return axios.get(`${http.gwApiPrefix}/api/payChain/list`).catch(errorHandler)
+        return axios.post(`${http.gwApiPrefix}/api/cluster/loadClusters?${params}`).catch(errorHandler)
+    },
+    getPayDetailData(query = {}, type = 'front') {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        let url = ''
+        switch (type) {
+            case 'front':
+                url = '/api/front/loadFronts'
+                break;
+            case 'online':
+                url = '/api/online/loadOnlines'
+                break;
+            case 'esb':
+                url = '/api/ESB/loadESBs'
+                break;
+            default:
+                break;
+        }
+        return axios.post(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
     },
 }

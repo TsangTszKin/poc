@@ -49,7 +49,7 @@ export default CellDetail;
 
 const style = {
     main: {
-        width: '230px', textAlign: 'center', boxShadow: '4px 4px 10px #ec7c31'
+        width: '230px', textAlign: 'center', boxShadow: '4px 4px 10px #ec7c31', marginBottom: '40px'
     },
     cell1: {
         height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', position: 'relative'

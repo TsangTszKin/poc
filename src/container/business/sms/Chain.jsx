@@ -57,17 +57,18 @@ class Chain extends Component {
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
+                                    allowClear={false}
                                     defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
                                     format={'YYYY/MM/DD'}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>客户账号 :</span>
-                                <Input size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
+                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>客户名称 :</span>
-                                <Input size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
+                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
                                 <Button size="small" type="primary">查询</Button>
@@ -87,6 +88,7 @@ class Chain extends Component {
                                             <a onClick={() => {
                                                 store.detail.updateData('visible', true)
                                                 store.detail.updateData('log', el.log)
+                                                store.getChainDetailForApi(el.tradeNo)
                                             }}>查看</a>
                                         </Fragment>
                                     })

@@ -1,8 +1,8 @@
 /*
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
- * @LastEditors: zengzijian
- * @LastEditTime: 2019-08-28 11:46:24
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 19:18:47
  * @Description: 
  */
 import React, { Component } from 'react';
@@ -10,7 +10,6 @@ import store from '@/store/business/Home';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import PageHeader from '@/components/PageHeader';
 import { Row, Col, DatePicker, Button, Select } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
@@ -54,6 +53,10 @@ class Index extends Component {
             title: {
                 text: '交易量'
             }, 
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
             tooltip: {
                 trigger: 'axis'
             },
@@ -81,6 +84,10 @@ class Index extends Component {
             title: {
                 text: '平均耗时'
             },
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
             xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -107,6 +114,7 @@ class Index extends Component {
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>统计周期 :</span>
                                 <DatePicker.RangePicker size="small"
+                                    allowClear={false}
                                     defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
                                     format={'YYYY/MM/DD'}
                                 />

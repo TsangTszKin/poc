@@ -6,14 +6,18 @@ import BranchPay from '@/components/business/home/widgets/BranchPay'
 @inject('store') @observer
 class DiagramPay extends Component {
     render() {
+        const { store } = this.props;
+        const front = store.data.getData.find(el => el.clusterName === 'front');
+        const online = store.data.getData.find(el => el.clusterName === 'online');
+        const esb = store.data.getData.find(el => el.clusterName === 'esb');
         return (
             <div style={{ minWidth: '930px' }}>
                 <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto' }}>
                     <div className="clearfix" style={{ float: 'left' }}>
                         <CellPay
                             title='支付系统前置集群'
-                            count={200}
-                            time={20}
+                            count={front.tradeCount}
+                            time={front.avgCountTime}
                             type="pre"
                         />
                         <div style={style.linker_cell2}>
@@ -23,8 +27,8 @@ class DiagramPay extends Component {
                         </div>
                         <CellPay
                             title='支付系统联机集群'
-                            count={200}
-                            time={20}
+                            count={online.tradeCount}
+                            time={online.avgCountTime}
                             type="unit"
                         />
                     </div>
@@ -38,8 +42,8 @@ class DiagramPay extends Component {
                         <CellPay
                             style={{ float: 'left' }}
                             title='ESB集群'
-                            count={200}
-                            time={20}
+                            count={esb.tradeCount}
+                            time={esb.avgCountTime}
                             type="esb"
                         />
                         <div style={style.linker_cell_right}>

@@ -2,8 +2,8 @@
 /*
  * @Author: zengzijian
  * @Date: 2018-07-24 15:33:02
- * @LastEditors: zengzijian
- * @LastEditTime: 2019-08-26 16:35:33
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 10:29:46
  * @Description: 根据环境不同，采用不同的请求配置
  */
 
@@ -88,6 +88,11 @@ const yongjian = {
     wsApiPrefix: 'ws://192.168.0.109:7081',
 }
 
+const poc_yuefei = {
+    gwApiPrefix: 'http://192.168.0.111:1874',
+    wsApiPrefix: 'ws://192.168.0.111:1874',
+}
+
 var httpResult;
 
 
@@ -105,7 +110,8 @@ switch (process.env.type) {
         // httpResult = yilun;
         // httpResult = yuefei;
         // httpResult = zhuolin
-        httpResult = developmentTest_2_0;
+        // httpResult = developmentTest_2_0;
+        httpResult = poc_yuefei;
         break;
     case 'test':
         httpResult = test;

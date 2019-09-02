@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 10:53:40
+ * @LastEditTime: 2019-09-02 15:35:11
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
@@ -13,7 +13,7 @@ import payService from '@/api/business/payService'
 class store {
     constructor() {
         this.reset = this.reset.bind(this);
-        this.getPayGroupDataForApi = this.getPayGroupDataForApi.bind(this);
+        this.getPayDetailDataForApi = this.getPayDetailDataForApi.bind(this);
     }
 
     @observable helper = {
@@ -54,11 +54,11 @@ class store {
         this.data.setData(common.deepClone(dataDemo))
     }
 
-    getPayGroupDataForApi() {
+    getPayDetailDataForApi(type) {
         this.helper.updateData('loading', true);
-        payService.getPayGroupData(this.helper.getData.query).then(this.getPayGroupDataForApiCallBack)
+        payService.getPayDetailData(this.helper.getData.query, type).then(this.getPayDetailDataForApiCallBack)
     }
-    @action.bound getPayGroupDataForApiCallBack(res) {
+    @action.bound getPayDetailDataForApiCallBack(res) {
         this.helper.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
         if (!common.isEmpty(res.data.result)) {
@@ -71,22 +71,14 @@ class store {
 export default new store
 
 const dataDemo = [
-    {
-        "clusterName": "online",
-        "tradeCount": 0,
-        "avgCountTime": 0,
-        "esbservices": null
-    },
-    {
-        "clusterName": "front",
-        "tradeCount": 0,
-        "avgCountTime": 0,
-        "esbservices": null
-    },
-    {
-        "clusterName": "esb",
-        "tradeCount": 0,
-        "avgCountTime": 0,
-        "esbservices": null
-    }
+    // {
+    //     "id": "12",
+    //     "ddate": "2019-08-29 10:33:15",
+    //     "takeTimes": 14,
+    //     "tradeCount": 23,
+    //     "hostIp": "96.0.124.98",
+    //     "logFile": "98.log",
+    //     "avg_time": 14,
+    //     "totalCount": null
+    // }
 ]

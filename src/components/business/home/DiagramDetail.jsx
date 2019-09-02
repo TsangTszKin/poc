@@ -15,8 +15,14 @@ class DiagramDetail extends Component {
                                 {
                                     i !== 0 ?
                                         <div style={style.linker_cell}>
-                                            <p style={style.linker}></p>
-                                            <span className="pay-left-to-right-rowup"></span>
+                                            {
+                                                this.props.type === 'sms' ?
+                                                    <Fragment>
+                                                        <p style={style.linker}></p>
+                                                        <span className="pay-left-to-right-rowup"></span>
+                                                    </Fragment>
+                                                    : ''
+                                            }
                                         </div>
                                         : ''
                                 }
@@ -54,7 +60,7 @@ export default DiagramDetail;
 
 const style = {
     linker_cell: {
-        width: '80px', height: '96px', float: 'left', position: 'relative'
+        width: '80px', height: '96px', float: 'left', position: 'relative', marginBottom: '40px'
     },
     linker: {
         margin: '0', width: '100%', position: 'absolute', top: '50%', border: '1.5px solid #ec7c31'

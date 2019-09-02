@@ -1,17 +1,17 @@
 /*
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
- * @LastEditors: zengzijian
- * @LastEditTime: 2019-08-28 14:44:28
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 19:13:45
  * @Description: 
  */
 import React, { Component } from 'react';
-import store from '@/store/business/Home';
+import store from '@/store/business/pay/Group';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
 import PageHeader from '@/components/PageHeader';
-import { Row, Col, DatePicker, Button, Select } from 'antd'
+import { Row, Col, DatePicker, Button, Select, Spin } from 'antd'
 import moment from 'moment';
 import DiagramPay from '@/components/business/home/DiagramPay'
 
@@ -42,6 +42,7 @@ class Home extends Component {
     init() {
         this.init_jiaoyiliang()
         this.init_pingjunhaoshi()
+        store.getPayGroupDataForApi();
     }
 
     init_jiaoyiliang() {
@@ -52,6 +53,10 @@ class Home extends Component {
             title: {
                 text: '交易量'
             },
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
             tooltip: {
                 trigger: 'axis'
             },
@@ -67,7 +72,7 @@ class Home extends Component {
                 type: 'line'
             }]
         };
-        
+
         myChart.setOption(option);
     }
 
@@ -78,7 +83,11 @@ class Home extends Component {
         let option = {
             title: {
                 text: '平均耗时'
-            }, 
+            },
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
             tooltip: {
                 trigger: 'axis'
             },
@@ -94,7 +103,7 @@ class Home extends Component {
                 type: 'line'
             }]
         };
-        
+
         myChart.setOption(option);
     }
 
@@ -108,20 +117,28 @@ class Home extends Component {
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>统计周期 :</span>
                                 <DatePicker.RangePicker size="small"
-                                    defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
-                                    format={'YYYY/MM/DD'}
+                                    allowClear={false}
+                                    defaultValue={[moment(store.helper.getData.query.startTime, 'YYYY-MM-DD hh:mm:ss'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm:s')]}
+                                    format={'YYYY-MM-DD'}
+                                    onChange={(date, dateString) => {
+                                        console.log('date, dateString', date, dateString)
+                                        let query = { startTime: `${dateString[0]} 00:00:00`, endTime: `${dateString[1]} 00:00:00` }
+                                        store.helper.updateData('query', query);
+                                    }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary">查询</Button>
+                                <Button size="small" type="primary" onClick={store.getPayGroupDataForApi}>查询</Button>
                             </div>
                         </div>
 
-                        <DiagramPay />
+                        <Spin spinning={store.helper.getData.loading} size="large">
+                            <DiagramPay />
+                        </Spin>
 
-                        <Row style={{marginBottom: '40px'}}>
+                        <Row style={{ marginBottom: '40px' }}>
                             <Col span={24}>
-                                <Select value="1hour" dropdownMatchSelectWidth={false} size="small" style={{minWidth: '80px', width: 'fit-content', marginBottom: '20px'}}>
+                                <Select value="1hour" dropdownMatchSelectWidth={false} size="small" style={{ minWidth: '80px', width: 'fit-content', margin: '20px 0px' }}>
                                     <Select.Option value="1min">1分钟</Select.Option>
                                     <Select.Option value="5min">5分钟</Select.Option>
                                     <Select.Option value="1hour">1小时</Select.Option>

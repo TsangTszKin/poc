@@ -1,8 +1,8 @@
 /*
  * @Author: zengzijian
  * @Date: 2019-06-10 14:28:18
- * @LastEditors: zengzijian
- * @LastEditTime: 2019-06-10 14:50:32
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 10:24:04
  * @Description: 请求过滤器
  */
 import axios from 'axios';

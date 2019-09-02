@@ -1,21 +1,23 @@
 /*
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
- * @LastEditors: zengzijian
- * @LastEditTime: 2019-08-28 14:47:44
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 19:14:02
  * @Description: 
  */
 import React, { Component } from 'react';
-import store from '@/store/business/Home';
+import store from '@/store/business/pay/Detail';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
 import PageHeader from '@/components/PageHeader';
-import { Row, Col, DatePicker, Button, Select } from 'antd'
+import { Row, Col, DatePicker, Button, Select, Spin } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import Code from '@/components/Code';
+import { withRouter } from 'react-router-dom'
 
+@withRouter
 @observer
 class Pre extends Component {
     constructor(props) {
@@ -25,10 +27,11 @@ class Pre extends Component {
         }
         this.init_jiaoyiliang = this.init_jiaoyiliang.bind(this);
         this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
+        this.getData = this.getData.bind(this);
     }
 
     componentDidMount() {
-        
+
 
         setInterval(() => {
             if (!common.isEmpty(window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar"))) {
@@ -40,8 +43,25 @@ class Pre extends Component {
     }
 
     init() {
+        this.getData()
         this.init_jiaoyiliang()
         this.init_pingjunhaoshi()
+    }
+
+    getData() {
+        switch (this.props.match.path) {
+            case '/business/pay/pre':
+                store.getPayDetailDataForApi('front');
+                break;
+            case '/business/pay/unit':
+                store.getPayDetailDataForApi('online');
+                break;
+            case '/business/pay/esb':
+                store.getPayDetailDataForApi('esb');
+                break;
+            default:
+                break;
+        }
     }
 
     init_jiaoyiliang() {
@@ -51,7 +71,11 @@ class Pre extends Component {
         let option = {
             title: {
                 text: '交易量'
-            }, 
+            },
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
             tooltip: {
                 trigger: 'axis'
             },
@@ -79,6 +103,10 @@ class Pre extends Component {
             title: {
                 text: '平均耗时'
             },
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
             xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -104,21 +132,58 @@ class Pre extends Component {
                         <div className="clearfix" style={style.searchPanel}>
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>统计周期 :</span>
-                                <DatePicker.RangePicker size="small"
-                                    defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
-                                    format={'YYYY/MM/DD'}
+                                <DatePicker.RangePicker
+                                    allowClear={false}
+                                    defaultValue={[moment(store.helper.getData.query.startTime, 'YYYY-MM-DD hh:mm:ss'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm:s')]}
+                                    format={'YYYY-MM-DD'}
+                                    onChange={(date, dateString) => {
+                                        console.log('date, dateString', date, dateString)
+                                        let query = { startTime: `${dateString[0]} 00:00:00`, endTime: `${dateString[1]} 00:00:00` }
+                                        store.helper.updateData('query', query);
+                                    }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary">查询</Button>
+                                <Button size="small" type="primary" onClick={this.getData}>查询</Button>
                             </div>
                         </div>
 
-                        <DiagramDetail data={DiagramDetailData} />
+
+                        <Spin spinning={store.helper.getData.loading} size="large" >
+                            <DiagramDetail
+                                data={(() => {
+                                    let data = [];
+                                    store.data.getData.forEach((el, i) => {
+                                        let title = '';
+                                        switch (this.props.match.path) {
+                                            case '/business/pay/pre':
+                                                title = `支付系统前置节点${i + 1}`
+                                                break;
+                                            case '/business/pay/unit':
+                                                title = `支付系统联机节点${i + 1}`
+                                                break;
+                                            case '/business/pay/esb':
+                                                title = `支付系统ESB节点${i + 1}`
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        data.push({
+                                            title: title,
+                                            count: el.tradeCount,
+                                            time: el.avg_time,
+                                            ip: el.hostIp
+                                        })
+                                    })
+                                    return data
+                                })()}
+                            />
+
+                        </Spin>
 
                         <Row style={{ marginBottom: '40px' }}>
                             <Col span={24}>
-                                <Select value="1hour" dropdownMatchSelectWidth={false} size="small" style={{ minWidth: '80px', width: 'fit-content', marginBottom: '20px' }}>
+                                <Select value="1hour" dropdownMatchSelectWidth={false} size="small" style={{ minWidth: '80px', width: 'fit-content', margin: '20px 0px' }}>
                                     <Select.Option value="1min">1分钟</Select.Option>
                                     <Select.Option value="5min">5分钟</Select.Option>
                                     <Select.Option value="1hour">1小时</Select.Option>
@@ -181,5 +246,31 @@ const DiagramDetailData = [
         count: 200,
         time: 20,
         ip: '96.0.56.200'
-    }
+    },
+
+    {
+        title: '支付系统前置节点3',
+        count: 200,
+        time: 20,
+        ip: '96.0.56.200'
+    },
+    {
+        title: '支付系统前置节点3',
+        count: 200,
+        time: 20,
+        ip: '96.0.56.200'
+    },
+    {
+        title: '支付系统前置节点3',
+        count: 200,
+        time: 20,
+        ip: '96.0.56.200'
+    },
+    {
+        title: '支付系统前置节点3',
+        count: 200,
+        time: 20,
+        ip: '96.0.56.200'
+    },
+
 ]
