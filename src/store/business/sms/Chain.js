@@ -1,8 +1,8 @@
 /*
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
- * @LastEditors: zengzijian
- * @LastEditTime: 2019-08-28 11:48:58
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 20:21:43
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
@@ -27,7 +27,8 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { time1: '', time2: '', module: '', businessType: '', category: '' }
+            query: { time1: '', time2: '', module: '', businessType: '', category: '' },
+            timeUnit: 60
         },
         get getData() {
             return toJS(this.data)
@@ -64,7 +65,8 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { time1: '', time2: '', module: '', businessType: '', category: '' }
+            query: { time1: '', time2: '', module: '', businessType: '', category: '' },
+            timeUnit: 60
         })
     }
 

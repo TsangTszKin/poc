@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 16:49:35
+ * @LastEditTime: 2019-09-02 20:21:33
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
@@ -28,7 +28,8 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00', userAccount: '', userName: '' }
+            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00', userAccount: '', userName: '' },
+            timeUnit: 60
         },
         get getData() {
             return toJS(this.data)
@@ -66,7 +67,8 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00', userAccount: '', userName: '' }
+            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00', userAccount: '', userName: '' },
+            timeUnit: 60
         })
     }
 

@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 20:33:31
+ * @LastEditTime: 2019-09-02 20:32:56
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'

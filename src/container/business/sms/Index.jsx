@@ -2,18 +2,19 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 19:18:47
+ * @LastEditTime: 2019-09-02 20:32:41
  * @Description: 
  */
 import React, { Component } from 'react';
-import store from '@/store/business/Home';
+import store from '@/store/business/sms/Index';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import { Row, Col, DatePicker, Button, Select } from 'antd'
+import { Row, Col, DatePicker, Button, Select, Divider } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import Code from '@/components/Code';
+import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 
 @observer
 class Index extends Component {
@@ -27,7 +28,7 @@ class Index extends Component {
     }
 
     componentDidMount() {
-        
+
 
         setInterval(() => {
             if (!common.isEmpty(window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar"))) {
@@ -52,7 +53,7 @@ class Index extends Component {
         let option = {
             title: {
                 text: '交易量'
-            }, 
+            },
             dataZoom: [{
             }, {
                 type: 'inside'
@@ -128,12 +129,10 @@ class Index extends Component {
 
                         <Row style={{ marginBottom: '40px' }}>
                             <Col span={24}>
-                                <Select value="1hour" dropdownMatchSelectWidth={false} size="small" style={{ minWidth: '80px', width: 'fit-content', marginBottom: '20px' }}>
-                                    <Select.Option value="1min">1分钟</Select.Option>
-                                    <Select.Option value="5min">5分钟</Select.Option>
-                                    <Select.Option value="1hour">1小时</Select.Option>
-                                    <Select.Option value="1day">1天</Select.Option>
-                                </Select>
+                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
+                                    store.helper.updateData('timeUnit', value);
+                                    //todo 调接口
+                                }} />
                             </Col>
                             <Col span={12}>
                                 <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
@@ -141,6 +140,11 @@ class Index extends Component {
                             <Col span={12}>
                                 <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
                             </Col>
+
+
+                        </Row>
+                        <Divider orientation="left">日志</Divider>
+                        <Row style={{ marginBottom: '40px' }}>
 
                             <Col span={24}>
                                 <Code sqlCode={sessionStorage.log} type={1} />

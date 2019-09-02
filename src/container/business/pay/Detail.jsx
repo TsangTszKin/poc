@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 19:14:02
+ * @LastEditTime: 2019-09-02 20:30:47
  * @Description: 
  */
 import React, { Component } from 'react';
@@ -11,11 +11,12 @@ import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
 import PageHeader from '@/components/PageHeader';
-import { Row, Col, DatePicker, Button, Select, Spin } from 'antd'
+import { Row, Col, DatePicker, Button, Select, Spin, Divider } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import Code from '@/components/Code';
 import { withRouter } from 'react-router-dom'
+import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 
 @withRouter
 @observer
@@ -183,12 +184,10 @@ class Pre extends Component {
 
                         <Row style={{ marginBottom: '40px' }}>
                             <Col span={24}>
-                                <Select value="1hour" dropdownMatchSelectWidth={false} size="small" style={{ minWidth: '80px', width: 'fit-content', margin: '20px 0px' }}>
-                                    <Select.Option value="1min">1分钟</Select.Option>
-                                    <Select.Option value="5min">5分钟</Select.Option>
-                                    <Select.Option value="1hour">1小时</Select.Option>
-                                    <Select.Option value="1day">1天</Select.Option>
-                                </Select>
+                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
+                                    store.helper.updateData('timeUnit', value);
+                                    //todo 调接口
+                                }} />
                             </Col>
                             <Col span={12}>
                                 <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
@@ -197,6 +196,10 @@ class Pre extends Component {
                                 <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
                             </Col>
 
+
+                        </Row>
+                        <Divider orientation="left">日志</Divider>
+                        <Row style={{ marginBottom: '40px' }}>
                             <Col span={24}>
                                 <Code sqlCode={sessionStorage.log} type={1} />
                             </Col>

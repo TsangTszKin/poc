@@ -4,7 +4,7 @@ import React, { Component, Fragment } from 'react'
 import { observer, Provider } from 'mobx-react'
 import { withRouter } from 'react-router-dom'
 import store from '@/store/business/sms/Chain'
-import { Table, Spin, Drawer, DatePicker, Input, Button } from 'antd'
+import { Table, Spin, Drawer, DatePicker, Input, Button, Divider } from 'antd'
 import PageHeader from '@/components/PageHeader';
 import common from '@/utils/common';
 import Paging from '@/components/Paging';
@@ -117,6 +117,7 @@ class Chain extends Component {
                         {/* <Code sqlCode={store.detail.getData.log} type={1} /> */}
                         <DiagramChainSms />
                         <div style={{ height: '40px' }}></div>
+                        <Divider orientation="left">日志</Divider>
                         <Code sqlCode={sessionStorage.log} type={1} />
                     </Drawer>
 

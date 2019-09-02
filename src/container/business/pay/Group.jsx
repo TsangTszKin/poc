@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 19:13:45
+ * @LastEditTime: 2019-09-02 20:30:08
  * @Description: 
  */
 import React, { Component } from 'react';
@@ -10,10 +10,10 @@ import store from '@/store/business/pay/Group';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import PageHeader from '@/components/PageHeader';
-import { Row, Col, DatePicker, Button, Select, Spin } from 'antd'
+import { Row, Col, DatePicker, Button, Spin } from 'antd'
 import moment from 'moment';
 import DiagramPay from '@/components/business/home/DiagramPay'
+import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 
 @observer
 class Home extends Component {
@@ -138,12 +138,10 @@ class Home extends Component {
 
                         <Row style={{ marginBottom: '40px' }}>
                             <Col span={24}>
-                                <Select value="1hour" dropdownMatchSelectWidth={false} size="small" style={{ minWidth: '80px', width: 'fit-content', margin: '20px 0px' }}>
-                                    <Select.Option value="1min">1分钟</Select.Option>
-                                    <Select.Option value="5min">5分钟</Select.Option>
-                                    <Select.Option value="1hour">1小时</Select.Option>
-                                    <Select.Option value="1day">1天</Select.Option>
-                                </Select>
+                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
+                                    store.helper.updateData('timeUnit', value);
+                                    //todo 调接口
+                                }} />
                             </Col>
                             <Col span={12}>
                                 <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
