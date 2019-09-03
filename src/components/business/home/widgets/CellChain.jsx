@@ -14,8 +14,9 @@ class CellChain extends Component {
                 })()}
             >
                 <div style={style.cell1}>
-                    <span style={style.cell1_title}>{this.props.title}</span>
-                    <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
+                    <p style={style.cell1_title}>{this.props.title}</p>
+                    <span >192.168.0.99</span>
+                    {/* <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
                         style={style.cell1_btn}
                         onClick={() => {
                             switch (this.props.type) {
@@ -32,11 +33,11 @@ class CellChain extends Component {
                                     break;
                             }
                         }}
-                    />
+                    /> */}
                 </div>
                 <Row style={style.cell2}>
-                    <Col span={12} style={style.cell2_l}>交易笔数：{this.props.count}</Col>
-                    <Col span={12} style={style.cell2_r}>平均耗时：{this.props.time}</Col>
+                    {/* <Col span={12} style={style.cell2_l}>交易笔数：{this.props.count}</Col> */}
+                    <Col span={24} style={style.cell2_r}>耗时：{this.props.time}</Col>
                 </Row>
             </div>
         );
@@ -66,13 +67,13 @@ const style = {
         width: '230px', textAlign: 'center', boxShadow: '4px 4px 10px #ec7c31'
     },
     cell1: {
-        height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '63px', position: 'relative'
+        height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '31.5px', position: 'relative'
     },
     cell1_btn: {
         position: 'absolute', top: '15px', right: '10px', cursor: 'pointer'
     },
     cell2: {
-        height: '33px', border: '1px solid rgba(201, 201, 201, 1)', lineHeight: '63px'
+        height: '34px', border: '1px solid rgba(201, 201, 201, 1)', lineHeight: '34px'
     },
     cell2_l: {
         borderRight: '1px solid rgba(201, 201, 201, 1)', height: '33px', lineHeight: '33px'

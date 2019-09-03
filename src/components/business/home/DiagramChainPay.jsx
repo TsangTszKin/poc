@@ -110,7 +110,7 @@ const style = {
         position: 'absolute', left: '22%', top: '1px', borderRadius: '50%', cursor: 'pointer'
     },
     _2: {
-        position: 'absolute', left: '47%', bottom: '-24px', borderRadius: '50%', cursor: 'pointer', zIndex: '1'
+        position: 'absolute', right: '2%', bottom: '-44px', borderRadius: '50%', cursor: 'pointer', zIndex: '1'
     },
     _3: {
         position: 'absolute', right: '18%', top: '1px', borderRadius: '50%', cursor: 'pointer'

@@ -2,10 +2,10 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 20:30:08
+ * @LastEditTime: 2019-09-03 10:47:56
  * @Description: 
  */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import store from '@/store/business/pay/Group';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
@@ -43,6 +43,7 @@ class Home extends Component {
         this.init_jiaoyiliang()
         this.init_pingjunhaoshi()
         store.getPayGroupDataForApi();
+        store.getGroupChartsForApi();
     }
 
     init_jiaoyiliang() {
@@ -141,15 +142,21 @@ class Home extends Component {
                                 <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
                                     store.helper.updateData('timeUnit', value);
                                     //todo 调接口
+                                    store.getGroupChartsForApi();
                                 }} />
                             </Col>
-                            <Col span={12}>
-                                <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
-                            </Col>
-                            <Col span={12}>
-                                <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
-                            </Col>
                         </Row>
+
+                        <Spin spinning={store.helper.getData.loading2} size="large">
+                            <Row>
+                                <Col span={12}>
+                                    <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
+                                </Col>
+                                <Col span={12}>
+                                    <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
+                                </Col>
+                            </Row>
+                        </Spin>
                     </div>
                 </div>
             </Provider>

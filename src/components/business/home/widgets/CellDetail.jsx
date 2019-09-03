@@ -55,7 +55,7 @@ const style = {
         height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', position: 'relative'
     },
     cell2: {
-        height: '33px', border: '1px solid rgba(201, 201, 201, 1)', lineHeight: '63px'
+        height: '34px', border: '1px solid rgba(201, 201, 201, 1)', lineHeight: '34px'
     },
     cell2_l: {
         borderRight: '1px solid rgba(201, 201, 201, 1)', height: '33px', lineHeight: '33px'

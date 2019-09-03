@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-09-29 11:57:27
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 17:04:24
+ * @LastEditTime: 2019-09-03 10:44:21
  * @Description: 通用的api
  */
 
@@ -65,5 +65,13 @@ export default {
                 break;
         }
         return axios.post(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
+    },
+    getGroupCharts(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.get(`${http.gwApiPrefix}/api/cluster/loadCharts?${params}`).catch(errorHandler)
     },
 }
