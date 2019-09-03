@@ -45,7 +45,7 @@ body {
 }
 
 
-/* 粒子动画 */
+/* 粒子动画 start */
 
 .pay-up-to-dowm-rowup {
     width: 10px;
@@ -65,16 +65,19 @@ body {
         left: 48.5%;
         top: 0;
     }
+
     50% {
         background: #ec7c31;
         left: 48.5%;
         top: 90%;
     }
+
     51% {
         background: #ec7c31;
         left: 48.5%;
         top: 90%;
     }
+
     100% {
         background: #ec7c31;
         left: 48.5%;
@@ -100,6 +103,7 @@ body {
         left: 0;
         top: 47%;
     }
+
     100% {
         background: #ec7c31;
         left: 90%;
@@ -125,11 +129,13 @@ body {
         left: 0;
         top: 47%;
     }
+
     50% {
         background: #ec7c31;
         left: 95%;
         top: 47%;
     }
+
     100% {
         background: #ec7c31;
         left: 190%;
@@ -155,6 +161,7 @@ body {
         left: -2.5px;
         top: 96%;
     }
+
     100% {
         background: #ec7c31;
         left: 100%;
@@ -180,6 +187,7 @@ body {
         left: -6.5px;
         top: -2.5px;
     }
+
     100% {
         background: #ec7c31;
         left: -6.5px;
@@ -205,6 +213,7 @@ body {
         left: 31.5%;
         top: 0;
     }
+
     100% {
         background: #ec7c31;
         left: 31.5%;
@@ -230,9 +239,21 @@ body {
         left: 64.3%;
         top: 90%;
     }
+
     100% {
         background: #ec7c31;
         left: 64.3%;
         top: 0;
     }
+}
+
+/* 粒子动画 end */
+
+
+.ellipsis-1 {
+    word-break: break-all;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

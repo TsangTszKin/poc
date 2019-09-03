@@ -25,8 +25,8 @@ class BranchCell extends Component {
                     {this.props.title}
                 </div>
                 <div style={style.data_cell}>
-                    <p>交易笔数：{this.props.count}</p>
-                    <p>平均耗时：{this.props.time}</p>
+                    <p className="ellipsis-1">交易笔数：{this.props.count}</p>
+                    <p className="ellipsis-1">平均耗时：{this.props.time}</p>
                 </div>
             </div>
         );

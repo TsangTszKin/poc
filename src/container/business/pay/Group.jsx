@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 10:47:56
+ * @LastEditTime: 2019-09-03 16:08:49
  * @Description: 
  */
 import React, { Component, Fragment } from 'react';
@@ -14,6 +14,8 @@ import { Row, Col, DatePicker, Button, Spin } from 'antd'
 import moment from 'moment';
 import DiagramPay from '@/components/business/home/DiagramPay'
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
+import publicUtils from '@/utils/publicUtils'
+import payService from '@/api/business/payService'
 
 @observer
 class Home extends Component {
@@ -24,29 +26,33 @@ class Home extends Component {
         }
         this.init_jiaoyiliang = this.init_jiaoyiliang.bind(this);
         this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
+        this.getGroupChartsForApi = this.getGroupChartsForApi.bind(this);
     }
 
     componentDidMount() {
-
-        setInterval(() => {
-            if (!common.isEmpty(window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar"))) {
-                window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar").style.width = '50%';
-            }
-
-            // $("#business-home-header-info span.ant-tabs-tab-next").addClass("ant-tabs-tab-arrow-show").removeClass("ant-tabs-tab-btn-disabled");
-        }, 300)
-
         this.init()
     }
 
     init() {
-        this.init_jiaoyiliang()
-        this.init_pingjunhaoshi()
+        store.reset();
         store.getPayGroupDataForApi();
-        store.getGroupChartsForApi();
+        this.getGroupChartsForApi();
     }
 
-    init_jiaoyiliang() {
+    getGroupChartsForApi() {
+        store.helper.updateData('loading2', true);
+        let query = Object.assign({
+            timeUnit: store.helper.getData.timeUnit
+        }, store.helper.getData.query)
+        payService.getGroupCharts(query).then(res => {
+            store.helper.updateData('loading2', false);
+            if (!publicUtils.isOk(res)) return
+            this.init_jiaoyiliang(res.data.result.keys, res.data.result.trades)
+            this.init_pingjunhaoshi(res.data.result.keys, res.data.result.times)
+        })
+    }
+
+    init_jiaoyiliang(x = [], data = []) {
         var myChart = echarts.init(this.jiaoyiliang);
         // 绘制图表
 
@@ -63,21 +69,22 @@ class Home extends Component {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: x
             },
             yAxis: {
                 type: 'value'
             },
             series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: data,
                 type: 'line'
-            }]
+            }],
+            color: '#ec7c31'
         };
 
         myChart.setOption(option);
     }
 
-    init_pingjunhaoshi() {
+    init_pingjunhaoshi(x = [], data = []) {
         var myChart = echarts.init(this.pingjunhaoshi);
         // 绘制图表
 
@@ -94,15 +101,16 @@ class Home extends Component {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: x
             },
             yAxis: {
                 type: 'value'
             },
             series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: data,
                 type: 'line'
-            }]
+            }],
+            color: '#ec7c31'
         };
 
         myChart.setOption(option);
@@ -142,7 +150,7 @@ class Home extends Component {
                                 <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
                                     store.helper.updateData('timeUnit', value);
                                     //todo 调接口
-                                    store.getGroupChartsForApi();
+                                    this.getGroupChartsForApi();
                                 }} />
                             </Col>
                         </Row>

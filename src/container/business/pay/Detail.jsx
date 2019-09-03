@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 20:30:47
+ * @LastEditTime: 2019-09-03 16:18:31
  * @Description: 
  */
 import React, { Component } from 'react';
@@ -17,6 +17,8 @@ import DiagramDetail from '@/components/business/home/DiagramDetail'
 import Code from '@/components/Code';
 import { withRouter } from 'react-router-dom'
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
+import publicUtils from '@/utils/publicUtils'
+import payService from '@/api/business/payService'
 
 @withRouter
 @observer
@@ -29,24 +31,16 @@ class Pre extends Component {
         this.init_jiaoyiliang = this.init_jiaoyiliang.bind(this);
         this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
         this.getData = this.getData.bind(this);
+        this.getDetailChartsForApi = this.getDetailChartsForApi.bind(this);
     }
 
     componentDidMount() {
-
-
-        setInterval(() => {
-            if (!common.isEmpty(window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar"))) {
-                window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar").style.width = '50%';
-            }
-        }, 300)
-
         this.init()
     }
 
     init() {
         this.getData()
-        this.init_jiaoyiliang()
-        this.init_pingjunhaoshi()
+        this.getDetailChartsForApi();
     }
 
     getData() {
@@ -65,7 +59,36 @@ class Pre extends Component {
         }
     }
 
-    init_jiaoyiliang() {
+    getDetailChartsForApi() {
+        store.helper.updateData('loading2', true);
+        let query = Object.assign({
+            timeUnit: store.helper.getData.timeUnit
+        }, store.helper.getData.query)
+
+        let type = ''
+        switch (this.props.match.path) {
+            case '/business/pay/pre':
+                type = 'front'
+                break;
+            case '/business/pay/unit':
+                type = 'online'
+                break;
+            case '/business/pay/esb':
+                type = 'esb'
+                break;
+            default:
+                break;
+        }
+
+        payService.getDetailCharts(query, type).then(res => {
+            store.helper.updateData('loading2', false);
+            if (!publicUtils.isOk(res)) return
+            this.init_jiaoyiliang(res.data.result.keys, res.data.result.trades)
+            this.init_pingjunhaoshi(res.data.result.keys, res.data.result.times)
+        })
+    }
+
+    init_jiaoyiliang(x = [], data = []) {
         var myChart = echarts.init(this.jiaoyiliang);
         // 绘制图表
 
@@ -82,21 +105,22 @@ class Pre extends Component {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: x
             },
             yAxis: {
                 type: 'value'
             },
             series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: data,
                 type: 'line'
-            }]
+            }],
+            color: '#ec7c31'
         };
 
         myChart.setOption(option);
     }
 
-    init_pingjunhaoshi() {
+    init_pingjunhaoshi(x = [], data = []) {
         var myChart = echarts.init(this.pingjunhaoshi);
         // 绘制图表
 
@@ -110,15 +134,16 @@ class Pre extends Component {
             }],
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: x
             },
             yAxis: {
                 type: 'value'
             },
             series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: data,
                 type: 'line'
-            }]
+            }],
+            color: '#ec7c31'
         };
 
         myChart.setOption(option);
@@ -187,6 +212,7 @@ class Pre extends Component {
                                 <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
                                     store.helper.updateData('timeUnit', value);
                                     //todo 调接口
+                                    this.getDetailChartsForApi();
                                 }} />
                             </Col>
                             <Col span={12}>

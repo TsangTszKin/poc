@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 20:33:36
+ * @LastEditTime: 2019-09-03 16:13:57
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
@@ -19,6 +19,7 @@ class store {
     @observable helper = {
         data: {
             loading: true,
+            loading2: true,
             query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
             timeUnit: 60
         },
@@ -49,6 +50,7 @@ class store {
     reset() {
         this.helper.setData({
             loading: true,
+            loading2: true,
             query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
             timeUnit: 60
         })

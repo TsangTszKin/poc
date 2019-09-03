@@ -19,8 +19,8 @@ class CellDetail extends Component {
                     <p>{this.props.ip}</p>
                 </div>
                 <Row style={style.cell2}>
-                    <Col span={12} style={style.cell2_l}>交易笔数：{this.props.count}</Col>
-                    <Col span={12} style={style.cell2_r}>平均耗时：{this.props.time}</Col>
+                    <Col span={12} style={style.cell2_l} className="ellipsis-1">交易笔数：{this.props.count}</Col>
+                    <Col span={12} style={style.cell2_r} className="ellipsis-1">平均耗时：{this.props.time}</Col>
                 </Row>
             </div>
         );

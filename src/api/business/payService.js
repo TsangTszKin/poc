@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-09-29 11:57:27
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 10:44:21
+ * @LastEditTime: 2019-09-03 16:13:05
  * @Description: 通用的api
  */
 
@@ -73,5 +73,27 @@ export default {
         }
         params = params.join('&')
         return axios.get(`${http.gwApiPrefix}/api/cluster/loadCharts?${params}`).catch(errorHandler)
+    },
+    getDetailCharts(query = {},  type = 'front') {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        let url = ''
+        switch (type) {
+            case 'front':
+                url = '/api/front/loadCharts'
+                break;
+            case 'online':
+                url = '/api/online/loadCharts'
+                break;
+            case 'esb':
+                url = '/api/ESB/loadCharts'
+                break;
+            default:
+                break;
+        }
+        return axios.get(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
     },
 }

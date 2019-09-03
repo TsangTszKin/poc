@@ -37,7 +37,7 @@ class CellChain extends Component {
                 </div>
                 <Row style={style.cell2}>
                     {/* <Col span={12} style={style.cell2_l}>交易笔数：{this.props.count}</Col> */}
-                    <Col span={24} style={style.cell2_r}>耗时：{this.props.time}</Col>
+                    <Col span={24} style={style.cell2_r} className="ellipsis-1">耗时：{this.props.time}</Col>
                 </Row>
             </div>
         );
