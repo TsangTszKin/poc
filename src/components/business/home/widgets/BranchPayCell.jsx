@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react'
 
@@ -8,15 +8,27 @@ class BranchPayCell extends Component {
         return (
             <div className="clearfix" style={{ width: 'fit-content', marginTop: this.props.nodeKey > 1 ? '10px' : '0' }}>
                 {
-                    this.props.nodeKey === 0 ?
-                        <div style={style.linker_cell}>
-                            <p style={style.linker}></p>
-                        </div>
-                        :
-                        <div style={style.linker_cell2}>
-                            <span className="pay-left-to-right-3-rowup"></span>
-                            <span className="pay-up-to-dowm-2-rowup"></span>
-                        </div>
+                    (() => {
+                        if (this.props.nodeKey === 0) {
+                            return (
+                                <div style={style.linker_cell}>
+                                    <p style={style.linker}></p>
+                                </div>
+                            )
+                        }
+                        return (
+                            <div style={style.linker_cell2}>
+                                {
+                                    !this.props.isESB ?
+                                        <Fragment>
+                                            <span className="pay-left-to-right-3-rowup"></span>
+                                            <span className="pay-up-to-dowm-2-rowup"></span>
+                                        </Fragment>
+                                        : ''
+                                }
+                            </div>
+                        )
+                    })()
                 }
                 <div style={style.title} className="ellipsis-1">
                     {this.props.name}
@@ -36,6 +48,7 @@ BranchPayCell.propTypes = {
     totalCount: PropTypes.number,
     avgTime: PropTypes.number,
     nodeKey: PropTypes.number,
+    isESB: PropTypes.bool,
 };
 BranchPayCell.defaultProps = {
     style: {
@@ -44,7 +57,8 @@ BranchPayCell.defaultProps = {
     name: '',
     totalCount: 0,
     avgTime: 0,
-    nodeKey: 0
+    nodeKey: 0,
+    isESB: false
 }
 
 export default BranchPayCell;

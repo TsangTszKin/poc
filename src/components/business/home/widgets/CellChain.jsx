@@ -15,28 +15,9 @@ class CellChain extends Component {
             >
                 <div style={style.cell1}>
                     <p style={style.cell1_title}>{this.props.title}</p>
-                    <span >192.168.0.99</span>
-                    {/* <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
-                        style={style.cell1_btn}
-                        onClick={() => {
-                            switch (this.props.type) {
-                                case 'pre':
-                                    this.props.history.push('/business/pay/pre')
-                                    break;
-                                case 'unit':
-                                    this.props.history.push('/business/pay/unit')
-                                    break;
-                                case 'esb':
-                                    this.props.history.push('/business/pay/esb')
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }}
-                    /> */}
+                    <span >{this.props.ip}</span>
                 </div>
                 <Row style={style.cell2}>
-                    {/* <Col span={12} style={style.cell2_l}>交易笔数：{this.props.count}</Col> */}
                     <Col span={24} style={style.cell2_r} className="ellipsis-1">耗时：{this.props.time}</Col>
                 </Row>
             </div>
@@ -49,7 +30,8 @@ CellChain.propTypes = {
     title: PropTypes.string,
     count: PropTypes.number,
     time: PropTypes.number,
-    type: PropTypes.oneOf(['pre', 'unit', 'esb'])
+    type: PropTypes.oneOf(['pre', 'unit', 'esb']),
+    ip: PropTypes.string
 };
 CellChain.defaultProps = {
     style: {
@@ -57,7 +39,8 @@ CellChain.defaultProps = {
     },
     title: '',
     count: 0,
-    time: 0
+    time: 0,
+    ip: ''
 }
 
 export default CellChain;

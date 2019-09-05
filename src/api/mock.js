@@ -518,4 +518,60 @@ var getLeftMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/leftm
     }
 });
 
-export { logList, payChainList, smsChainList, login, getAuthAction, getTopMenu, getLeftMenu, alertList, alertSettingList }
+var payFindByTradeNoList = Mock.mock(`${http.gwApiPrefix}/api/callChain/findByTradeNo`, {
+    "resultCode": 1000,
+    "resultMessage": "操作成功",
+    "result": [
+        {
+          "id": "1",
+          "beginDate": "1",
+          "endDate": "1",
+          "takeTimes": 11,
+          "finishFlag": 1,
+          "hostIp": "192.169.0.1",
+          "sourceIp": "1",
+          "tradeNo": "1",
+          "processId": "1",
+          "logFile": "frontfrontfrontfrontfront",
+          "content": "1",
+          "clusterSign": "front",
+          "uuid": "1",
+          "snum": 1
+        },
+        {
+          "id": "1",
+          "beginDate": "1",
+          "endDate": "1",
+          "takeTimes": 11,
+          "finishFlag": 1,
+          "hostIp": "192.169.0.1",
+          "sourceIp": "1",
+          "tradeNo": "1",
+          "processId": "1",
+          "logFile": "onlineonlineonlineonline",
+          "content": "1",
+          "clusterSign": "online",
+          "uuid": "1",
+          "snum": 1
+        },
+        {
+          "id": "1",
+          "beginDate": "1",
+          "endDate": "1",
+          "takeTimes": 11,
+          "finishFlag": 1,
+          "hostIp": "192.169.0.1",
+          "sourceIp": "1",
+          "tradeNo": "1",
+          "processId": "1",
+          "logFile": "ESBESBESBESBESBESBESBESBESB",
+          "content": "1",
+          "clusterSign": "ESB",
+          "uuid": "1",
+          "snum": 1
+        }
+      ],
+});
+
+export { logList, payChainList, smsChainList, login, getAuthAction, getTopMenu, getLeftMenu, alertList, alertSettingList, payFindByTradeNoList }
+

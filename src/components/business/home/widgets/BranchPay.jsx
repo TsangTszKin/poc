@@ -10,7 +10,7 @@ class BranchPay extends Component {
             <div style={{ marginRight: '20px' }}>
                 {
                     this.props.data.map((item, i) =>
-                        <BranchPayCell key={i} nodeKey={i} {...item} />
+                        <BranchPayCell key={i} nodeKey={i} {...item} isESB={this.props.isESB} />
                     )
                 }
             </div>
@@ -20,8 +20,10 @@ class BranchPay extends Component {
 
 BranchPay.propTypes = {
     data: PropTypes.array,
+    isESB: PropTypes.bool,
 };
 BranchPay.defaultProps = {
-    data: []
+    data: [],
+    isESB: false
 }
 export default BranchPay;

@@ -53,6 +53,13 @@ class Chain extends Component {
                     {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
 
+                        <Button onClick={() => {
+                            store.detail.updateData('visible', true)
+                            store.detail.updateData('log', 1)
+                            store.getChainDetailForApi(1)
+                            common.loading.hide()
+                        }}>test</Button>
+
                         <div className="clearfix" style={style.searchPanel}>
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>日期 :</span>
@@ -137,10 +144,22 @@ class Chain extends Component {
                     >
                         {/* <p>{store.detail.getData.log}</p> */}
                         {/* <Code sqlCode={store.detail.getData.log} type={1} /> */}
-                        <DiagramChainPay />
+                        <DiagramChainPay
+                            data={store.detail.getData.data}
+                            callbackfn={(log, step) => {
+                                store.detail.updateData('log', log)
+                                store.detail.updateData('step', step)
+                            }}
+                        />
                         <div style={{ height: '40px' }}></div>
-                        <Divider orientation="left">日志</Divider>
-                        <Code sqlCode={sessionStorage.log} type={1} />
+                        {
+                            !common.isEmpty(store.detail.getData.log) ?
+                                <Fragment>
+                                    <Divider orientation="left">日志（步骤{store.detail.getData.step}）</Divider>
+                                    <Code sqlCode={store.detail.getData.log} type={1} />
+                                </Fragment>
+                                : ''
+                        }
                     </Drawer>
 
                 </div>

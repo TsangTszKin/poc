@@ -23,6 +23,8 @@ import 'codemirror/theme/ambiance.css';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/theme/elegant.css';
 import 'codemirror/theme/duotone-light.css';
+import 'codemirror/theme/abcdef.css';
+import 'codemirror/theme/idea.css';
 
 class Code extends Component {
     constructor(props) {
@@ -57,7 +59,8 @@ class Code extends Component {
             lineNumbers: true,                     //显示行号  
             mode: { name: "text/x-mysql" },          //定义mode  
             extraKeys: this.props.type === 1 ? {} : { "Ctrl": "autocomplete" },   //自动提示配置  
-            theme: this.props.type === 1 ? 'duotone-light' : 'idea',//选中的theme  
+            // theme: this.props.type === 1 ? 'duotone-light' : 'idea',//选中的theme  
+            theme: 'idea',//选中的theme  
             cursorHeight: this.props.type === 1 ? 0 : 1
         };
         let self = this;

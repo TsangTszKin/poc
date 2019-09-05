@@ -104,4 +104,13 @@ export default {
         params = params.join('&')
         return axios.get(`${http.gwApiPrefix}/api/ESB/findAllServices?${params}`).catch(errorHandler)
     },
+    getPayFindByTradeNoList(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.get(`${http.gwApiPrefix}/api/callChain/findByTradeNo`).catch(errorHandler)
+        // return axios.get(`${http.gwApiPrefix}/api/callChain/findByTradeNo?${params}`).catch(errorHandler)
+    },
 }
