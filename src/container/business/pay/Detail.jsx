@@ -192,29 +192,51 @@ class Pre extends Component {
                                             let data = [];
                                             DiagramDetailData.forEach((el, i) => {
                                                 let title = `支付系统ESB节点${i + 1}`
-                                                data.push({
-                                                    title: title,
-                                                    count: el.tradeCount,
-                                                    time: el.avg_time,
-                                                    ip: el.hostIp,
-                                                    service: [
-                                                        {
-                                                            name: 'aaa',
-                                                            totalCount: 0,
-                                                            avgTime: 0
-                                                        },
-                                                        {
-                                                            name: 'bbb',
-                                                            totalCount: 0,
-                                                            avgTime: 0
-                                                        },
-                                                        {
-                                                            name: 'ccc',
-                                                            totalCount: 0,
-                                                            avgTime: 0
-                                                        }
-                                                    ]
-                                                })
+                                                if (i === 0) {
+                                                    data.push({
+                                                        title: title,
+                                                        count: el.tradeCount,
+                                                        time: el.avg_time,
+                                                        ip: el.hostIp,
+                                                        service: [
+                                                            {
+                                                                name: 'aaa',
+                                                                totalCount: 0,
+                                                                avgTime: 0
+                                                            },
+                                                            {
+                                                                name: 'bbb',
+                                                                totalCount: 0,
+                                                                avgTime: 0
+                                                            }
+                                                        ]
+                                                    })
+                                                }else {
+                                                    data.push({
+                                                        title: title,
+                                                        count: el.tradeCount,
+                                                        time: el.avg_time,
+                                                        ip: el.hostIp,
+                                                        service: [
+                                                            {
+                                                                name: 'aaa',
+                                                                totalCount: 0,
+                                                                avgTime: 0
+                                                            },
+                                                            {
+                                                                name: 'bbb',
+                                                                totalCount: 0,
+                                                                avgTime: 0
+                                                            },
+                                                            {
+                                                                name: 'ccc',
+                                                                totalCount: 0,
+                                                                avgTime: 0
+                                                            }
+                                                        ]
+                                                    })
+                                                }
+                                                
                                             })
                                             return data
                                         })()}

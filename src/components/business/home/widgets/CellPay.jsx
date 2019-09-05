@@ -15,24 +15,29 @@ class CellPay extends Component {
             >
                 <div style={style.cell1}>
                     <span style={style.cell1_title}>{this.props.title}</span>
-                    <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
-                        style={style.cell1_btn}
-                        onClick={() => {
-                            switch (this.props.type) {
-                                case 'pre':
-                                    this.props.history.push('/business/pay/pre')
-                                    break;
-                                case 'unit':
-                                    this.props.history.push('/business/pay/unit')
-                                    break;
-                                case 'esb':
-                                    this.props.history.push('/business/pay/esb')
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }}
-                    />
+                    {
+                        !this.props.isESB ?
+
+                            <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
+                                style={style.cell1_btn}
+                                onClick={() => {
+                                    switch (this.props.type) {
+                                        case 'pre':
+                                            this.props.history.push('/business/pay/pre')
+                                            break;
+                                        case 'unit':
+                                            this.props.history.push('/business/pay/unit')
+                                            break;
+                                        case 'esb':
+                                            this.props.history.push('/business/pay/esb')
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }}
+                            />
+                            : ''
+                    }
                 </div>
                 <Row style={style.cell2}>
                     <Col span={12} style={style.cell2_l} className="ellipsis-1">交易笔数：{this.props.count}</Col>
@@ -48,13 +53,15 @@ CellPay.propTypes = {
     title: PropTypes.string,
     count: PropTypes.number,
     time: PropTypes.number,
-    type: PropTypes.oneOf(['pre', 'unit', 'esb'])
+    type: PropTypes.oneOf(['pre', 'unit', 'esb']),
+    isESB: PropTypes.bool,
 };
 CellPay.defaultProps = {
     style: {},
     title: '',
     count: 0,
-    time: 0
+    time: 0,
+    isESB: false
 }
 
 export default CellPay;

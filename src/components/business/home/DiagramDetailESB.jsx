@@ -21,6 +21,7 @@ class DiagramDetailESB extends Component {
                                         time={item.time}
                                         ip={item.ip}
                                         type="esb"
+                                        isESB={true}
                                     />
                                     <div style={style.linker_cell_right}>
                                         <p style={style.linker_right}></p>
