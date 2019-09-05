@@ -89,8 +89,8 @@ const yongjian = {
 }
 
 const poc_yuefei = {
-    gwApiPrefix: 'http://192.168.0.111:1874',
-    wsApiPrefix: 'ws://192.168.0.111:1874',
+    gwApiPrefix: 'http://96.0.192.78:1874',
+    wsApiPrefix: 'ws://96.0.192.78:1874',
 }
 
 var httpResult;

@@ -108,21 +108,28 @@ const SystemConfigEvent = Loadable({ loader: () => import('@/routers/system/conf
 const SystemConfigTask = Loadable({ loader: () => import('@/routers/system/config/task/Index'), loading: DelayLoading, delay: 3000 });
 
 // 农信应用监控poc
-// 数据监控
-// 数据监控 > 首页
-
-// 数据监控 > 统一支付
+// 数据查询
+// 数据查询 > 统一支付
 const Home = Loadable({ loader: () => import('@/routers/business/home/Index'), loading: DelayLoading, delay: 3000 });
 const PayGroup = Loadable({ loader: () => import('@/routers/business/pay/Group'), loading: DelayLoading, delay: 3000 });
 const PayDetail = Loadable({ loader: () => import('@/routers/business/pay/Detail'), loading: DelayLoading, delay: 3000 });
 const PayChain = Loadable({ loader: () => import('@/routers/business/pay/Chain'), loading: DelayLoading, delay: 3000 });
-// 数据监控 > 短信
+// 数据查询 > 短信
 const SmsIndex = Loadable({ loader: () => import('@/routers/business/sms/Index'), loading: DelayLoading, delay: 3000 });
 const SmsChain = Loadable({ loader: () => import('@/routers/business/sms/Chain'), loading: DelayLoading, delay: 3000 });
-// 数据监控 > 日志查询检索
+// 数据查询 > 日志查询检索
 const Log = Loadable({ loader: () => import('@/routers/business/log/Index'), loading: DelayLoading, delay: 0 });
-// 数据监控 > 指标统计与展示
+// 数据查询 > 指标统计与展示
 const Charts = Loadable({ loader: () => import('@/routers/business/charts/Index'), loading: DelayLoading, delay: 0 });
+// 监控告警
+// 监控告警 > 统一支付
+const PayGroup_monitor = Loadable({ loader: () => import('@/routers/monitor/pay/Group'), loading: DelayLoading, delay: 3000 });
+const PayDetail_monitor = Loadable({ loader: () => import('@/routers/monitor/pay/Detail'), loading: DelayLoading, delay: 3000 });
+// 监控告警 > 短信
+const SmsIndex_monitor = Loadable({ loader: () => import('@/routers/monitor/sms/Index'), loading: DelayLoading, delay: 3000 });
+// 监控告警 > 告警
+const AlertIndex = Loadable({ loader: () => import('@/routers/monitor/alert/Index'), loading: DelayLoading, delay: 3000 });
+const AlertSetting = Loadable({ loader: () => import('@/routers/monitor/alert/Setting'), loading: DelayLoading, delay: 3000 });
 
 export default [
     {
@@ -131,7 +138,7 @@ export default [
         'meta': {
             'title': '监控告警',
             'descript': '这里是监控告警',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '监控告警', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '监控告警', 'path': null }]
         }
     },
     {
@@ -140,7 +147,7 @@ export default [
         'meta': {
             'title': '指标统计与展示',
             'descript': '这里是指标统计与展示',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '指标统计与展示', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '指标统计与展示', 'path': null }]
         }
     },
     {
@@ -149,16 +156,82 @@ export default [
         'meta': {
             'title': '日志查询检索',
             'descript': '这里是日志查询检索',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '日志查询检索', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '日志查询检索', 'path': null }]
         }
     },
+    // 监控告警 start
+    {
+        'path': '/monitor/sms/index',
+        'component': SmsIndex_monitor,
+        'meta': {
+            'title': '统一支付系统',
+            'descript': '这里是统一支付系统',
+            'nav': [{ 'name': '监控告警', 'path': '/monitor/pay/group' }, { 'name': '统一支付系统', 'path': null }]
+        }
+    }, 
+    {
+        'path': '/monitor/pay/pre',
+        'component': PayDetail_monitor,
+        'meta': {
+            'title': '前置',
+            'descript': '这里是前置',
+            'nav': [{ 'name': '监控告警', 'path': '/monitor/pay/group' }, { 'name': '前置', 'path': null }]
+        }
+    }, 
+    {
+        'path': '/monitor/pay/unit',
+        'component': PayDetail_monitor,
+        'meta': {
+            'title': '联机',
+            'descript': '这里是联机',
+            'nav': [{ 'name': '监控告警', 'path': '/monitor/pay/group' }, { 'name': '联机', 'path': null }]
+        }
+    }, 
+    {
+        'path': '/monitor/pay/esb',
+        'component': PayDetail_monitor,
+        'meta': {
+            'title': 'ESB',
+            'descript': '这里是ESB',
+            'nav': [{ 'name': '监控告警', 'path': '/monitor/pay/group' }, { 'name': 'ESB', 'path': null }]
+        }
+    }, 
+    {
+        'path': '/monitor/pay/group',
+        'component': PayGroup_monitor,
+        'meta': {
+            'title': '集群',
+            'descript': '这里是集群',
+            'nav': [{ 'name': '监控告警', 'path': '/monitor/pay/group' }, { 'name': '集群', 'path': null }]
+        }
+    }, 
+    {
+        'path': '/monitor/alert/index',
+        'component': AlertIndex,
+        'meta': {
+            'title': '告警信息',
+            'descript': '这里是告警信息',
+            'nav': [{ 'name': '监控告警', 'path': '/monitor/pay/group' }, { 'name': '集群', 'path': null }]
+        }
+    }, 
+    {
+        'path': '/monitor/alert/setting',
+        'component': AlertSetting,
+        'meta': {
+            'title': '告警信息',
+            'descript': '这里是告警信息',
+            'nav': [{ 'name': '监控告警', 'path': '/monitor/pay/group' }, { 'name': '集群', 'path': null }]
+        }
+    }, 
+    // 监控告警 end
+    // 数据查询 start
     {
         'path': '/business/sms/index',
         'component': SmsIndex,
         'meta': {
-            'title': '数据分析',
-            'descript': '这里是数据分析',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '数据分析', 'path': null }]
+            'title': '统一支付系统',
+            'descript': '这里是统一支付系统',
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '统一支付系统', 'path': null }]
         }
     }, 
     {
@@ -167,7 +240,7 @@ export default [
         'meta': {
             'title': '调用链查询',
             'descript': '这里是调用链查询',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '调用链查询', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '调用链查询', 'path': null }]
         }
     }, 
     {
@@ -176,7 +249,7 @@ export default [
         'meta': {
             'title': '调用链查询',
             'descript': '这里是调用链查询',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '调用链查询', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '调用链查询', 'path': null }]
         }
     }, 
     {
@@ -185,7 +258,7 @@ export default [
         'meta': {
             'title': '前置',
             'descript': '这里是前置',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '前置', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '前置', 'path': null }]
         }
     }, 
     {
@@ -194,7 +267,7 @@ export default [
         'meta': {
             'title': '联机',
             'descript': '这里是联机',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '联机', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '联机', 'path': null }]
         }
     }, 
     {
@@ -203,7 +276,7 @@ export default [
         'meta': {
             'title': 'ESB',
             'descript': '这里是ESB',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': 'ESB', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': 'ESB', 'path': null }]
         }
     }, 
     {
@@ -212,9 +285,10 @@ export default [
         'meta': {
             'title': '集群',
             'descript': '这里是集群',
-            'nav': [{ 'name': '数据监控', 'path': '/business/home' }, { 'name': '集群', 'path': null }]
+            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '集群', 'path': null }]
         }
     }, 
+    // 数据查询 end
     {
         'path': '/business/variable/event',
         'component': Event,

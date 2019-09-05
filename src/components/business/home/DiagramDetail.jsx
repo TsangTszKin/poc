@@ -7,7 +7,7 @@ import CellDetail from '@/components/business/home/widgets/CellDetail'
 class DiagramDetail extends Component {
     render() {
         return (
-            <div style={{ minWidth: '950px', marginBottom: '40px' }}>
+            <div style={{ minWidth: '950px', marginBottom: '40px', minHeight: '100px' }}>
                 <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto' }}>
                     {
                         this.props.data.map((item, i) =>

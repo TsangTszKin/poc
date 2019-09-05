@@ -85,6 +85,69 @@ var smsChainList = Mock.mock(`${http.gwApiPrefix}/api/smsChain/list`, {
     }
 });
 
+var alertList = Mock.mock(`${http.gwApiPrefix}/api/alert/list`, {
+    "resultCode": 1000,
+    "resultMessage": "操作成功",
+    "pageList": {
+        "curPageNO": 0,
+        "offset": 10,
+        "pageCount": 5,
+        "sum": 100,
+        "resultList|10": [{
+            'id': '@natural',
+            'time': '@datetime', //日期
+            'level|1': [
+                "紧急",
+                "重要",
+                "提示"
+            ],
+            'status|1': [
+                "未处理",
+                "已处理"
+            ],
+            'content': '@cparagraph'
+        }]
+    }
+});
+
+
+var alertSettingList = Mock.mock(`${http.gwApiPrefix}/api/alertSetting/list`, {
+    "resultCode": 1000,
+    "resultMessage": "操作成功",
+    "pageList": {
+        "curPageNO": 0,
+        "offset": 10,
+        "pageCount": 5,
+        "sum": 100,
+        "resultList|10": [{
+            'id': '@natural',
+            'index|1': [
+                "1分钟交易量",
+                "5分钟交易量",
+                "1小时交易量",
+                "1天交易量",
+                "1分钟时延",
+                "5分钟时延",
+                "1小时时延",
+                "1天时延",
+            ],
+            "target|1": [
+                "前置集群",
+                "前置节点1",
+                "联机集群",
+                "联机节点1",
+            ],
+            "threshold|1-100": 100,
+            "level|1": [
+                "紧急",
+                "重要",
+                "提示"
+            ],
+            'message': '@cparagraph'
+        }]
+    }
+});
+
 var login = Mock.mock(`${http.gwApiPrefix}/api/auth/login`, {
     "resultCode": 1000,
     "resultMessage": "操作成功",
@@ -125,35 +188,35 @@ var getTopMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/topmen
     "resultCode": 1000,
     "resultMessage": "操作成功",
     "result": [{
-            "id": 1,
-            "appId": 1,
-            "parentId": 0,
-            "actions": {},
-            "child": [],
-            "level": 0,
-            "name": "数据监控",
-            "description": "数据监控",
-            "label": "business",
-            "url": "/business/home/group",
-            "icon": "home",
-            "method": "get",
-            "orderNum": 1
-        },
-        {
-            "id": 10,
-            "appId": 1,
-            "parentId": 0,
-            "actions": {},
-            "child": [],
-            "level": 0,
-            "name": "运维中心",
-            "description": "运维中心",
-            "label": "system",
-            "url": "/system/eventSource",
-            "icon": "",
-            "method": "create",
-            "orderNum": 4
-        }
+        "id": 1,
+        "appId": 1,
+        "parentId": 0,
+        "actions": {},
+        "child": [],
+        "level": 0,
+        "name": "数据查询",
+        "description": "数据查询",
+        "label": "business",
+        "url": "/business/pay/group",
+        "icon": "home",
+        "method": "get",
+        "orderNum": 1
+    },
+    {
+        "id": 2,
+        "appId": 1,
+        "parentId": 0,
+        "actions": {},
+        "child": [],
+        "level": 0,
+        "name": "监控告警",
+        "description": "监控告警",
+        "label": "monitor",
+        "url": "/monitor/pay/group",
+        "icon": "",
+        "method": "create",
+        "orderNum": 4
+    }
     ]
 });
 
@@ -162,109 +225,83 @@ var getLeftMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/leftm
     "resultCode": 1000,
     "resultMessage": "操作成功",
     "result": {
-        '1': [{
-                "id": 54,
-                "appId": 1,
-                "parentId": 1,
-                "actions": {},
-                "child": [],
-                "level": 1,
-                "name": "监控告警",
-                "label": "business-home",
-                "url": "/business/home",
-                "icon": "dashboard",
-                "method": ""
-            },
+        '1': [
             {
                 "id": 2,
                 "appId": 1,
                 "parentId": 1,
                 "actions": {
-                    "business:home:view": {
-                        "level": 1,
-                        "name": "查看",
-                        "label": "business:home:view",
-                        "url": "",
-                        "method": ""
-                    },
-                    "business:home:edit": {
-                        "level": 1,
-                        "name": "编缉",
-                        "label": "business:home:edit",
-                        "url": "",
-                        "method": ""
-                    }
                 },
                 "child": [{
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "集群",
-                        "label": "business-pay-group",
-                        "url": "/business/pay/group",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
-                    {
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "前置",
-                        "label": "business-pay-pre",
-                        "url": "/business/pay/pre",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
-                    {
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "联机",
-                        "label": "business-pay-unit",
-                        "url": "/business/pay/unit",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
-                    {
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "ESB",
-                        "label": "business-pay-esb",
-                        "url": "/business/pay/esb",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
-                    {
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "调用链查询",
-                        "label": "business-pay-chain",
-                        "url": "/business/pay/chain",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "统一支付系统",
+                    "label": "business-pay-group",
+                    "url": "/business/pay/group",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
+                {
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "前置",
+                    "label": "business-pay-pre",
+                    "url": "/business/pay/pre",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
+                {
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "联机",
+                    "label": "business-pay-unit",
+                    "url": "/business/pay/unit",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
+                {
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "ESB",
+                    "label": "business-pay-esb",
+                    "url": "/business/pay/esb",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
+                {
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "调用链查询",
+                    "label": "business-pay-chain",
+                    "url": "/business/pay/chain",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
                 ],
                 "level": 0,
                 "name": "统一支付",
@@ -279,49 +316,35 @@ var getLeftMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/leftm
                 "appId": 1,
                 "parentId": 1,
                 "actions": {
-                    "business:home:view": {
-                        "level": 1,
-                        "name": "查看",
-                        "label": "business:home:view",
-                        "url": "",
-                        "method": ""
-                    },
-                    "business:home:edit": {
-                        "level": 1,
-                        "name": "编缉",
-                        "label": "business:home:edit",
-                        "url": "",
-                        "method": ""
-                    }
                 },
                 "child": [{
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "数据分析",
-                        "label": "business-sms-index",
-                        "url": "/business/sms/index",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
-                    {
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "调用链查询",
-                        "label": "business-sms-chain",
-                        "url": "/business/sms/chain",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "短信系统",
+                    "label": "business-sms-index",
+                    "url": "/business/sms/index",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
+                {
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "调用链查询",
+                    "label": "business-sms-chain",
+                    "url": "/business/sms/chain",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
                 ],
                 "level": 0,
                 "name": "短信",
@@ -343,180 +366,156 @@ var getLeftMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/leftm
                 "url": "/business/log/index",
                 "icon": "file-text",
                 "method": ""
-            },
-            {
-                "id": 54,
-                "appId": 1,
-                "parentId": 1,
-                "actions": {},
-                "child": [],
-                "level": 1,
-                "name": "指标统计与展示",
-                "label": "business-charts-index",
-                "url": "/business/charts/index",
-                "icon": "bar-chart",
-                "method": ""
             }
         ],
-        '10': [{
-            "id": 37,
-            "appId": 1,
-            "parentId": 10,
-            "actions": {},
-            "child": [{
-                    "id": 32,
-                    "appId": 1,
-                    "parentId": 37,
-                    "actions": {
-                        "system:member:resetPassword": {
-                            "level": 1,
-                            "name": "重置密码",
-                            "label": "system:member:resetPassword",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:member:edit": {
-                            "level": 1,
-                            "name": "编缉",
-                            "label": "system:member:edit",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:member:delete": {
-                            "level": 1,
-                            "name": "删除",
-                            "label": "system:member:delete",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:member:view": {
-                            "level": 1,
-                            "name": "查看",
-                            "label": "system:member:view",
-                            "url": "",
-                            "method": ""
-                        }
-                    },
-                    "child": [],
-                    "level": 1,
-                    "name": "用户管理",
-                    "label": "system-auth-member",
-                    "url": "/system/auth/member",
-                    "icon": "user",
-                    "method": "",
-                    "orderNum": 1
+        '2': [
+            {
+                "id": 2,
+                "appId": 1,
+                "parentId": 1,
+                "actions": {
                 },
-                {
+                "child": [{
                     "id": 34,
                     "appId": 1,
                     "parentId": 37,
-                    "actions": {
-                        "system:power:view": {
-                            "level": 1,
-                            "name": "查看",
-                            "label": "system:power:view",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:power:edit": {
-                            "level": 1,
-                            "name": "编缉",
-                            "label": "system:power:edit",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:power:delete": {
-                            "level": 1,
-                            "name": "删除",
-                            "label": "system:power:delete",
-                            "url": "",
-                            "method": ""
-                        }
-                    },
+                    "actions": {},
                     "child": [],
                     "level": 1,
-                    "name": "菜单目录",
-                    "label": "system-auth-power",
-                    "url": "/system/auth/power",
+                    "name": "统一支付系统",
+                    "label": "monitor-pay-group",
+                    "url": "/monitor/pay/group",
                     "icon": "tool",
                     "method": "",
                     "orderNum": 2
                 },
                 {
-                    "id": 33,
+                    "id": 34,
                     "appId": 1,
                     "parentId": 37,
-                    "actions": {
-                        "system:group:view": {
-                            "level": 1,
-                            "name": "查看",
-                            "label": "system:group:view",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:group:edit": {
-                            "level": 1,
-                            "name": "编辑",
-                            "label": "system:group:edit",
-                            "url": "",
-                            "method": ""
-                        }
-                    },
+                    "actions": {},
                     "child": [],
                     "level": 1,
-                    "name": "角色管理",
-                    "label": "system-auth-group",
-                    "url": "/system/auth/group",
-                    "icon": "team",
+                    "name": "前置",
+                    "label": "monitor-pay-pre",
+                    "url": "/monitor/pay/pre",
+                    "icon": "tool",
                     "method": "",
-                    "orderNum": 3
+                    "orderNum": 2
                 },
                 {
-                    "id": 35,
+                    "id": 34,
                     "appId": 1,
                     "parentId": 37,
-                    "actions": {
-                        "system:organization:view": {
-                            "level": 1,
-                            "name": "查看",
-                            "label": "system:organization:view",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:organization:delete": {
-                            "level": 1,
-                            "name": "删除",
-                            "label": "system:organization:delete",
-                            "url": "",
-                            "method": ""
-                        },
-                        "system:organization:edit": {
-                            "level": 1,
-                            "name": "编缉",
-                            "label": "system:organization:edit",
-                            "url": "",
-                            "method": ""
-                        }
-                    },
+                    "actions": {},
                     "child": [],
                     "level": 1,
-                    "name": "机构管理",
-                    "label": "system-auth-organization",
-                    "url": "/system/auth/organization",
-                    "icon": "reconciliation",
+                    "name": "联机",
+                    "label": "monitor-pay-unit",
+                    "url": "/monitor/pay/unit",
+                    "icon": "tool",
                     "method": "",
-                    "orderNum": 4
-                }
-            ],
-            "level": 1,
-            "name": "权限管理",
-            "label": "system-auth",
-            "url": "/system/auth",
-            "icon": "eye",
-            "method": "",
-            "orderNum": 2
-        }, ]
+                    "orderNum": 2
+                },
+                {
+                    "id": 34,
+                    "appId": 1,
+                    "parentId": 37,
+                    "actions": {},
+                    "child": [],
+                    "level": 1,
+                    "name": "ESB",
+                    "label": "monitor-pay-esb",
+                    "url": "/monitor/pay/esb",
+                    "icon": "tool",
+                    "method": "",
+                    "orderNum": 2
+                },
+                ],
+                "level": 0,
+                "name": "统一支付",
+                "description": "统一支付",
+                "label": "monitor-pay",
+                "url": "/monitor/pay",
+                "icon": "pay-circle",
+                "method": "ALL"
+            },
+            {
+                "id": 2,
+                "appId": 1,
+                "parentId": 1,
+                "actions": {
+                },
+                "child": [
+                    {
+                        "id": 34,
+                        "appId": 1,
+                        "parentId": 37,
+                        "actions": {},
+                        "child": [],
+                        "level": 1,
+                        "name": "短信系统",
+                        "label": "monitor-sms-index",
+                        "url": "/monitor/sms/index",
+                        "icon": "tool",
+                        "method": "",
+                        "orderNum": 2
+                    },
+                ],
+                "level": 0,
+                "name": "短信",
+                "description": "短信",
+                "label": "monitor-sms",
+                "url": "/monitor/sms",
+                "icon": "message",
+                "method": "ALL"
+            },
+            {
+                "id": 2,
+                "appId": 1,
+                "parentId": 1,
+                "actions": {
+                },
+                "child": [
+                    {
+                        "id": 34,
+                        "appId": 1,
+                        "parentId": 37,
+                        "actions": {},
+                        "child": [],
+                        "level": 1,
+                        "name": "告警信息",
+                        "label": "monitor-alert-index",
+                        "url": "/monitor/alert/index",
+                        "icon": "tool",
+                        "method": "",
+                        "orderNum": 2
+                    },
+                    {
+                        "id": 34,
+                        "appId": 1,
+                        "parentId": 37,
+                        "actions": {},
+                        "child": [],
+                        "level": 1,
+                        "name": "阀值设定",
+                        "label": "monitor-alert-setting",
+                        "url": "/monitor/alert/setting",
+                        "icon": "tool",
+                        "method": "",
+                        "orderNum": 2
+                    },
+                ],
+                "level": 0,
+                "name": "告警",
+                "description": "告警",
+                "label": "monitor-alert",
+                "url": "/monitor/alert",
+                "icon": "warning",
+                "method": "ALL"
+            }
+        ]
     }
 });
 
-export { logList, payChainList, smsChainList, login, getAuthAction, getTopMenu, getLeftMenu }
+export { logList, payChainList, smsChainList, login, getAuthAction, getTopMenu, getLeftMenu, alertList, alertSettingList }

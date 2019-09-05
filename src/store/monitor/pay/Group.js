@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 16:39:32
+ * @LastEditTime: 2019-09-03 16:13:41
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
@@ -14,14 +14,13 @@ class store {
     constructor() {
         this.reset = this.reset.bind(this);
         this.getPayGroupDataForApi = this.getPayGroupDataForApi.bind(this);
-        this.getESBServicesForApi = this.getESBServicesForApi.bind(this);
     }
 
     @observable helper = {
         data: {
             loading: true,
             loading2: true,
-            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
+            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
             timeUnit: 60
         },
         get getData() {
@@ -48,24 +47,11 @@ class store {
         }
     }
 
-    @observable esbServices = {
-        data: [],
-        get getData() {
-            return toJS(this.data)
-        },
-        setData(value) {
-            this.data = value
-        },
-        updateData(key, value) {
-            this.data[key] = value
-        }
-    }
-
     reset() {
         this.helper.setData({
             loading: true,
             loading2: true,
-            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
+            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
             timeUnit: 60
         })
 
@@ -85,22 +71,7 @@ class store {
             this.data.setData(common.deepClone(dataDemo))
         }
     }
-
-    getESBServicesForApi() {
-        this.helper.updateData('loading', true);
-        payService.getESBServices(this.helper.getData.query).then(this.getESBServicesForApiCallBack)
-    }
-    @action.bound getESBServicesForApiCallBack(res) {
-        this.helper.updateData('loading', false);
-        if (!publicUtils.isOk(res)) return
-        if (!common.isEmpty(res.data.result)) {
-            this.esbServices.setData(res.data.result);
-        } else {
-            this.esbServices.setData([])
-        }
-    }
 }
-
 export default new store
 
 const dataDemo = [

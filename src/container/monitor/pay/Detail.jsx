@@ -6,12 +6,11 @@
  * @Description: 
  */
 import React, { Component } from 'react';
-import store from '@/store/business/pay/Detail';
+import store from '@/store/monitor/pay/Detail';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import PageHeader from '@/components/PageHeader';
-import { Row, Col, DatePicker, Button, Select, Spin, Divider } from 'antd'
+import { Row, Col, DatePicker, Button, Select, Spin, PageHeader } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import Code from '@/components/Code';
@@ -45,13 +44,13 @@ class Pre extends Component {
 
     getData() {
         switch (this.props.match.path) {
-            case '/business/pay/pre':
+            case '/monitor/pay/pre':
                 store.getPayDetailDataForApi('front');
                 break;
-            case '/business/pay/unit':
+            case '/monitor/pay/unit':
                 store.getPayDetailDataForApi('online');
                 break;
-            case '/business/pay/esb':
+            case '/monitor/pay/esb':
                 store.getPayDetailDataForApi('esb');
                 break;
             default:
@@ -67,13 +66,13 @@ class Pre extends Component {
 
         let type = ''
         switch (this.props.match.path) {
-            case '/business/pay/pre':
+            case '/monitor/pay/pre':
                 type = 'front'
                 break;
-            case '/business/pay/unit':
+            case '/monitor/pay/unit':
                 type = 'online'
                 break;
-            case '/business/pay/esb':
+            case '/monitor/pay/esb':
                 type = 'esb'
                 break;
             default:
@@ -155,27 +154,24 @@ class Pre extends Component {
                 <div className='panel'>
                     {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
-                        <div className="clearfix" style={style.searchPanel}>
-                            <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>统计周期 :</span>
-                                <DatePicker.RangePicker
-                                    allowClear={false}
-                                    defaultValue={[moment(store.helper.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
-                                    format={'YYYY-MM-DD'}
-                                    onChange={(date, dateString) => {
-                                        console.log('date, dateString', date, dateString)
-                                        let query = { startTime: `${dateString[0]} 00:00`, endTime: `${dateString[1]} 00:00` }
-                                        store.helper.updateData('query', query);
-                                    }}
-                                />
-                            </div>
-                            <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary" onClick={()=> {
-                                    this.getData();
-                                    this.getDetailChartsForApi();
-                                }}>查询</Button>
-                            </div>
-                        </div>
+
+                        <PageHeader
+                            title={`${(() => {
+                                switch (this.props.match.path) {
+                                    case '/monitor/pay/pre':
+                                        return '前置'
+                                    case '/monitor/pay/unit':
+                                        return '联机'
+                                    case '/monitor/pay/esb':
+                                        return 'ESB'
+                                    default:
+                                        break;
+                                }
+                            })()}系统监控`}
+                            subTitle="数据统计周期：1分钟"
+                            style={{ padding: '0 0 30px 0' }}
+                        />
+
 
 
                         <Spin spinning={store.helper.getData.loading} size="large" >
@@ -185,13 +181,13 @@ class Pre extends Component {
                                     store.data.getData.forEach((el, i) => {
                                         let title = '';
                                         switch (this.props.match.path) {
-                                            case '/business/pay/pre':
+                                            case '/monitor/pay/pre':
                                                 title = `支付系统前置节点${i + 1}`
                                                 break;
-                                            case '/business/pay/unit':
+                                            case '/monitor/pay/unit':
                                                 title = `支付系统联机节点${i + 1}`
                                                 break;
-                                            case '/business/pay/esb':
+                                            case '/monitor/pay/esb':
                                                 title = `支付系统ESB节点${i + 1}`
                                                 break;
                                             default:
@@ -210,38 +206,23 @@ class Pre extends Component {
 
                         </Spin>
 
-                        <Row style={{ marginBottom: '40px' }}>
-                            <Col span={24}>
-                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
-                                    store.helper.updateData('timeUnit', value);
-                                    //todo 调接口
-                                    this.getDetailChartsForApi();
-                                }} />
+
+
+                        <Row style={{ margin: '10px 0 40px 0' }} gutter={10}>
+                            <Col span={12}>
+                                <Spin spinning={store.helper.getData.loading2} size="large">
+
+                                    <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
+                                </Spin>
                             </Col>
+                            <Col span={12}>
+                                <Spin spinning={store.helper.getData.loading2} size="large">
 
-                            <Row style={{ margin: '10px 0 40px 0' }} gutter={10}>
-                                <Col span={12}>
-                                    <Spin spinning={store.helper.getData.loading2} size="large">
-                                        <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
-
-                                    </Spin>
-                                </Col>
-                                <Col span={12}>
-                                    <Spin spinning={store.helper.getData.loading2} size="large">
-                                        <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
-
-                                    </Spin>
-                                </Col>
-                            </Row>
-
-
-                        </Row>
-                        <Divider orientation="left">日志</Divider>
-                        <Row style={{ marginBottom: '40px' }}>
-                            <Col span={24}>
-                                <Code sqlCode={sessionStorage.log} type={1} />
+                                    <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
+                                </Spin>
                             </Col>
                         </Row>
+
                     </div>
                 </div>
             </Provider>

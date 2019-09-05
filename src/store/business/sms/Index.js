@@ -19,7 +19,7 @@ class store {
     @observable helper = {
         data: {
             loading: true,
-            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
+            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
             timeUnit: 60
         },
         get getData() {
@@ -49,7 +49,7 @@ class store {
     reset() {
         this.helper.setData({
             loading: true,
-            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
+            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
             timeUnit: 60
         })
 
@@ -76,19 +76,19 @@ const dataDemo = [
     {
         "clusterName": "online",
         "tradeCount": 0,
-        "avgCountTime": 0,
+        "avgTime": 0,
         "esbservices": null
     },
     {
         "clusterName": "front",
         "tradeCount": 0,
-        "avgCountTime": 0,
+        "avgTime": 0,
         "esbservices": null
     },
     {
         "clusterName": "esb",
         "tradeCount": 0,
-        "avgCountTime": 0,
+        "avgTime": 0,
         "esbservices": null
     }
 ]
