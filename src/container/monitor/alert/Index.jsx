@@ -3,17 +3,16 @@
 import React, { Component, Fragment } from 'react'
 import { observer, Provider } from 'mobx-react'
 import { withRouter } from 'react-router-dom'
-import store from '@/store/business/pay/Chain'
-import { Table, Spin, Tag, Drawer, DatePicker, Input, Button, Divider } from 'antd'
-import PageHeader from '@/components/PageHeader';
+import store from '@/store/monitor/alert/Index'
+import { Table, Spin, Drawer, DatePicker, Input, Button, Divider, Select, Tag } from 'antd'
 import common from '@/utils/common';
 import Paging from '@/components/Paging';
 import Code from '@/components/Code';
 import moment from 'moment';
-import DiagramChainPay from '@/components/business/home/DiagramChainPay'
+import DiagramChainSms from '@/components/business/home/DiagramChainSms'
 
 @withRouter @observer
-class Chain extends Component {
+class Index extends Component {
 
     constructor(props) {
         super(props)
@@ -27,7 +26,7 @@ class Chain extends Component {
 
     init() {
         store.reset();
-        store.getChainListForApi()
+        store.getAlertListForApi()
     }
 
     changePage = (pageNum, pageSize) => {
@@ -35,7 +34,7 @@ class Chain extends Component {
         console.log("分页回调：获取条数" + pageSize);
         store.list.updateData('pageNum', pageNum);
         store.list.updateData('pageSize', pageSize);
-        store.getChainListForApi();
+        store.getAlertListForApi();
     }
 
 
@@ -58,41 +57,54 @@ class Chain extends Component {
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    defaultValue={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm:ss'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm:s')]}
                                     format={'YYYY-MM-DD'}
                                     onChange={(date, dateString) => {
                                         console.log('date, dateString', date, dateString)
                                         let query = store.list.getData.query;
-                                        query.startTime = `${dateString[0]} 00:00`
-                                        query.endTime = `${dateString[1]} 00:00`
+                                        query.startTime = `${dateString[0]} 00:00:00`
+                                        query.endTime = `${dateString[1]} 00:00:00`
                                         store.list.updateData('query', query);
                                     }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>客户账号 :</span>
-                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
-                                    value={store.list.getData.query.userAccount}
+                                <span style={style.searchTitle}>告警级别 :</span>
+                                <Select dropdownMatchSelectWidth={false} allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请选择"
+                                    value={store.list.getData.query.level}
+                                    onChange={(value) => {
+                                        let query = store.list.getData.query;
+                                        query.level = value
+                                        store.list.updateData('query', query);
+                                    }}>
+                                </Select>
+                            </div>
+                            <div className="clearfix" style={style.searchShell}>
+                                <span dropdownMatchSelectWidth={false} style={style.searchTitle}>告警状态 :</span>
+                                <Select allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请选择"
+                                    value={store.list.getData.query.status}
+                                    onChange={(value) => {
+                                        let query = store.list.getData.query;
+                                        query.status = value
+                                        store.list.updateData('query', query);
+                                    }}>
+                                </Select>
+                            </div>
+                            <div className="clearfix" style={style.searchShell}>
+                                <span style={style.searchTitle}>告警ID :</span>
+                                <Input allowClear={true} size="small" style={{ minWidth: '80px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.id}
                                     onChange={(e) => {
                                         let query = store.list.getData.query;
-                                        query.userAccount = e.target.value
+                                        query.id = e.target.value
                                         store.list.updateData('query', query);
                                     }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>客户名称 :</span>
-                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
-                                    value={store.list.getData.query.userName}
-                                    onChange={(e) => {
-                                        let query = store.list.getData.query;
-                                        query.userName = e.target.value
-                                        store.list.updateData('query', query);
-                                    }}
-                                />
-                            </div>
-                            <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary" onClick={store.getChainListForApi}>查询</Button>
+                                <Button size="small" type="primary"
+                                    onClick={store.getAlertListForApi}
+                                >查询</Button>
                             </div>
                         </div>
 
@@ -105,13 +117,10 @@ class Chain extends Component {
                                     let dataSource = common.deepClone(store.list.getData.dataSource);
                                     dataSource.forEach((el, i) => {
                                         el.index = i + 1;
-                                        el.time = `${el.beginDate}到${el.endDate}`;
                                         el.action = <Fragment>
                                             <a onClick={() => {
-                                                store.detail.updateData('visible', true)
-                                                store.detail.updateData('log', el.log)
-                                                store.getChainDetailForApi(el.tradeNo)
-                                            }}>查看</a>
+                                                // store.getChainDetailForApi(el.tradeNo)
+                                            }}>设为已处理</a>
                                         </Fragment>
                                     })
                                     return dataSource
@@ -126,23 +135,6 @@ class Chain extends Component {
                         />
                     </div>
 
-                    <Drawer
-                        title="调用链明细"
-                        placement="right"
-                        closable={true}
-                        onClose={() => store.detail.updateData('visible', false)}
-                        visible={store.detail.getData.visible}
-                        width={1000}
-                        id="log-detail"
-                    >
-                        {/* <p>{store.detail.getData.log}</p> */}
-                        {/* <Code sqlCode={store.detail.getData.log} type={1} /> */}
-                        <DiagramChainPay />
-                        <div style={{ height: '40px' }}></div>
-                        <Divider orientation="left">日志</Divider>
-                        <Code sqlCode={sessionStorage.log} type={1} />
-                    </Drawer>
-
                 </div>
 
             </Provider>
@@ -150,7 +142,7 @@ class Chain extends Component {
     }
 }
 
-export default Chain
+export default Index
 
 const columns = [
     {
@@ -159,42 +151,56 @@ const columns = [
         key: 'index',
     },
     {
-        title: '时间',
+        title: '告警产生时间',
         dataIndex: 'time',
-        key: 'time.'
+        key: 'time.',
+        sorter: (a, b) => {
+            return a.time.localeCompare(b.time)
+        }
     },
     {
-        title: '业务代码',
-        dataIndex: 'mmsgCd',
-        key: 'mmsgCd'
+        title: '告警ID',
+        dataIndex: 'id',
+        key: 'id'
     },
     {
-        title: '客户账号',
-        dataIndex: 'userAccount',
-        key: 'userAccount'
-    },
-    {
-        title: '客户名称',
-        dataIndex: 'userName',
-        key: 'userName'
-    },
-    {
-        title: '涉及渠道',
-        dataIndex: 'bizTp',
-        key: 'bizTp',
+        title: '告警级别',
+        dataIndex: 'level',
+        key: 'level',
         render: (value) => {
+            switch (value) {
+                case '紧急':
+                    return <Tag color="red">{value}</Tag>
+                case '重要':
+                    return <Tag color="orange">{value}</Tag>
+                case '提示':
+                    return <Tag >{value}</Tag>
+                default:
+                    break;
+            }
             return <Tag>{value}</Tag>
         }
     },
     {
-        title: '涉及金额',
-        dataIndex: 'amt',
-        key: 'amt'
+        title: '告警状态',
+        dataIndex: 'status',
+        key: 'status',
+        render: (value) => {
+            switch (value) {
+                case '已处理':
+                    return <Tag color="green">{value}</Tag>
+                case '未处理':
+                    return <Tag color="blue">{value}</Tag>
+                default:
+                    break;
+            }
+            return <Tag>{value}</Tag>
+        }
     },
     {
-        title: '关联流水号',
-        dataIndex: 'tradeNo',
-        key: 'tradeNo'
+        title: '告警消息',
+        dataIndex: 'content',
+        key: 'content'
     },
     {
         title: '操作',

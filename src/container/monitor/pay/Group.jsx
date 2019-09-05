@@ -6,11 +6,11 @@
  * @Description: 
  */
 import React, { Component, Fragment } from 'react';
-import store from '@/store/business/pay/Group';
+import store from '@/store/monitor/pay/Group';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import { Row, Col, DatePicker, Button, Spin } from 'antd'
+import { Row, Col, DatePicker, Button, Spin, PageHeader } from 'antd'
 import moment from 'moment';
 import DiagramPay from '@/components/business/home/DiagramPay'
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
@@ -120,46 +120,16 @@ class Home extends Component {
         return (
             <Provider store={store}>
                 <div className='panel'>
-                    {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
-                        <div className="clearfix" style={style.searchPanel}>
-                            <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>统计周期 :</span>
-                                <DatePicker.RangePicker size="small"
-                                    allowClear={false}
-                                    defaultValue={[moment(store.helper.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
-                                    format={'YYYY-MM-DD'}
-                                    onChange={(date, dateString) => {
-                                        console.log('date, dateString', date, dateString)
-                                        let query = { startTime: `${dateString[0]} 00:00`, endTime: `${dateString[1]} 00:00` }
-                                        store.helper.updateData('query', query);
-                                    }}
-                                />
-                            </div>
-                            <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary" onClick={()=> {
-                                    store.getPayGroupDataForApi();
-                                    this.getGroupChartsForApi();
-                                }}>查询</Button>
-                            </div>
-                        </div>
+
+                        <PageHeader title="统一支付系统监控" subTitle="数据统计周期：1分钟" style={{ padding: '0 0 30px 0' }} />
 
                         <Spin spinning={store.helper.getData.loading} size="large">
                             <DiagramPay />
                         </Spin>
 
-                        <Row>
-                            <Col span={24}>
-                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
-                                    store.helper.updateData('timeUnit', value);
-                                    //todo 调接口
-                                    this.getGroupChartsForApi();
-                                }} />
-                            </Col>
-                        </Row>
-
-                        <Spin spinning={store.helper.getData.loading2} size="large">
-                            <Row>
+                        <Spin spinning={store.helper.getData.loading2} size="large" style={{ marginTop: '10px' }}>
+                            <Row >
                                 <Col span={12}>
                                     <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
                                 </Col>

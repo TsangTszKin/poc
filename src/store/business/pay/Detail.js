@@ -20,7 +20,7 @@ class store {
         data: {
             loading: true,
             loading2: true,
-            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
+            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
             timeUnit: 60
         },
         get getData() {
@@ -51,7 +51,7 @@ class store {
         this.helper.setData({
             loading: true,
             loading2: true,
-            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
+            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
             timeUnit: 60
         })
 

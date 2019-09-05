@@ -95,5 +95,5 @@ export default {
                 break;
         }
         return axios.get(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
-    },
+    }
 }

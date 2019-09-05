@@ -238,6 +238,24 @@ export default {
         let D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate() + '';
         return Y + M + D;
     },
+    getCurrentMonthStartTime() {
+        var date = new Date();
+        let Y = date.getFullYear() + '-';
+        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        let D = '01 ';
+        let h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+        let m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+        return Y + M + D + h + m
+    },
+    getCurrentMonthEndTime() {
+        var date = new Date();
+        let Y = date.getFullYear() + '-';
+        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        let D = date.getDate() < 10 ? '0' + date.getDate() + ' ' : date.getDate() + ' ';
+        let h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+        let m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+        return Y + M + D + h + m
+    },
     /**
      * 字符串限制长度，超出部分显示为省略号，默认最大长度20
      */

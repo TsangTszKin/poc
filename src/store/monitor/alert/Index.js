@@ -2,19 +2,18 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-02 20:21:33
+ * @LastEditTime: 2019-09-02 20:21:43
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
-import common from '@/utils/common';
+// import common from '@/utils/common';
 import publicUtils from '@/utils/publicUtils'
-import payService from '@/api/business/payService'
+import alertService from '@/api/business/alertService'
 
 class store {
     constructor() {
         this.reset = this.reset.bind(this);
-        this.getChainListForApi = this.getChainListForApi.bind(this);
-        this.getChainDetailForApi = this.getChainDetailForApi.bind(this);
+        this.getAlertListForApi = this.getAlertListForApi.bind(this);
     }
 
     /**
@@ -28,7 +27,7 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), userAccount: '', userName: '' },
+            query: { startTime: '2019-01-01', endTime: '2019-09-01', id: '', status: '', level: '' },
             timeUnit: 60
         },
         get getData() {
@@ -44,7 +43,6 @@ class store {
 
     @observable detail = {
         data: {
-            data: [],
             log: '',
             visible: false
         },
@@ -67,16 +65,16 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), userAccount: '', userName: '' },
+            query: { startTime: '2019-01-01', endTime: '2019-09-01', id: '', status: '', level: '' },
             timeUnit: 60
         })
     }
 
-    getChainListForApi() {
+    getAlertListForApi() {
         this.list.updateData('loading', true);
-        payService.getChainList(this.list.getData.pageNum, this.list.getData.pageSize, this.list.getData.query).then(this.getChainListForApiCallBack)
+        alertService.getAlertList(this.list.getData.pageNum, this.list.getData.pageSize, this.list.getData.query).then(this.getAlertListForApiCallBack)
     }
-    @action.bound getChainListForApiCallBack(res) {
+    @action.bound getAlertListForApiCallBack(res) {
         this.list.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
 
@@ -86,16 +84,7 @@ class store {
         this.list.updateData('pageNum', pageNum);
         this.list.updateData('total', total);
         this.list.updateData('dataSource', dataSource);
-    }
 
-    getChainDetailForApi(tradeNo) {
-        common.loading.show();
-        payService.getChainDetail(tradeNo).then(this.getChainDetailForApiCallBack)
-    }
-    @action.bound getChainDetailForApiCallBack(res) {
-        common.loading.hide();
-        if (!publicUtils.isOk(res)) return
-        this.detail.updateData('data', res.data.result)
     }
 }
 export default new store

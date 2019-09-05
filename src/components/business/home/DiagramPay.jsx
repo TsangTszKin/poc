@@ -17,7 +17,7 @@ class DiagramPay extends Component {
                         <CellPay
                             title='支付系统前置集群'
                             count={front.tradeCount}
-                            time={front.avgCountTime}
+                            time={front.avgTime}
                             type="pre"
                         />
                         <div style={style.linker_cell2}>
@@ -28,7 +28,7 @@ class DiagramPay extends Component {
                         <CellPay
                             title='支付系统联机集群'
                             count={online.tradeCount}
-                            time={online.avgCountTime}
+                            time={online.avgTime}
                             type="unit"
                         />
                     </div>
@@ -43,7 +43,7 @@ class DiagramPay extends Component {
                             style={{ float: 'left' }}
                             title='ESB集群'
                             count={esb.tradeCount}
-                            time={esb.avgCountTime}
+                            time={esb.avgTime}
                             type="esb"
                         />
                         <div style={style.linker_cell_right}>

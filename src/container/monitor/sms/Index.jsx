@@ -6,11 +6,11 @@
  * @Description: 
  */
 import React, { Component } from 'react';
-import store from '@/store/business/sms/Index';
+import store from '@/store/monitor/sms/Index';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import { Row, Col, DatePicker, Button, Select, Divider } from 'antd'
+import { Row, Col, DatePicker, Button, Select, PageHeader } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import Code from '@/components/Code';
@@ -113,43 +113,24 @@ class Index extends Component {
                 <div className='panel'>
                     {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
-                        <div className="clearfix" style={style.searchPanel}>
-                            <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>统计周期 :</span>
-                                <DatePicker.RangePicker size="small"
-                                    allowClear={false}
-                                    defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
-                                    format={'YYYY/MM/DD'}
-                                />
-                            </div>
-                            <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary">查询</Button>
-                            </div>
+
+                        <PageHeader
+                            title={`短信系统监控`}
+                            subTitle="数据统计周期：1分钟"
+                            style={{ padding: '0 0 30px 0' }}
+                        />
+
+
+                        <div style={{ marginTop: '40px' }}>
+                            <DiagramDetail data={DiagramDetailData} type="sms" />
                         </div>
 
-                        <DiagramDetail data={DiagramDetailData} type="sms" />
-
-                        <Row style={{ marginBottom: '40px' }}>
-                            <Col span={24}>
-                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
-                                    store.helper.updateData('timeUnit', value);
-                                    //todo 调接口
-                                }} />
-                            </Col>
+                        <Row style={{ marginBottom: '40px' }} gutter={10}>
                             <Col span={12}>
                                 <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
                             </Col>
                             <Col span={12}>
                                 <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
-                            </Col>
-
-
-                        </Row>
-                        <Divider orientation="left">日志</Divider>
-                        <Row style={{ marginBottom: '40px' }}>
-
-                            <Col span={24}>
-                                <Code sqlCode={sessionStorage.log} type={1} />
                             </Col>
                         </Row>
                     </div>

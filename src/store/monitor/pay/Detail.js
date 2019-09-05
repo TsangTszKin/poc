@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 16:13:41
+ * @LastEditTime: 2019-09-03 16:13:57
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
@@ -13,14 +13,14 @@ import payService from '@/api/business/payService'
 class store {
     constructor() {
         this.reset = this.reset.bind(this);
-        this.getPayGroupDataForApi = this.getPayGroupDataForApi.bind(this);
+        this.getPayDetailDataForApi = this.getPayDetailDataForApi.bind(this);
     }
 
     @observable helper = {
         data: {
             loading: true,
             loading2: true,
-            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
+            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
             timeUnit: 60
         },
         get getData() {
@@ -51,18 +51,18 @@ class store {
         this.helper.setData({
             loading: true,
             loading2: true,
-            query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
+            query: { startTime: '2019-01-01 00:00:00', endTime: '2019-09-01 00:00:00' },
             timeUnit: 60
         })
 
         this.data.setData(common.deepClone(dataDemo))
     }
 
-    getPayGroupDataForApi() {
+    getPayDetailDataForApi(type) {
         this.helper.updateData('loading', true);
-        payService.getPayGroupData(this.helper.getData.query).then(this.getPayGroupDataForApiCallBack)
+        payService.getPayDetailData(this.helper.getData.query, type).then(this.getPayDetailDataForApiCallBack)
     }
-    @action.bound getPayGroupDataForApiCallBack(res) {
+    @action.bound getPayDetailDataForApiCallBack(res) {
         this.helper.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
         if (!common.isEmpty(res.data.result)) {
@@ -75,22 +75,14 @@ class store {
 export default new store
 
 const dataDemo = [
-    {
-        "clusterName": "online",
-        "tradeCount": 0,
-        "avgTime": 0,
-        "esbservices": null
-    },
-    {
-        "clusterName": "front",
-        "tradeCount": 0,
-        "avgTime": 0,
-        "esbservices": null
-    },
-    {
-        "clusterName": "esb",
-        "tradeCount": 0,
-        "avgTime": 0,
-        "esbservices": null
-    }
+    // {
+    //     "id": "12",
+    //     "ddate": "2019-08-29 10:33:15",
+    //     "takeTimes": 14,
+    //     "tradeCount": 23,
+    //     "hostIp": "96.0.124.98",
+    //     "logFile": "98.log",
+    //     "avg_time": 14,
+    //     "totalCount": null
+    // }
 ]

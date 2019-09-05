@@ -8,7 +8,7 @@ class DiagramDetail extends Component {
     render() {
         return (
             <div style={{ minWidth: '930px', marginBottom: '40px' }}>
-                <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto' }}>
+                <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto', minHeight: '100px' }}>
                     {
                         this.props.data.map((item, i) =>
                             <Fragment key={i}>
