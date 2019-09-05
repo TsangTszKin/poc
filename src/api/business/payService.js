@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-09-29 11:57:27
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 16:13:05
+ * @LastEditTime: 2019-09-03 16:36:35
  * @Description: 通用的api
  */
 
@@ -95,5 +95,13 @@ export default {
                 break;
         }
         return axios.get(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
+    },
+    getESBServices(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.get(`${http.gwApiPrefix}/api/ESB/findAllServices?${params}`).catch(errorHandler)
     },
 }

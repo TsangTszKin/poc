@@ -11,8 +11,8 @@ class DiagramPay extends Component {
         const online = store.data.getData.find(el => el.clusterName === 'online');
         const esb = store.data.getData.find(el => el.clusterName === 'esb');
         return (
-            <div style={{ minWidth: '930px' }}>
-                <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto' }}>
+            <div style={{ minWidth: '950px' }}>
+                <div className="clearfix" style={{ width: 'fit-content', margin: '40px auto' }}>
                     <div className="clearfix" style={{ float: 'left' }}>
                         <CellPay
                             title='支付系统前置集群'
@@ -52,7 +52,7 @@ class DiagramPay extends Component {
                         </div>
                     </div>
                     <div className="clearfix" style={{ float: 'left' }}>
-                        <BranchPay />
+                        <BranchPay data={this.props.store.esbServices.getData} />
                     </div>
                 </div>
 

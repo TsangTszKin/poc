@@ -8,7 +8,7 @@ import { Icon, Tag } from 'antd'
 class DiagramChainPay extends Component {
     render() {
         return (
-            <div style={{ minWidth: '930px' }}>
+            <div style={{ minWidth: '950px' }}>
                 <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto' }}>
                     <div className="clearfix" style={{ float: 'left' }}>
                         <CellChain

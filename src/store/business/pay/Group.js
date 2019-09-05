@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2019-08-26 14:17:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 16:13:41
+ * @LastEditTime: 2019-09-03 16:39:32
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
@@ -14,6 +14,7 @@ class store {
     constructor() {
         this.reset = this.reset.bind(this);
         this.getPayGroupDataForApi = this.getPayGroupDataForApi.bind(this);
+        this.getESBServicesForApi = this.getESBServicesForApi.bind(this);
     }
 
     @observable helper = {
@@ -36,6 +37,19 @@ class store {
 
     @observable data = {
         data: common.deepClone(dataDemo),
+        get getData() {
+            return toJS(this.data)
+        },
+        setData(value) {
+            this.data = value
+        },
+        updateData(key, value) {
+            this.data[key] = value
+        }
+    }
+
+    @observable esbServices = {
+        data: [],
         get getData() {
             return toJS(this.data)
         },
@@ -71,7 +85,22 @@ class store {
             this.data.setData(common.deepClone(dataDemo))
         }
     }
+
+    getESBServicesForApi() {
+        this.helper.updateData('loading', true);
+        payService.getESBServices(this.helper.getData.query).then(this.getESBServicesForApiCallBack)
+    }
+    @action.bound getESBServicesForApiCallBack(res) {
+        this.helper.updateData('loading', false);
+        if (!publicUtils.isOk(res)) return
+        if (!common.isEmpty(res.data.result)) {
+            this.esbServices.setData(res.data.result);
+        } else {
+            this.esbServices.setData([])
+        }
+    }
 }
+
 export default new store
 
 const dataDemo = [

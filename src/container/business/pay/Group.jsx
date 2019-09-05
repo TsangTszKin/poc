@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 16:08:49
+ * @LastEditTime: 2019-09-03 16:46:09
  * @Description: 
  */
 import React, { Component, Fragment } from 'react';
@@ -36,6 +36,7 @@ class Home extends Component {
     init() {
         store.reset();
         store.getPayGroupDataForApi();
+        store.getESBServicesForApi();
         this.getGroupChartsForApi();
     }
 

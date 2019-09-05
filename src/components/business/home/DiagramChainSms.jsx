@@ -7,7 +7,7 @@ import { Icon, Tag } from 'antd'
 class DiagramChainSms extends Component {
     render() {
         return (
-            <div style={{ minWidth: '930px' }}>
+            <div style={{ minWidth: '950px' }}>
                 <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto' }}>
 
 
