@@ -5,23 +5,25 @@
  * @LastEditTime: 2019-09-03 16:18:31
  * @Description: 
  */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import store from '@/store/monitor/pay/Detail';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import { Row, Col, DatePicker, Button, Select, Spin, PageHeader } from 'antd'
+import { Row, Col, Empty, Button, Drawer, Spin, PageHeader } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
+import DiagramDetailESB from '@/components/business/home/DiagramDetailESB'
 import Code from '@/components/Code';
 import { withRouter } from 'react-router-dom'
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 import publicUtils from '@/utils/publicUtils'
 import payService from '@/api/business/payService'
+import Paging from '@/components/Paging';
 
 @withRouter
 @observer
-class Pre extends Component {
+class Detail extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,10 +33,14 @@ class Pre extends Component {
         this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
         this.getData = this.getData.bind(this);
         this.getDetailChartsForApi = this.getDetailChartsForApi.bind(this);
+        this.changePage = this.changePage.bind(this);
     }
 
     componentDidMount() {
-        this.init()
+        this.init();
+        setInterval(() => {
+            this.init()
+        }, 60000);
     }
 
     init() {
@@ -50,9 +56,6 @@ class Pre extends Component {
             case '/monitor/pay/unit':
                 store.getPayDetailDataForApi('online');
                 break;
-            case '/monitor/pay/esb':
-                store.getPayDetailDataForApi('esb');
-                break;
             default:
                 break;
         }
@@ -60,9 +63,6 @@ class Pre extends Component {
 
     getDetailChartsForApi() {
         store.helper.updateData('loading2', true);
-        let query = Object.assign({
-            timeUnit: store.helper.getData.timeUnit
-        }, store.helper.getData.query)
 
         let type = ''
         switch (this.props.match.path) {
@@ -72,14 +72,11 @@ class Pre extends Component {
             case '/monitor/pay/unit':
                 type = 'online'
                 break;
-            case '/monitor/pay/esb':
-                type = 'esb'
-                break;
             default:
                 break;
         }
 
-        payService.getDetailCharts(query, type).then(res => {
+        payService.getDetailMonitorCharts(type).then(res => {
             store.helper.updateData('loading2', false);
             if (!publicUtils.isOk(res)) return
             this.init_jiaoyiliang(res.data.result.keys, res.data.result.trades)
@@ -125,7 +122,7 @@ class Pre extends Component {
 
         let option = {
             title: {
-                text: '平均耗时'
+                text: '平均耗时(ms)'
             },
             dataZoom: [{
             }, {
@@ -146,6 +143,26 @@ class Pre extends Component {
         };
 
         myChart.setOption(option);
+    }
+
+
+    changePage = (pageNum, pageSize) => {
+        console.log("分页回调：当前页码" + pageNum);
+        console.log("分页回调：获取条数" + pageSize);
+        store.logList.updateData('pageNum', pageNum);
+        store.logList.updateData('pageSize', pageSize);
+        let type = ''
+        switch (this.props.match.path) {
+            case '/monitor/pay/pre':
+                type = `front`
+                break;
+            case '/monitor/pay/unit':
+                type = `online`
+                break;
+            default:
+                break;
+        }
+        store.getLogForApi(type);
     }
 
     render() {
@@ -172,8 +189,6 @@ class Pre extends Component {
                             style={{ padding: '0 0 30px 0' }}
                         />
 
-
-
                         <Spin spinning={store.helper.getData.loading} size="large" >
                             <DiagramDetail
                                 data={(() => {
@@ -187,42 +202,84 @@ class Pre extends Component {
                                             case '/monitor/pay/unit':
                                                 title = `支付系统联机节点${i + 1}`
                                                 break;
-                                            case '/monitor/pay/esb':
-                                                title = `支付系统ESB节点${i + 1}`
-                                                break;
                                             default:
                                                 break;
                                         }
                                         data.push({
-                                            title: title,
-                                            count: el.tradeCount,
-                                            time: el.avg_time,
+                                            title: el.hostIp,
+                                            count: el.totalTrades,
+                                            time: el.avgTimes,
                                             ip: el.hostIp
                                         })
                                     })
                                     return data
                                 })()}
+                                type={(() => {
+                                    let type = ''
+                                    switch (this.props.match.path) {
+                                        case '/monitor/pay/pre':
+                                            type = `front`
+                                            break;
+                                        case '/monitor/pay/unit':
+                                            type = `online`
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    return type
+                                })()}
                             />
-
+                            {
+                                common.isEmpty(store.data.getData) ?
+                                    <Empty />
+                                    :
+                                    ''
+                            }
                         </Spin>
 
-
-
-                        <Row style={{ margin: '10px 0 40px 0' }} gutter={10}>
-                            <Col span={12}>
-                                <Spin spinning={store.helper.getData.loading2} size="large">
-
-                                    <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
-                                </Spin>
+                        <Row style={{ marginBottom: '40px' }}>
+                            <Col span={24}>
+                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
+                                    store.helper.updateData('timeUnit', value);
+                                    //todo 调接口
+                                    this.getDetailChartsForApi();
+                                }} />
                             </Col>
-                            <Col span={12}>
-                                <Spin spinning={store.helper.getData.loading2} size="large">
 
-                                    <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
-                                </Spin>
-                            </Col>
+                            <Row style={{ margin: '10px 0 40px 0' }} gutter={10}>
+                                <Col span={12}>
+                                    <Spin spinning={store.helper.getData.loading2} size="large">
+                                        <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
+
+                                    </Spin>
+                                </Col>
+                                <Col span={12}>
+                                    <Spin spinning={store.helper.getData.loading2} size="large">
+                                        <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
+
+                                    </Spin>
+                                </Col>
+                            </Row>
+
+
                         </Row>
 
+                        <Drawer
+                            title={`日志（${store.logList.getData.title}）`}
+                            placement="right"
+                            closable={true}
+                            onClose={() => store.logList.updateData('visible', false)}
+                            visible={store.logList.getData.visible}
+                            width={1200}
+                        >
+                            <Code sqlCode={store.logList.getData.dataSource} type={1} />
+                            <Paging
+                                pageNum={store.logList.getData.pageNum}
+                                total={store.logList.getData.total}
+                                showPageSize={store.logList.getData.pageSize}
+                                changePage={this.changePage}
+                            />
+                        </Drawer>
                     </div>
                 </div>
             </Provider>
@@ -230,11 +287,11 @@ class Pre extends Component {
     }
 }
 
-export default Pre
+export default Detail
 
 const style = {
     searchPanel: {
-        marginBottom: '40px'
+        marginBottom: '100px'
     },
     searchShell: {
         margin: '0px 30px 10px 0px',
@@ -252,47 +309,24 @@ const style = {
 
 const DiagramDetailData = [
     {
-        title: '支付系统前置节点1',
+        title: '支付系统ESB节点1',
         count: 200,
         time: 20,
-        ip: '96.0.56.198'
+        ip: '96.0.56.198',
+        service: []
     },
     {
-        title: '支付系统前置节点2',
+        title: '支付系统ESB节点1',
         count: 200,
         time: 20,
-        ip: '96.0.56.199'
+        ip: '96.0.56.198',
+        service: []
     },
     {
-        title: '支付系统前置节点3',
+        title: '支付系统ESB节点1',
         count: 200,
         time: 20,
-        ip: '96.0.56.200'
-    },
-
-    {
-        title: '支付系统前置节点3',
-        count: 200,
-        time: 20,
-        ip: '96.0.56.200'
-    },
-    {
-        title: '支付系统前置节点3',
-        count: 200,
-        time: 20,
-        ip: '96.0.56.200'
-    },
-    {
-        title: '支付系统前置节点3',
-        count: 200,
-        time: 20,
-        ip: '96.0.56.200'
-    },
-    {
-        title: '支付系统前置节点3',
-        count: 200,
-        time: 20,
-        ip: '96.0.56.200'
-    },
-
+        ip: '96.0.56.198',
+        service: []
+    }
 ]

@@ -29,7 +29,38 @@ export default {
             params.push(`${key}=${query[key]}`)
         }
         params = params.join('&')
-        return axios.get(`${http.gwApiPrefix}/api/smsChain/list`).catch(errorHandler)
-        // return axios.get(`${http.gwApiPrefix}/api/chain/list?${params}`).catch(errorHandler)
+        // return axios.get(`${http.gwApiPrefix}/bpc/msg/call/chain`).catch(errorHandler)
+        return axios.get(`${http.gwApiPrefix}/bpc/msg/call/chain?${params}`).catch(errorHandler)
     },
+    getSmsAllData(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        // return axios.get(`${http.gwApiPrefix}/bpc/msg/index`).catch(errorHandler)
+        return axios.get(`${http.gwApiPrefix}/bpc/msg/index?${params}`).catch(errorHandler)
+    },
+    getAllCharts(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.get(`${http.gwApiPrefix}/bpc/msg/statisrtical/chart?${params}`).catch(errorHandler)
+    },
+    getChainDetail(signAcct) {
+        return axios.get(`${http.gwApiPrefix}/bpc/msg/call/chain/detail?signAcct=${signAcct}`).catch(errorHandler)
+    },
+    getLog(page, size, query = {}) {
+        let params = [];
+        params.push(`page=${page}`)
+        params.push(`size=${size}`)
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.get(`${http.gwApiPrefix}/bpc/msg/index/type/log?${params}`).catch(errorHandler)
+        // return axios.get(`${http.gwApiPrefix}/api/getLog`).catch(errorHandler)
+    }
 }

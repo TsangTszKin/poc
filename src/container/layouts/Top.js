@@ -68,7 +68,11 @@ class Top extends Component {
     render() {
         const menu = (
             <Menu>
-                <Menu.Item key="1" onClick={() => this.logout()}><Icon type="logout" /><span style={{ marginLeft: "5px" }}>退出</span></Menu.Item>
+                <Menu.Item key="1"
+                //  onClick={() => this.logout()}
+                 onClick={() => this.props.history.push('/login')}
+                 
+                 ><Icon type="logout" /><span style={{ marginLeft: "5px" }}>退出</span></Menu.Item>
             </Menu>
         );
         // console.log("this.props.GlobalStore.menu.getTop layout top", this.props.GlobalStore.menu.getTop);

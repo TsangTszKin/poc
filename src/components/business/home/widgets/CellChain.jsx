@@ -18,7 +18,7 @@ class CellChain extends Component {
                     <span >{this.props.ip}</span>
                 </div>
                 <Row style={style.cell2}>
-                    <Col span={24} style={style.cell2_r} className="ellipsis-1">耗时：{this.props.time}</Col>
+                    <Col span={24} style={style.cell2_r} className="ellipsis-1" title={this.props.time}>耗时(ms)：{this.props.time}</Col>
                 </Row>
             </div>
         );
@@ -35,7 +35,7 @@ CellChain.propTypes = {
 };
 CellChain.defaultProps = {
     style: {
-        width: '230px', textAlign: 'center'
+        width: '300px', textAlign: 'center'
     },
     title: '',
     count: 0,
@@ -47,7 +47,7 @@ export default CellChain;
 
 const style = {
     main: {
-        width: '230px', textAlign: 'center', boxShadow: '4px 4px 10px #ec7c31'
+        width: '300px', textAlign: 'center', boxShadow: '4px 4px 10px #ec7c31'
     },
     cell1: {
         height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '31.5px', position: 'relative'

@@ -10,11 +10,14 @@ import store from '@/store/business/sms/Index';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import { Row, Col, DatePicker, Button, Select, Divider } from 'antd'
+import { Row, Col, DatePicker, Button, Empty, Drawer, Spin } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import Code from '@/components/Code';
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
+import smsService from '@/api/business/smsService'
+import publicUtils from '@/utils/publicUtils'
+import Paging from '@/components/Paging';
 
 @observer
 class Index extends Component {
@@ -25,28 +28,56 @@ class Index extends Component {
         }
         this.init_jiaoyiliang = this.init_jiaoyiliang.bind(this);
         this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
+        this.getChartsForApi = this.getChartsForApi.bind(this);
+        this.changePage = this.changePage.bind(this);
     }
 
     componentDidMount() {
-
-
-        setInterval(() => {
-            if (!common.isEmpty(window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar"))) {
-                window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar").style.width = '50%';
-            }
-
-            // $("#business-home-header-info span.ant-tabs-tab-next").addClass("ant-tabs-tab-arrow-show").removeClass("ant-tabs-tab-btn-disabled");
-        }, 300)
-
         this.init()
     }
 
     init() {
-        this.init_jiaoyiliang()
-        this.init_pingjunhaoshi()
+        store.reset();
+        store.getSmsAllDataForApi();
+        this.getChartsForApi();
     }
 
-    init_jiaoyiliang() {
+    getChartsForApi() {
+        store.helper.updateData('loading2', true);
+        let query = Object.assign({
+            timeUnit: store.helper.getData.timeUnit
+        }, store.helper.getData.query)
+        smsService.getAllCharts(query).then(res => {
+            store.helper.updateData('loading2', false);
+            if (!publicUtils.isOk(res)) return
+            this.init_jiaoyiliang(res.data.result.keys, res.data.result.sendCounts)
+            this.init_pingjunhaoshi(res.data.result.keys, res.data.result.times)
+        })
+    }
+
+    changePage = (pageNum, pageSize) => {
+        console.log("分页回调：当前页码" + pageNum);
+        console.log("分页回调：获取条数" + pageSize);
+        store.logList.updateData('pageNum', pageNum);
+        store.logList.updateData('pageSize', pageSize);
+        let type = '';
+        switch (store.logList.getData.title) {
+            case 'MQ':
+                type = '1'
+                break;
+            case 'Front':
+                type = '2'
+                break;
+            case 'Realtime':
+                type = '3'
+                break;
+            default:
+                break;
+        }
+        store.getLogForApi(type);
+    }
+
+    init_jiaoyiliang(x = [], data = []) {
         var myChart = echarts.init(this.jiaoyiliang);
         // 绘制图表
 
@@ -63,13 +94,13 @@ class Index extends Component {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: x
             },
             yAxis: {
                 type: 'value'
             },
             series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: data,
                 type: 'line'
             }],
             color: '#ec7c31'
@@ -78,7 +109,7 @@ class Index extends Component {
         myChart.setOption(option);
     }
 
-    init_pingjunhaoshi() {
+    init_pingjunhaoshi(x = [], data = []) {
         var myChart = echarts.init(this.pingjunhaoshi);
         // 绘制图表
 
@@ -92,13 +123,13 @@ class Index extends Component {
             }],
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: x
             },
             yAxis: {
                 type: 'value'
             },
             series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                data: data,
                 type: 'line'
             }],
             color: '#ec7c31'
@@ -108,32 +139,63 @@ class Index extends Component {
     }
 
     render() {
+        console.log('store.data.getData')
         return (
             <Provider store={store}>
                 <div className='panel'>
-                    {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
                         <div className="clearfix" style={style.searchPanel}>
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>统计周期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
-                                    format={'YYYY/MM/DD'}
+                                    defaultValue={[moment(store.helper.getData.query.beginTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    format={'YYYY-MM-DD'}
+                                    onChange={(date, dateString) => {
+                                        console.log('date, dateString', date, dateString)
+                                        let query = { beginTime: `${dateString[0]} 00:00`, endTime: `${dateString[1]} 00:00` }
+                                        store.helper.updateData('query', query);
+                                    }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary">查询</Button>
+                                <Button size="small" type="primary" onClick={() => {
+                                    store.getSmsAllDataForApi();
+                                    this.getChartsForApi();
+                                }}>查询</Button>
                             </div>
                         </div>
 
-                        <DiagramDetail data={DiagramDetailData} type="sms" />
+                        <Spin spinning={store.helper.getData.loading} size="large" >
+                            <DiagramDetail
+                                type="sms"
+                                data={(() => {
+                                    let data = [];
+                                    store.data.getData.forEach((el, i) => {
+                                        data.push({
+                                            title: el.name,
+                                            count: el.sendCount,
+                                            time: el.takeTimes,
+                                            ip: el.hostIp
+                                        })
+                                    })
+                                    return data
+                                })()}
+                            />
+                            {
+                                common.isEmpty(store.data.getData) ?
+                                    <Empty />
+                                    :
+                                    ''
+                            }
+                        </Spin>
 
                         <Row style={{ marginBottom: '40px' }}>
                             <Col span={24}>
                                 <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
                                     store.helper.updateData('timeUnit', value);
                                     //todo 调接口
+                                    this.getChartsForApi();
                                 }} />
                             </Col>
                             <Col span={12}>
@@ -145,14 +207,24 @@ class Index extends Component {
 
 
                         </Row>
-                        <Divider orientation="left">日志</Divider>
-                        <Row style={{ marginBottom: '40px' }}>
-
-                            <Col span={24}>
-                                <Code sqlCode={sessionStorage.log} type={1} />
-                            </Col>
-                        </Row>
                     </div>
+
+                    <Drawer
+                        title={`日志（${store.logList.getData.title}）`}
+                        placement="right"
+                        closable={true}
+                        onClose={() => store.logList.updateData('visible', false)}
+                        visible={store.logList.getData.visible}
+                        width={1200}
+                    >
+                        <Code sqlCode={store.logList.getData.dataSource} type={1} />
+                        <Paging
+                            pageNum={store.logList.getData.pageNum}
+                            total={store.logList.getData.total}
+                            showPageSize={store.logList.getData.pageSize}
+                            changePage={this.changePage}
+                        />
+                    </Drawer>
                 </div>
             </Provider>
         )
@@ -178,24 +250,3 @@ const style = {
         marginRight: '5px'
     }
 }
-
-const DiagramDetailData = [
-    {
-        title: 'MQ',
-        count: 200,
-        time: 20,
-        ip: ''
-    },
-    {
-        title: 'Front',
-        count: 200,
-        time: 20,
-        ip: ''
-    },
-    {
-        title: 'Realtime',
-        count: 200,
-        time: 20,
-        ip: ''
-    }
-]

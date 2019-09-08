@@ -46,7 +46,7 @@ class Routers extends Component {
 
         if (this.pathname === '/') {
             if (localStorage.token) {
-                this.props.history.replace('/business/home')
+                this.props.history.replace('/home/index')
             }
         } else {
             this.checkJsessionID()

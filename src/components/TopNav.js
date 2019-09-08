@@ -119,6 +119,7 @@ class TopNav extends Component {
                             className={`nav-item ${this.isActive(item.label, item.id) ? "nav-item-selected" : null}`}
                             onClick={
                                 () => this.goTo(item.id)
+                                // () => this.props.history.push('/login')
                             } > {item.name} </li>
                     )
                 }

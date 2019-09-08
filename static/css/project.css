@@ -62,30 +62,30 @@ body {
 @keyframes pay_up_to_dowm_rowup {
     0% {
         background: #ec7c31;
-        left: 48.5%;
+        left: 48.8%;
         top: 0;
     }
 
     50% {
         background: #ec7c31;
-        left: 48.5%;
+        left: 48.8%;
         top: 90%;
     }
 
     51% {
         background: #ec7c31;
-        left: 48.5%;
+        left: 48.8%;
         top: 90%;
     }
 
     100% {
         background: #ec7c31;
-        left: 48.5%;
+        left: 48.8%;
         top: 0;
     }
 }
 
-.pay-left-to-right-rowup {
+.pay-right-to-left-rowup {
     width: 10px;
     height: 10px;
     background: #ec7c31;
@@ -98,6 +98,34 @@ body {
 }
 
 @keyframes pay_right_to_left_rowup {
+    0% {
+        background: #ec7c31;
+        left: 90%;
+        top: 47%;
+    }
+
+    100% {
+        background: #ec7c31;
+        left: 0;
+        top: 47%;
+    }
+}
+
+
+
+.pay-left-to-right-rowup {
+    width: 10px;
+    height: 10px;
+    background: #ec7c31;
+    -webkit-animation: 0.2s pay_left_to_right_rowup linear infinite normal;
+    animation: 0.2s pay_left_to_right_rowup linear infinite normal;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes pay_left_to_right_rowup {
     0% {
         background: #ec7c31;
         left: 0;
@@ -115,8 +143,8 @@ body {
     width: 10px;
     height: 10px;
     background: #ec7c31;
-    -webkit-animation: 0.4s pay_right_to_left_2_rowup linear infinite normal;
-    animation: 0.4s pay_right_to_left_2_rowup linear infinite normal;
+    -webkit-animation: 0.2s pay_right_to_left_2_rowup linear infinite normal;
+    animation: 0.2s pay_right_to_left_2_rowup linear infinite normal;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
@@ -130,15 +158,9 @@ body {
         top: 47%;
     }
 
-    50% {
-        background: #ec7c31;
-        left: 95%;
-        top: 47%;
-    }
-
     100% {
         background: #ec7c31;
-        left: 190%;
+        left: 100%;
         top: 47%;
     }
 }
@@ -168,6 +190,61 @@ body {
         top: 96%;
     }
 }
+
+
+
+.pay-left-to-right-4-rowup {
+    width: 10px;
+    height: 10px;
+    background: #ec7c31;
+    -webkit-animation: 0.2s pay_right_to_left_4_rowup linear infinite normal;
+    animation: 0.2s pay_right_to_left_4_rowup linear infinite normal;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes pay_right_to_left_4_rowup {
+    0% {
+        background: #ec7c31;
+        left: -27%;
+        top: 47%;
+    }
+
+    100% {
+        background: #ec7c31;
+        left: 20%;
+        top: 47%;
+    }
+}
+
+.pay-left-to-right-5-rowup {
+    width: 10px;
+    height: 10px;
+    background: #ec7c31;
+    -webkit-animation: 0.2s pay_right_to_left_5_rowup linear infinite normal;
+    animation: 0.2s pay_right_to_left_5_rowup linear infinite normal;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes pay_right_to_left_5_rowup {
+    0% {
+        background: #ec7c31;
+        left: -90px;
+        top: -5px;
+    }
+
+    100% {
+        background: #ec7c31;
+        left: -5px;
+        top: -5px;
+    }
+}
+
 
 .pay-up-to-dowm-2-rowup {
     width: 10px;
@@ -210,13 +287,13 @@ body {
 @keyframes pay_up_to_dowm_chain_rowup {
     0% {
         background: #ec7c31;
-        left: 31.5%;
+        left: 31.7%;
         top: 0;
     }
 
     100% {
         background: #ec7c31;
-        left: 31.5%;
+        left: 31.7%;
         top: 90%;
     }
 }
@@ -236,13 +313,13 @@ body {
 @keyframes pay_dowm_to_up_chain_rowup {
     0% {
         background: #ec7c31;
-        left: 64.3%;
+        left: 195px;
         top: 90%;
     }
 
     100% {
         background: #ec7c31;
-        left: 64.3%;
+        left: 195px;
         top: 0;
     }
 }
@@ -256,4 +333,17 @@ body {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.transform-90deg {
+    /* Rotate div */
+    transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    /* Internet Explorer */
+    -moz-transform: rotate(90deg);
+    /* Firefox */
+    -webkit-transform: rotate(90deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(90deg);
+    /* Opera */
 }

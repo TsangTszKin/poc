@@ -29,14 +29,14 @@ class FromBox extends Component {
                     {getFieldDecorator('userName', {
                         rules: [{ required: true, message: '请输入账号' }],
                     })(
-                        <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} style={{  height: '40px' }} placeholder="请输入账号" />
+                        <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} style={{  height: '40px' }} placeholder="admin" />
                     )}
                 </FormItem>
                 <FormItem>
                     {getFieldDecorator('password', {
                         rules: [{ required: true, message: '请输入密码' }],
                     })(
-                        <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" style={{ height: '40px' }} placeholder="请输入密码" />
+                        <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" style={{ height: '40px' }} placeholder="123456" />
                     )}
                 </FormItem>
                 <FormItem>

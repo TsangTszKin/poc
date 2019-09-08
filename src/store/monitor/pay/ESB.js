@@ -5,7 +5,7 @@
  * @LastEditTime: 2019-09-03 16:13:57
  * @Description: 
  */
-import { observable, toJS, action, computed } from 'mobx'
+import { observable, toJS, action } from 'mobx'
 import common from '@/utils/common';
 import publicUtils from '@/utils/publicUtils'
 import payService from '@/api/business/payService'
@@ -13,7 +13,7 @@ import payService from '@/api/business/payService'
 class store {
     constructor() {
         this.reset = this.reset.bind(this);
-        this.getPayDetailDataForApi = this.getPayDetailDataForApi.bind(this);
+        this.getPayDetailESBDataForApi = this.getPayDetailESBDataForApi.bind(this);
         this.getLogForApi = this.getLogForApi.bind(this);
         this.resetLogList = this.resetLogList.bind(this);
     }
@@ -40,6 +40,19 @@ class store {
         }
     }
 
+    resetLogList() {
+        this.logList.setData({
+            visible: false,
+            title: '',
+            dataSource: '',
+            pageNum: 1,
+            pageSize: 40,
+            total: 0,
+            loading: true,
+            query: { hostIp: '', logFile: '' },
+        })
+    }
+
     @observable helper = {
         data: {
             loading: true,
@@ -59,7 +72,7 @@ class store {
     }
 
     @observable data = {
-        data: common.deepClone(dataDemo),
+        data: [],
         get getData() {
             return toJS(this.data)
         },
@@ -78,33 +91,21 @@ class store {
             query: { startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime() },
             timeUnit: 60
         })
-        this.data.setData(common.deepClone(dataDemo))
+
+        this.data.setData([])
     }
 
-    resetLogList() {
-        this.logList.setData({
-            visible: false,
-            title: '',
-            dataSource: '',
-            pageNum: 1,
-            pageSize: 40,
-            total: 0,
-            loading: true,
-            query: { hostIp: '', logFile: '' },
-        })
-    }
-
-    getPayDetailDataForApi(type) {
+    getPayDetailESBDataForApi() {
         this.helper.updateData('loading', true);
-        payService.getPayDetailData(this.helper.getData.query, type).then(this.getPayDetailDataForApiCallBack)
+        payService.getPayDetailMonitorData('esb').then(this.getESBServicesForApiCallBack)
     }
-    @action.bound getPayDetailDataForApiCallBack(res) {
+    @action.bound getESBServicesForApiCallBack(res) {
         this.helper.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
         if (!common.isEmpty(res.data.result)) {
             this.data.setData(res.data.result);
         } else {
-            this.data.setData(common.deepClone(dataDemo))
+            this.data.setData([])
         }
     }
 

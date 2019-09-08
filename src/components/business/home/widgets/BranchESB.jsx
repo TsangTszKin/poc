@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react'
-import BranchPayCell from '@/components/business/home/widgets/BranchPayCell'
+import BranchESBCell from '@/components/business/home/widgets/BranchESBCell'
 
 @inject('store') @observer
-class BranchPay extends Component {
+class BranchESB extends Component {
     render() {
         return (
-            <div style={{ marginRight: '20px' }}>
+            <div className="clearfix">
                 {
                     this.props.data.map((item, i) =>
-                        <BranchPayCell key={i} nodeKey={i} {...item} />
+                        <BranchESBCell key={i} nodeKey={i} {...item} start={i === 0} end={this.props.data.length - 1 === i} />
                     )
                 }
             </div>
@@ -18,10 +18,10 @@ class BranchPay extends Component {
     }
 }
 
-BranchPay.propTypes = {
+BranchESB.propTypes = {
     data: PropTypes.array
 };
-BranchPay.defaultProps = {
+BranchESB.defaultProps = {
     data: []
 }
-export default BranchPay;
+export default BranchESB;

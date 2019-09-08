@@ -67,7 +67,7 @@ var payChainList = Mock.mock(`${http.gwApiPrefix}/api/payChain/list`, {
     }
 });
 
-var smsChainList = Mock.mock(`${http.gwApiPrefix}/api/smsChain/list`, {
+var smsChainList = Mock.mock(`${http.gwApiPrefix}/bpc/msg/call/chain`, {
     "resultCode": 1000,
     "resultMessage": "操作成功",
     "pageList": {
@@ -77,10 +77,11 @@ var smsChainList = Mock.mock(`${http.gwApiPrefix}/api/smsChain/list`, {
         "sum": 100,
         "resultList|10": [{
             'id': '@natural',
-            'time': '@datetime', //日期
+            'signAcct': '@natural',
+            'timestamp': '@datetime', //日期
             'templateId': '@string("lower", 5)',
-            'mobile': '@natural',
-            'smsContent': '@cparagraph'
+            'phone': '@natural',
+            'msgBody': '@cparagraph'
         }]
     }
 });
@@ -164,7 +165,7 @@ var login = Mock.mock(`${http.gwApiPrefix}/api/auth/login`, {
             "lastPasswordResetDate": 1548319921000,
             "mobile": "13570412412",
             "nickName": "超级管理员",
-            "orgName": "开发部",
+            "orgName": "运维部",
             "organization": "dev",
             "supperAdmin": true,
             "teamIds": [],
@@ -187,36 +188,52 @@ var getAuthAction = Mock.mock(`${http.gwApiPrefix}/api/auth/getOperAuthSet`, {
 var getTopMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/topmenu`, {
     "resultCode": 1000,
     "resultMessage": "操作成功",
-    "result": [{
-        "id": 1,
-        "appId": 1,
-        "parentId": 0,
-        "actions": {},
-        "child": [],
-        "level": 0,
-        "name": "数据查询",
-        "description": "数据查询",
-        "label": "business",
-        "url": "/business/pay/group",
-        "icon": "home",
-        "method": "get",
-        "orderNum": 1
-    },
-    {
-        "id": 2,
-        "appId": 1,
-        "parentId": 0,
-        "actions": {},
-        "child": [],
-        "level": 0,
-        "name": "监控告警",
-        "description": "监控告警",
-        "label": "monitor",
-        "url": "/monitor/pay/group",
-        "icon": "",
-        "method": "create",
-        "orderNum": 4
-    }
+    "result": [
+        {
+            "id": 3,
+            "appId": 1,
+            "parentId": 0,
+            "actions": {},
+            "child": [],
+            "level": 0,
+            "name": "首页",
+            "description": "首页",
+            "label": "home",
+            "url": "/home/index",
+            "icon": "",
+            "method": "create",
+            "orderNum": 4
+        },
+        {
+            "id": 2,
+            "appId": 1,
+            "parentId": 0,
+            "actions": {},
+            "child": [],
+            "level": 0,
+            "name": "监控告警",
+            "description": "监控告警",
+            "label": "monitor",
+            "url": "/monitor/pay/group",
+            "icon": "",
+            "method": "create",
+            "orderNum": 4
+        },
+        {
+            "id": 1,
+            "appId": 1,
+            "parentId": 0,
+            "actions": {},
+            "child": [],
+            "level": 0,
+            "name": "数据查询",
+            "description": "数据查询",
+            "label": "business",
+            "url": "/business/pay/group",
+            "icon": "home",
+            "method": "get",
+            "orderNum": 1
+        },
     ]
 });
 
@@ -440,36 +457,36 @@ var getLeftMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/leftm
                 "icon": "pay-circle",
                 "method": "ALL"
             },
-            {
-                "id": 2,
-                "appId": 1,
-                "parentId": 1,
-                "actions": {
-                },
-                "child": [
-                    {
-                        "id": 34,
-                        "appId": 1,
-                        "parentId": 37,
-                        "actions": {},
-                        "child": [],
-                        "level": 1,
-                        "name": "短信系统",
-                        "label": "monitor-sms-index",
-                        "url": "/monitor/sms/index",
-                        "icon": "tool",
-                        "method": "",
-                        "orderNum": 2
-                    },
-                ],
-                "level": 0,
-                "name": "短信",
-                "description": "短信",
-                "label": "monitor-sms",
-                "url": "/monitor/sms",
-                "icon": "message",
-                "method": "ALL"
-            },
+            // {
+            //     "id": 2,
+            //     "appId": 1,
+            //     "parentId": 1,
+            //     "actions": {
+            //     },
+            //     "child": [
+            //         {
+            //             "id": 34,
+            //             "appId": 1,
+            //             "parentId": 37,
+            //             "actions": {},
+            //             "child": [],
+            //             "level": 1,
+            //             "name": "短信系统",
+            //             "label": "monitor-sms-index",
+            //             "url": "/monitor/sms/index",
+            //             "icon": "tool",
+            //             "method": "",
+            //             "orderNum": 2
+            //         },
+            //     ],
+            //     "level": 0,
+            //     "name": "短信",
+            //     "description": "短信",
+            //     "label": "monitor-sms",
+            //     "url": "/monitor/sms",
+            //     "icon": "message",
+            //     "method": "ALL"
+            // },
             {
                 "id": 2,
                 "appId": 1,
@@ -514,64 +531,144 @@ var getLeftMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/leftm
                 "icon": "warning",
                 "method": "ALL"
             }
-        ]
+        ],
+        '3': [
+            {
+                "id": 2,
+                "appId": 1,
+                "parentId": 1,
+                "actions": {
+                },
+                "child": [
+                ],
+                "level": 0,
+                "name": "驾驶舱",
+                "description": "驾驶舱",
+                "label": "home-index",
+                "url": "/home/index",
+                "icon": "dashboard",
+                "method": "ALL"
+            },
+        ],
     }
 });
 
 var payFindByTradeNoList = Mock.mock(`${http.gwApiPrefix}/api/callChain/findByTradeNo`, {
     "resultCode": 1000,
     "resultMessage": "操作成功",
-    "result": [
-        {
-          "id": "1",
-          "beginDate": "1",
-          "endDate": "1",
-          "takeTimes": 11,
-          "finishFlag": 1,
-          "hostIp": "192.169.0.1",
-          "sourceIp": "1",
-          "tradeNo": "1",
-          "processId": "1",
-          "logFile": "frontfrontfrontfrontfront",
-          "content": "1",
-          "clusterSign": "front",
-          "uuid": "1",
-          "snum": 1
+    "result": {
+        resource: {
+            front: {
+                "id": "1",
+                "beginDate": "1",
+                "endDate": "1",
+                "takeTimes": 11,
+                "finishFlag": 1,
+                "hostIp": "192.169.0.1",
+                "sourceIp": "1",
+                "tradeNo": "1",
+                "processId": "1",
+                "logFile": "frontfrontfrontfrontfront",
+                "content": "1",
+                "clusterSign": "front",
+                "uuid": "1",
+                "snum": 1
+            },
+            service: {
+                "id": "1",
+                "beginDate": "1",
+                "endDate": "1",
+                "takeTimes": 11,
+                "finishFlag": 1,
+                "hostIp": "192.169.0.1",
+                "sourceIp": "1",
+                "tradeNo": "1",
+                "processId": "1",
+                "logFile": "qqq",
+                "content": "1",
+                "clusterSign": "front",
+                "uuid": "1",
+                "snum": 1
+            }
         },
-        {
-          "id": "1",
-          "beginDate": "1",
-          "endDate": "1",
-          "takeTimes": 11,
-          "finishFlag": 1,
-          "hostIp": "192.169.0.1",
-          "sourceIp": "1",
-          "tradeNo": "1",
-          "processId": "1",
-          "logFile": "onlineonlineonlineonline",
-          "content": "1",
-          "clusterSign": "online",
-          "uuid": "1",
-          "snum": 1
-        },
-        {
-          "id": "1",
-          "beginDate": "1",
-          "endDate": "1",
-          "takeTimes": 11,
-          "finishFlag": 1,
-          "hostIp": "192.169.0.1",
-          "sourceIp": "1",
-          "tradeNo": "1",
-          "processId": "1",
-          "logFile": "ESBESBESBESBESBESBESBESBESB",
-          "content": "1",
-          "clusterSign": "ESB",
-          "uuid": "1",
-          "snum": 1
+        mapping: [
+            {
+                logFile: 'qqq',
+                serviceName: 'aaaa'
+            },
+            {
+                logFile: 'asfda',
+                serviceName: 'bbbb'
+            },
+        ],
+        content: {
+            '1': 'afdsafasssasfasf',
+            '3': '的',
+            '5': 'wwwww'
         }
-      ],
+    }
 });
 
-export { logList, payChainList, smsChainList, login, getAuthAction, getTopMenu, getLeftMenu, alertList, alertSettingList, payFindByTradeNoList }
+
+var getLog = Mock.mock(`${http.gwApiPrefix}/api/getLog`, {
+    "resultCode": 1000,
+    "resultMessage": "操作成功",
+    "result": {
+        'content': 'eyJzdWIiOiJhZG1pbiIsImF1ZCI6IndlYiIsImlzcyI6IjEiLCJleHAiOjE1NjcwMDMxMjMsImlhdCI6MTU2NzAwMTMyM30'
+    }
+});
+
+var getPayGroupMonitorData = Mock.mock(`${http.gwApiPrefix}/api/streaming/loadClusters`, {
+    "resultCode": 1000,
+    "resultMessage": "操作成功",
+    "result": [
+        {
+            clusterName: 'front',
+            tradeCount: 100,
+            totalTime: 200,
+            avgTime: 300
+        },
+        {
+            clusterName: 'td1',
+            tradeCount: 100,
+            totalTime: 200,
+            avgTime: 300
+        }
+    ]
+});
+
+var getSmsAllData = Mock.mock(`${http.gwApiPrefix}/bpc/msg/index`, {
+    "resultCode": 1000,
+    "resultMessage": "操作成功",
+    "result": [
+        {
+            name: 'MQ',
+            sendCount: 100,
+            totalTimes: 200
+        }
+    ]
+});
+
+var getPayGroupData_TD = Mock.mock(`${http.gwApiPrefix}/BPC/streaming/loadClusters`, {
+    "resultCode": 1000,
+    "resultMessage": "操作成功",
+    "result": [
+        {
+            name: 'front',
+            duration: 0,
+            code: 1,
+            type: '',
+            trans_count: 0
+        },
+        {
+            name: 'esb',
+            duration: 0,
+            code: 3,
+            type: '',
+            trans_count: 0
+        }
+    ]
+});
+
+export { logList, payChainList, smsChainList, login, getAuthAction, getTopMenu, getLeftMenu, alertList, alertSettingList, payFindByTradeNoList, getLog, getPayGroupMonitorData, getSmsAllData, getPayGroupData_TD }
 

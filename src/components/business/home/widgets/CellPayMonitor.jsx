@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react'
-import { Row, Col, Button } from 'antd'
+import { Row, Col, Button, Select } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 @withRouter @inject('store') @observer
-class CellPay extends Component {
+class CellPayMonitor extends Component {
     render() {
         return (
             <div
@@ -15,6 +15,11 @@ class CellPay extends Component {
             >
                 <div style={style.cell1}>
                     <span style={style.cell1_title} title={this.props.title}>{this.props.title}</span>
+                    <div>
+                        <Select style={{ width: '120px' }} value="实时借记业务" size="small" >
+                            <Select.Option value="实时借记业务">实时借记业务</Select.Option>
+                        </Select>
+                    </div>
                     <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
                         style={style.cell1_btn}
                         onClick={() => {
@@ -43,28 +48,28 @@ class CellPay extends Component {
     }
 }
 
-CellPay.propTypes = {
+CellPayMonitor.propTypes = {
     style: PropTypes.object,
     title: PropTypes.string,
     count: PropTypes.number,
     time: PropTypes.number,
     type: PropTypes.oneOf(['pre', 'unit', 'esb'])
 };
-CellPay.defaultProps = {
+CellPayMonitor.defaultProps = {
     style: {},
     title: '',
     count: 0,
     time: 0
 }
 
-export default CellPay;
+export default CellPayMonitor;
 
 const style = {
     main: {
         width: '300px', textAlign: 'center', boxShadow: '4px 4px 10px #ec7c31'
     },
     cell1: {
-        height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '63px', position: 'relative'
+        height: '75px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '36.5px', position: 'relative'
     },
     cell1_btn: {
         position: 'absolute', top: '15px', right: '10px', cursor: 'pointer'

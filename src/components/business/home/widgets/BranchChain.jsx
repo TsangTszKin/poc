@@ -10,7 +10,7 @@ class BranchChain extends Component {
         return (
             <div style={{ marginRight: '20px' }}>
                 {
-                    common.deepClone(data).map((item, i) =>
+                    this.props.data.map((item, i) =>
                         <BranchChainCell key={i} nodeKey={i} {...item} />
                     )
                 }
@@ -20,18 +20,10 @@ class BranchChain extends Component {
 }
 
 BranchChain.propTypes = {
-    style: PropTypes.object,
-    title: PropTypes.string,
-    count: PropTypes.number,
-    time: PropTypes.number,
+    data: PropTypes.array
 };
 BranchChain.defaultProps = {
-    style: {
-        width: '230px', textAlign: 'center'
-    },
-    title: '',
-    count: 0,
-    time: 0
+    data: []
 }
 
 export default BranchChain;

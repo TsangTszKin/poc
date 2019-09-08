@@ -53,12 +53,13 @@ class Chain extends Component {
                     {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
 
-                        <Button onClick={() => {
+                        {/* <Button onClick={() => {
                             store.detail.updateData('visible', true)
-                            store.detail.updateData('log', 1)
-                            store.getChainDetailForApi(1)
-                            common.loading.hide()
-                        }}>test</Button>
+                            store.getChainDetailForApi('')
+                            common.loading.hide();
+                        }}>
+                            fdsaf
+                        </Button> */}
 
                         <div className="clearfix" style={style.searchPanel}>
                             <div className="clearfix" style={style.searchShell}>
@@ -116,7 +117,6 @@ class Chain extends Component {
                                         el.action = <Fragment>
                                             <a onClick={() => {
                                                 store.detail.updateData('visible', true)
-                                                store.detail.updateData('log', el.log)
                                                 store.getChainDetailForApi(el.tradeNo)
                                             }}>查看</a>
                                         </Fragment>
@@ -139,24 +139,21 @@ class Chain extends Component {
                         closable={true}
                         onClose={() => store.detail.updateData('visible', false)}
                         visible={store.detail.getData.visible}
-                        width={1000}
+                        width={1200}
                         id="log-detail"
                     >
-                        {/* <p>{store.detail.getData.log}</p> */}
-                        {/* <Code sqlCode={store.detail.getData.log} type={1} /> */}
                         <DiagramChainPay
                             data={store.detail.getData.data}
-                            callbackfn={(log, step) => {
-                                store.detail.updateData('log', log)
+                            callbackfn={(step) => {
                                 store.detail.updateData('step', step)
                             }}
                         />
                         <div style={{ height: '40px' }}></div>
                         {
-                            !common.isEmpty(store.detail.getData.log) ?
+                            !common.isEmpty(store.detail.getData.step) ?
                                 <Fragment>
                                     <Divider orientation="left">日志（步骤{store.detail.getData.step}）</Divider>
-                                    <Code sqlCode={store.detail.getData.log} type={1} />
+                                    <Code sqlCode={store.detail.getData.log[store.detail.getData.step]} type={1} />
                                 </Fragment>
                                 : ''
                         }

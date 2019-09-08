@@ -2,7 +2,7 @@
  * @Author: zengzijian
  * @Date: 2018-10-12 16:59:52
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-03 16:08:49
+ * @LastEditTime: 2019-09-03 16:46:09
  * @Description: 
  */
 import React, { Component, Fragment } from 'react';
@@ -12,7 +12,7 @@ import common from '@/utils/common';
 import echarts from 'echarts'
 import { Row, Col, DatePicker, Button, Spin, PageHeader } from 'antd'
 import moment from 'moment';
-import DiagramPay from '@/components/business/home/DiagramPay'
+import DiagramPayMonitor from '@/components/business/home/DiagramPayMonitor'
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 import publicUtils from '@/utils/publicUtils'
 import payService from '@/api/business/payService'
@@ -31,6 +31,9 @@ class Home extends Component {
 
     componentDidMount() {
         this.init()
+        setInterval(() => {
+            this.init()
+        }, 60000);
     }
 
     init() {
@@ -44,7 +47,7 @@ class Home extends Component {
         let query = Object.assign({
             timeUnit: store.helper.getData.timeUnit
         }, store.helper.getData.query)
-        payService.getGroupCharts(query).then(res => {
+        payService.getGroupMonitorCharts(query).then(res => {
             store.helper.updateData('loading2', false);
             if (!publicUtils.isOk(res)) return
             this.init_jiaoyiliang(res.data.result.keys, res.data.result.trades)
@@ -90,7 +93,7 @@ class Home extends Component {
 
         let option = {
             title: {
-                text: '平均耗时'
+                text: '平均耗时(ms)'
             },
             dataZoom: [{
             }, {
@@ -120,16 +123,27 @@ class Home extends Component {
         return (
             <Provider store={store}>
                 <div className='panel'>
+                    {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
 
-                        <PageHeader title="统一支付系统监控" subTitle="数据统计周期：1分钟" style={{ padding: '0 0 30px 0' }} />
+                        <PageHeader title="统一支付系统监控" subTitle="数据统计周期：1分钟" style={{ padding: '0 0 150px 0' }} />
 
                         <Spin spinning={store.helper.getData.loading} size="large">
-                            <DiagramPay />
+                            <DiagramPayMonitor />
                         </Spin>
 
-                        <Spin spinning={store.helper.getData.loading2} size="large" style={{ marginTop: '10px' }}>
-                            <Row >
+                        <Row>
+                            <Col span={24}>
+                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
+                                    store.helper.updateData('timeUnit', value);
+                                    //todo 调接口
+                                    this.getGroupChartsForApi();
+                                }} />
+                            </Col>
+                        </Row>
+
+                        <Spin spinning={store.helper.getData.loading2} size="large">
+                            <Row>
                                 <Col span={12}>
                                     <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
                                 </Col>

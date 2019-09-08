@@ -2,10 +2,21 @@ import React, { Component } from 'react';
 import { observer, inject, PropTypes } from 'mobx-react'
 import CellChain from '@/components/business/home/widgets/CellChain'
 import BranchChain from '@/components/business/home/widgets/BranchChain'
-import { Icon, Tag } from 'antd'
+import { Icon, Tag, message } from 'antd'
+import common from '@/utils/common';
 
 @inject('store') @observer
 class DiagramChainPay extends Component {
+
+    constructor(props) {
+        super(props)
+        this.hasLog = this.hasLog.bind(this);
+    }
+
+    hasLog(step) {
+        return !common.isEmpty(this.props.store.detail.getData.log[step])
+    }
+
     render() {
         return (
             <div style={{ minWidth: '950px' }}>
@@ -22,19 +33,46 @@ class DiagramChainPay extends Component {
                             <Icon type="caret-down" style={style.linker2_to} />
                             <p style={style.linker2_1}></p>
                             <Icon type="caret-up" style={style.linker2_1_to} />
+                            {
+                                this.hasLog('1') ?
+                                    <span className="pay-up-to-dowm-chain-rowup"></span>
+                                    :
+                                    ''
+                            }
 
-                            <span className="pay-up-to-dowm-chain-rowup"></span>
-                            <span className="pay-dowm-to-up-chain-rowup"></span>
-
-                            <Tag color="#2db7f5" style={style._1} title="点击查看日志"
-                                onClick={() => { this.props.callbackfn(this.props.data.front.logFile, 1) }}
+                            {
+                                this.hasLog('3') ?
+                                    <span className="pay-dowm-to-up-chain-rowup"></span>
+                                    :
+                                    ''
+                            }
+                            <Tag color={this.hasLog('1') ? '#2db7f5' : '#DCDCDC'} style={style._1} title="点击查看日志"
+                                onClick={() => {
+                                    if (this.hasLog('1')) this.props.callbackfn(1)
+                                    else message.warning('此处日志信息')
+                                }}
                             >1</Tag>
-                            <Tag color="#87d068" style={style._2} title="点击查看日志"
-                                onClick={() => { this.props.callbackfn(this.props.data.online.logFile, 2) }}
+                            <Tag color={this.hasLog('2') ? '#87d068' : '#DCDCDC'} style={style._2} title="点击查看日志"
+                                onClick={() => {
+                                    if (this.hasLog('2')) this.props.callbackfn(2)
+                                    else message.warning('此处日志信息')
+                                }}
                             >2</Tag>
-                            <Tag color="#108ee9" style={style._3} title="点击查看日志"
-                                onClick={() => { this.props.callbackfn(this.props.data.front.logFile, 3) }}
+                            <Tag color={this.hasLog('3') ? '#108ee9' : '#DCDCDC'} style={style._3} title="点击查看日志"
+                                onClick={() => {
+                                    if (this.hasLog('3')) this.props.callbackfn(3)
+                                    else message.warning('此处日志信息')
+                                }}
                             >3</Tag>
+
+                            <Tag
+                                color={this.hasLog('4') ? '#4169E1' : '#DCDCDC'}
+                                style={style._4} title="点击查看日志"
+                                onClick={() => {
+                                    if (this.hasLog('4')) this.props.callbackfn(4)
+                                    else message.warning('此处日志信息')
+                                }}
+                            >4</Tag>
 
                         </div>
                         <CellChain
@@ -48,28 +86,46 @@ class DiagramChainPay extends Component {
                     <div style={style.linker_cell}>
                         <p style={style.linker}></p>
                         <Icon type="caret-right" style={style.linker_to} />
-                        <Tag color="#5F9EA0" style={style._4} title="点击查看日志"
-                            onClick={() => { this.props.callbackfn(this.props.data.ESB.logFile, 4) }}
-                        >4</Tag>
-                        <span className="pay-left-to-right-rowup"></span>
+                        <Tag
+                            color={this.hasLog('5') ? '#5F9EA0' : '#DCDCDC'}
+                            style={style._5} title="点击查看日志"
+                            onClick={() => {
+                                if (this.hasLog('5')) this.props.callbackfn(5)
+                                else message.warning('此处日志信息')
+                            }}
+                        >5</Tag>
+                        {
+                            this.hasLog('5') ?
+                                <span className="pay-left-to-right-rowup"></span>
+                                :
+                                ''
+                        }
                     </div>
                     {/* 最右端 */}
                     <div className="clearfix" style={{ float: 'left' }}>
                         <CellChain
                             style={{ float: 'left' }}
                             title='ESB'
-                            time={this.props.data.ESB.takeTimes}
-                            ip={this.props.data.ESB.hostIp}
+                            time={this.props.data.esb.takeTimes}
+                            ip={this.props.data.esb.hostIp}
                             type="esb"
                         />
-                        <div style={style.linker_cell_right}>
-                            <p style={style.linker_right}></p>
-                            <span className="pay-left-to-right-2-rowup"></span>
-                        </div>
+                        {
+                            !common.isEmpty(this.props.data.services) ?
+
+                                <div style={style.linker_cell_right}>
+                                    <p style={style.linker_right}></p>
+                                </div>
+                                : ''
+                        }
                     </div>
-                    <div className="clearfix" style={{ float: 'left' }}>
-                        <BranchChain />
-                    </div>
+                    {
+                        !common.isEmpty(this.props.data.services) ?
+                            <div className="clearfix" style={{ float: 'left' }}>
+                                <BranchChain data={this.props.data.services} />
+                            </div>
+                            : ''
+                    }
                 </div>
 
             </div>
@@ -97,6 +153,7 @@ DiagramChainPay.defaultProps = {
             "logFile": "",
             "hostIp": "",
             "takeTimes": 0,
+            "service": []
         }
     },
     callbackfn: () => { }
@@ -114,19 +171,19 @@ const style = {
         position: 'absolute', right: '-4px', top: '44%', color: '#ec7c31'
     },
     linker_cell2: {
-        width: '230px', height: '68px', position: 'relative'
+        width: '300px', height: '68px', position: 'relative'
     },
     linker2: {
         margin: '0', width: '1px', height: '100%', position: 'absolute', top: '0', left: '33%', border: '1.5px solid #ec7c31'
     },
     linker2_to: {
-        position: 'absolute', bottom: '-4px', left: '30.5%', color: '#ec7c31'
+        position: 'absolute', bottom: '-4px', left: '31%', color: '#ec7c31'
     },
     linker2_1: {
         margin: '0', width: '1px', height: '100%', position: 'absolute', top: '0', left: '66%', border: '1.5px solid #ec7c31'
     },
     linker2_1_to: {
-        position: 'absolute', top: '-4px', left: '63.5%', color: '#ec7c31'
+        position: 'absolute', top: '-4px', left: '64%', color: '#ec7c31'
     },
     linker_cell_right: {
         width: '80px', height: '96px', float: 'left', position: 'relative'
@@ -144,6 +201,9 @@ const style = {
         position: 'absolute', right: '18%', top: '1px', borderRadius: '50%', cursor: 'pointer'
     },
     _4: {
+        position: 'absolute', right: '0', top: '-71px', borderRadius: '50%', cursor: 'pointer', zIndex: '1'
+    },
+    _5: {
         position: 'absolute', right: '-38px', top: '25%', borderRadius: '50%', cursor: 'pointer', zIndex: '1'
     }
 }

@@ -7,7 +7,7 @@ import CellDetail from '@/components/business/home/widgets/CellDetail'
 class DiagramDetail extends Component {
     render() {
         return (
-            <div style={{ minWidth: '950px', marginBottom: '40px', minHeight: '100px' }}>
+            <div style={{ minWidth: '1070px', marginBottom: '40px', minHeight: '100px' }}>
                 <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto' }}>
                     {
                         this.props.data.map((item, i) =>
@@ -19,7 +19,16 @@ class DiagramDetail extends Component {
                                                 this.props.type === 'sms' ?
                                                     <Fragment>
                                                         <p style={style.linker}></p>
-                                                        <span className="pay-left-to-right-rowup"></span>
+                                                        {
+                                                            (() => {
+                                                                if (i === 1) {
+                                                                    return <span className="pay-left-to-right-rowup"></span>
+                                                                }
+                                                                if (i === 2) {
+                                                                    return <span className="pay-right-to-left-rowup"></span>
+                                                                }
+                                                            })()
+                                                        }
                                                     </Fragment>
                                                     : ''
                                             }
@@ -27,7 +36,8 @@ class DiagramDetail extends Component {
                                         : ''
                                 }
                                 <div className="clearfix" style={{ float: 'left' }}>
-                                    <CellDetail key={i} {...item} type={this.props.type}
+                                    <CellDetail key={i} {...item} type={this.props.type} style={{ marginBottom: '40px' }}
+                                        nodeKey={i}
                                     />
                                 </div>
                             </Fragment>
@@ -42,7 +52,7 @@ class DiagramDetail extends Component {
 
 DiagramDetail.propTypes = {
     data: PropTypes.array,
-    type: PropTypes.oneOf(['pay', 'sms'])
+    type: PropTypes.oneOf(['front', 'online', 'sms']),
 };
 DiagramDetail.defaultProps = {
     data: [
@@ -53,7 +63,7 @@ DiagramDetail.defaultProps = {
             ip: ''
         }
     ],
-    type: 'pay'
+    type: ''
 }
 
 export default DiagramDetail;

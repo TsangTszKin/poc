@@ -1,40 +1,46 @@
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react'
 import PropTypes from 'prop-types'
-import CellPay from '@/components/business/home/widgets/CellPay'
-import BranchPay from '@/components/business/home/widgets/BranchPay'
+import CellPayMonitor from '@/components/business/home/widgets/CellPayMonitor'
+import BranchESB from '@/components/business/home/widgets/BranchESB'
 
 @inject('store') @observer
 class DiagramDetailESB extends Component {
     render() {
         return (
-            <div style={{ minWidth: '950px', marginBottom: '40px', minHeight: '100px' }}>
-                <div style={{ width: 'fit-content', margin: '0 auto' }}>
-                    {
-                        this.props.data.map((item, i) =>
-                            <div key={i} className="clearfix" style={{ float: 'left', marginBottom: '40px' }}>
-                                <div className="clearfix" style={{ float: 'left' }}>
-                                    <CellPay
-                                        style={{ float: 'left' }}
-                                        title={item.title}
-                                        count={item.count}
-                                        time={item.time}
-                                        ip={item.ip}
-                                        type="esb"
-                                        isESB={true}
-                                    />
-                                    <div style={style.linker_cell_right}>
-                                        <p style={style.linker_right}></p>
-                                    </div>
-                                </div>
-                                <div className="clearfix" style={{ float: 'left' }}>
-                                    <BranchPay data={item.service} isESB={true} />
+            <div className="clearfix" style={{ width: 'fit-content', margin: '0 auto', marginBottom: '40px', minHeight: '100px' }}>
+                {
+                    this.props.data.map((item, i) =>
+                        <div key={i} className="clearfix" style={{ float: 'left', margin: '0 20px 40px 20px' }}>
+                            <div
+                                className="clearfix" style={{ margin: '0 auto' }}
+                                onClick={() => {
+                                    let query = this.props.store.logList.getData.query;
+                                    query.hostIp = item.ip;
+                                    query.logFile = '';
+                                    this.props.store.logList.updateData('query', query);
+
+                                    this.props.store.getLogForApi('esb');
+                                    this.props.store.logList.updateData('title', item.title)
+                                }}
+                            >
+                                <CellPayMonitor
+                                    style={{ margin: '0 auto' }}
+                                    title={item.title}
+                                    count={item.count}
+                                    time={item.time}
+                                    ip={item.ip}
+                                    type="esb"
+                                    isESB={true}
+                                />
+                                <div style={style.linker_cell_v}>
+                                    <p style={style.linker_v}></p>
                                 </div>
                             </div>
-                        )
-                    }
-                </div>
-
+                            <BranchESB data={item.service} />
+                        </div>
+                    )
+                }
             </div>
         );
     }
@@ -58,17 +64,11 @@ DiagramDetailESB.defaultProps = {
 export default DiagramDetailESB;
 
 const style = {
-    linker_cell: {
-        width: '80px', height: '96px', float: 'left', position: 'relative', marginBottom: '40px'
+    linker_cell_v: {
+        width: '300px', height: '70px', margin: '0 auto'
     },
-    linker: {
-        margin: '0', width: '100%', position: 'absolute', top: '50%', border: '1.5px solid #ec7c31'
-    },
-    linker_cell_right: {
-        width: '80px', height: '96px', float: 'left', position: 'relative'
-    },
-    linker_right: {
-        margin: '0', width: '100%', position: 'relative', top: '50%', border: '1.5px solid #ec7c31'
+    linker_v: {
+        margin: '0 auto', width: '1px', height: '100%', border: '1.5px solid #ec7c31', backgroundColor: '#ec7c31'
     },
 }
 

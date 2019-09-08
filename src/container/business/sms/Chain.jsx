@@ -58,20 +58,41 @@ class Chain extends Component {
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
-                                    format={'YYYY/MM/DD'}
+                                    defaultValue={[moment(store.list.getData.query.beginTime, 'YYYY-MM-DD hh:mm'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    format={'YYYY-MM-DD'}
+                                    onChange={(date, dateString) => {
+                                        console.log('date, dateString', date, dateString)
+                                        let query = store.list.getData.query;
+                                        query.beginTime = `${dateString[0]} 00:00`
+                                        query.endTime = `${dateString[1]} 00:00`
+                                        store.list.updateData('query', query);
+                                    }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>客户账号 :</span>
-                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
+                                <span style={style.searchTitle}>手机号 :</span>
+                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.phone}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.phone = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>客户名称 :</span>
-                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入" />
+                                <span style={style.searchTitle}>模板ID :</span>
+                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.templateId}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.templateId = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary">查询</Button>
+                                <Button size="small" type="primary" onClick={store.getChainListForApi}>查询</Button>
                             </div>
                         </div>
 
@@ -87,8 +108,7 @@ class Chain extends Component {
                                         el.action = <Fragment>
                                             <a onClick={() => {
                                                 store.detail.updateData('visible', true)
-                                                store.detail.updateData('log', el.log)
-                                                store.getChainDetailForApi(el.tradeNo)
+                                                store.getChainDetailForApi(el.signAcct)
                                             }}>查看</a>
                                         </Fragment>
                                     })
@@ -110,15 +130,41 @@ class Chain extends Component {
                         closable={true}
                         onClose={() => store.detail.updateData('visible', false)}
                         visible={store.detail.getData.visible}
-                        width={1000}
+                        width={1200}
                         id="log-detail"
                     >
-                        {/* <p>{store.detail.getData.log}</p> */}
-                        {/* <Code sqlCode={store.detail.getData.log} type={1} /> */}
-                        <DiagramChainSms />
+                        <DiagramChainSms
+                            data={store.detail.getData.data}
+                            callbackfn={(step) => {
+                                store.detail.updateData('step', step)
+                            }}
+                        />
                         <div style={{ height: '40px' }}></div>
-                        <Divider orientation="left">日志</Divider>
-                        <Code sqlCode={sessionStorage.log} type={1} />
+                        {
+                            !common.isEmpty(store.detail.getData.step) ?
+                                <Fragment>
+                                    <Divider orientation="left">日志（步骤{store.detail.getData.step}）</Divider>
+                                    <Code sqlCode={(() => {
+                                        let step = store.detail.getData.step;
+                                        if (!common.isEmpty(step)) {
+                                            if (step == 1) {
+                                                return store.detail.getData.data.MQ.info
+                                            }
+                                            if (step == 2) {
+                                                return store.detail.getData.data.Front.info
+                                            }
+                                            if (step == 3) {
+                                                return store.detail.getData.data.Realtime.info
+                                            }
+                                        } else {
+                                            return ''
+                                        }
+                                    })()} type={1} />
+                                </Fragment>
+                                : ''
+                        }
+
+
                     </Drawer>
 
                 </div>
@@ -138,7 +184,7 @@ const columns = [
     },
     {
         title: '时间',
-        dataIndex: 'time',
+        dataIndex: 'timestamp',
         key: 'time.',
         sorter: (a, b) => {
             return a.time.localeCompare(b.time)
@@ -151,13 +197,13 @@ const columns = [
     },
     {
         title: '手机号码',
-        dataIndex: 'mobile',
-        key: 'mobile'
+        dataIndex: 'phone',
+        key: 'phone'
     },
     {
         title: '短信内容',
-        dataIndex: 'smsContent',
-        key: 'smsContent'
+        dataIndex: 'msgBody',
+        key: 'msgBody'
     },
     {
         title: '操作',

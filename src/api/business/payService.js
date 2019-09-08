@@ -66,6 +66,9 @@ export default {
         }
         return axios.post(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
     },
+    getPayDetailMonitorData(sign = 'front') {
+        return axios.post(`${http.gwApiPrefix}/api/streaming/loadSons?sign=${sign}`).catch(errorHandler)
+    },
     getGroupCharts(query = {}) {
         let params = [];
         for (const key in query) {
@@ -74,7 +77,15 @@ export default {
         params = params.join('&')
         return axios.get(`${http.gwApiPrefix}/api/cluster/loadCharts?${params}`).catch(errorHandler)
     },
-    getDetailCharts(query = {},  type = 'front') {
+    getGroupMonitorCharts(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.get(`${http.gwApiPrefix}/api/streaming/loadCharts?${params}`).catch(errorHandler)
+    },
+    getDetailCharts(query = {}, type = 'front') {
         let params = [];
         for (const key in query) {
             params.push(`${key}=${query[key]}`)
@@ -96,6 +107,9 @@ export default {
         }
         return axios.get(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
     },
+    getDetailMonitorCharts(sign = 'front') {
+        return axios.post(`${http.gwApiPrefix}/api/streaming/loadSonCharts?sign=${sign}`).catch(errorHandler)
+    },
     getESBServices(query = {}) {
         let params = [];
         for (const key in query) {
@@ -110,7 +124,36 @@ export default {
             params.push(`${key}=${query[key]}`)
         }
         params = params.join('&')
-        return axios.get(`${http.gwApiPrefix}/api/callChain/findByTradeNo`).catch(errorHandler)
-        // return axios.get(`${http.gwApiPrefix}/api/callChain/findByTradeNo?${params}`).catch(errorHandler)
+        // return axios.get(`${http.gwApiPrefix}/api/callChain/findByTradeNo`).catch(errorHandler)
+        return axios.post(`${http.gwApiPrefix}/api/callChain/findByTradeNo?${params}`).catch(errorHandler)
+    },
+    getLog(page, size, query = {}) {
+        let params = [];
+        params.push(`page=${page}`)
+        params.push(`size=${size}`)
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.post(`${http.gwApiPrefix}/api/logs/findAll?${params}`).catch(errorHandler)
+        // return axios.get(`${http.gwApiPrefix}/api/getLog`).catch(errorHandler)
+    },
+    getPayGroupMonitorData(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.post(`${http.gwApiPrefix}/api/streaming/loadClusters`).catch(errorHandler)
+        // return axios.get(`${http.gwApiPrefix}/api/stats/result?${params}`).catch(errorHandler)
+    },
+    getPayGroupData_TD(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        // return axios.get(`${http.gwApiPrefix}/api/streaming/loadClusters`).catch(errorHandler)
+        return axios.get(`${http.gwApiPrefix}/BPC/stats/result?${params}`).catch(errorHandler)
     },
 }

@@ -91,7 +91,7 @@ class Home extends Component {
 
         let option = {
             title: {
-                text: '平均耗时'
+                text: '平均耗时(ms)'
             },
             dataZoom: [{
             }, {

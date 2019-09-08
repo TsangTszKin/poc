@@ -11,7 +11,7 @@ class DiagramPay extends Component {
         const online = store.data.getData.find(el => el.clusterName === 'online');
         const esb = store.data.getData.find(el => el.clusterName === 'esb');
         return (
-            <div style={{ minWidth: '950px' }}>
+            <div style={{ minWidth: '680px' }}>
                 <div className="clearfix" style={{ width: 'fit-content', margin: '40px auto' }}>
                     <div className="clearfix" style={{ float: 'left' }}>
                         <CellPay
@@ -46,13 +46,6 @@ class DiagramPay extends Component {
                             time={esb.avgTime}
                             type="esb"
                         />
-                        <div style={style.linker_cell_right}>
-                            <p style={style.linker_right}></p>
-                            <span className="pay-left-to-right-2-rowup"></span>
-                        </div>
-                    </div>
-                    <div className="clearfix" style={{ float: 'left' }}>
-                        <BranchPay data={this.props.store.esbServices.getData} />
                     </div>
                 </div>
 
@@ -75,7 +68,7 @@ const style = {
         margin: '0', width: '100%', position: 'relative', top: '50%', border: '1.5px solid #ec7c31'
     },
     linker_cell2: {
-        width: '230px', height: '68px', overFlow: 'hidden', position: 'relative'
+        width: '300px', height: '68px', overFlow: 'hidden', position: 'relative'
     },
     linker2: {
         margin: '0', width: '1px', height: '100%', position: 'relative', right: '-50%', border: '1.5px solid #ec7c31'

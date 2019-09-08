@@ -18,24 +18,18 @@ class BranchPayCell extends Component {
                         }
                         return (
                             <div style={style.linker_cell2}>
-                                {
-                                    !this.props.isESB ?
-                                        <Fragment>
-                                            <span className="pay-left-to-right-3-rowup"></span>
-                                            <span className="pay-up-to-dowm-2-rowup"></span>
-                                        </Fragment>
-                                        : ''
-                                }
+                                <span className="pay-left-to-right-3-rowup"></span>
+                                <span className="pay-up-to-dowm-2-rowup"></span>
                             </div>
                         )
                     })()
                 }
-                <div style={style.title} className="ellipsis-1">
+                <div style={style.title} className="ellipsis-1" title={this.props.name}>
                     {this.props.name}
                 </div>
                 <div style={style.data_cell}>
-                    <p className="ellipsis-1">交易笔数：{this.props.totalCount}</p>
-                    <p className="ellipsis-1">平均耗时：{this.props.avgTime}</p>
+                    <p className="ellipsis-1" title={this.props.totalCount}>交易笔数：{this.props.totalCount}</p>
+                    <p className="ellipsis-1" title={this.props.avgTime}>平均耗时(ms)：{this.props.avgTime}</p>
                 </div>
             </div>
         );
@@ -47,18 +41,16 @@ BranchPayCell.propTypes = {
     name: PropTypes.string,
     totalCount: PropTypes.number,
     avgTime: PropTypes.number,
-    nodeKey: PropTypes.number,
-    isESB: PropTypes.bool,
+    nodeKey: PropTypes.number
 };
 BranchPayCell.defaultProps = {
     style: {
-        width: '230px', textAlign: 'center'
+        width: '300px', textAlign: 'center'
     },
     name: '',
     totalCount: 0,
     avgTime: 0,
-    nodeKey: 0,
-    isESB: false
+    nodeKey: 0
 }
 
 export default BranchPayCell;
@@ -83,6 +75,6 @@ const style = {
         width: '75px', height: '75px', lineHeight: '75px', textAlign: 'center', borderRadius: '50%', border: '1px solid #ec7c31', float: 'left', marginTop: '11px', boxShadow: '0 0 10px #ec7c31'
     },
     data_cell: {
-        width: '120px', float: 'left', margin: '27px 20px 0px 10px'
+        width: '180px', float: 'left', margin: '27px 20px 0px 10px'
     }
 }

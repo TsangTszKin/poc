@@ -5,13 +5,12 @@
  * @LastEditTime: 2019-09-03 16:18:31
  * @Description: 
  */
-import React, { Component, Fragment } from 'react';
-import store from '@/store/business/pay/Detail';
+import React, { Component } from 'react';
+import store from '@/store/monitor/pay/ESB';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import PageHeader from '@/components/PageHeader';
-import { Row, Col, DatePicker, Button, Drawer, Spin, Empty } from 'antd'
+import { Row, Col, Empty, Button, PageHeader, Spin, Drawer } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import DiagramDetailESB from '@/components/business/home/DiagramDetailESB'
@@ -24,7 +23,7 @@ import Paging from '@/components/Paging';
 
 @withRouter
 @observer
-class Detail extends Component {
+class ESB extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,52 +31,26 @@ class Detail extends Component {
         }
         this.init_jiaoyiliang = this.init_jiaoyiliang.bind(this);
         this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
-        this.getData = this.getData.bind(this);
         this.getDetailChartsForApi = this.getDetailChartsForApi.bind(this);
+        this.init = this.init.bind(this);
         this.changePage = this.changePage.bind(this);
     }
 
     componentDidMount() {
-        this.init()
+        this.init();
+        setInterval(() => {
+            this.init()
+        }, 60000);
     }
 
     init() {
-        this.getData()
+        store.getPayDetailESBDataForApi('esb');
         this.getDetailChartsForApi();
-    }
-
-    getData() {
-        switch (this.props.match.path) {
-            case '/business/pay/pre':
-                store.getPayDetailDataForApi('front');
-                break;
-            case '/business/pay/unit':
-                store.getPayDetailDataForApi('online');
-                break;
-            default:
-                break;
-        }
     }
 
     getDetailChartsForApi() {
         store.helper.updateData('loading2', true);
-        let query = Object.assign({
-            timeUnit: store.helper.getData.timeUnit
-        }, store.helper.getData.query)
-
-        let type = ''
-        switch (this.props.match.path) {
-            case '/business/pay/pre':
-                type = 'front'
-                break;
-            case '/business/pay/unit':
-                type = 'online'
-                break;
-            default:
-                break;
-        }
-
-        payService.getDetailCharts(query, type).then(res => {
+        payService.getDetailMonitorCharts('esb').then(res => {
             store.helper.updateData('loading2', false);
             if (!publicUtils.isOk(res)) return
             this.init_jiaoyiliang(res.data.result.keys, res.data.result.trades)
@@ -146,24 +119,12 @@ class Detail extends Component {
         myChart.setOption(option);
     }
 
-
     changePage = (pageNum, pageSize) => {
         console.log("分页回调：当前页码" + pageNum);
         console.log("分页回调：获取条数" + pageSize);
         store.logList.updateData('pageNum', pageNum);
         store.logList.updateData('pageSize', pageSize);
-        let type = ''
-        switch (this.props.match.path) {
-            case '/business/pay/pre':
-                type = `front`
-                break;
-            case '/business/pay/unit':
-                type = `online`
-                break;
-            default:
-                break;
-        }
-        store.getLogForApi(type);
+        store.getLogForApi('esb');
     }
 
     render() {
@@ -172,68 +133,38 @@ class Detail extends Component {
                 <div className='panel'>
                     {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
-                        <div className="clearfix" style={style.searchPanel}>
-                            <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>统计周期 :</span>
-                                <DatePicker.RangePicker
-                                    size='small'
-                                    allowClear={false}
-                                    defaultValue={[moment(store.helper.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
-                                    format={'YYYY-MM-DD'}
-                                    onChange={(date, dateString) => {
-                                        console.log('date, dateString', date, dateString)
-                                        let query = { startTime: `${dateString[0]} 00:00`, endTime: `${dateString[1]} 00:00` }
-                                        store.helper.updateData('query', query);
-                                    }}
-                                />
-                            </div>
-                            <div className="clearfix" style={style.searchShell}>
-                                <Button size="small" type="primary" onClick={() => {
-                                    this.getData();
-                                    this.getDetailChartsForApi();
-                                }}>查询</Button>
-                            </div>
-                        </div>
-
+                        <PageHeader
+                            title={`ESB系统监控`}
+                            subTitle="数据统计周期：1分钟"
+                            style={{ padding: '0 0 30px 0' }}
+                        />
 
                         <Spin spinning={store.helper.getData.loading} size="large" >
-                            <DiagramDetail
+                            <DiagramDetailESB
                                 data={(() => {
                                     let data = [];
                                     store.data.getData.forEach((el, i) => {
-                                        let title = '';
-                                        switch (this.props.match.path) {
-                                            case '/business/pay/pre':
-                                                title = `支付系统前置节点${i + 1}`
-                                                break;
-                                            case '/business/pay/unit':
-                                                title = `支付系统联机节点${i + 1}`
-                                                break;
-                                            default:
-                                                break;
-                                        }
+                                        let title = `支付系统ESB节点${i + 1}`
                                         data.push({
-                                            title: title,
-                                            count: el.totalTrade,
-                                            time: el.avgTime,
-                                            ip: el.hostIp
+                                            title: el.hostIp,
+                                            count: el.totalTrades,
+                                            time: el.avgTimes,
+                                            ip: el.hostIp,
+                                            service: (() => {
+                                                let data = [];
+                                                el.esbServiceVOS.forEach(el2 => {
+                                                    data.push({
+                                                        name: el2.name,
+                                                        totalCount: el2.totalTrades,
+                                                        avgTime: el2.avgTimes,
+                                                        ip: el.hostIp
+                                                    })
+                                                })
+                                                return data
+                                            })()
                                         })
                                     })
                                     return data
-                                })()}
-                                type={(() => {
-                                    let type = ''
-                                    switch (this.props.match.path) {
-                                        case '/business/pay/pre':
-                                            type = `front`
-                                            break;
-                                        case '/business/pay/unit':
-                                            type = `online`
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    return type
                                 })()}
                             />
                             {
@@ -271,6 +202,7 @@ class Detail extends Component {
 
                         </Row>
 
+
                         <Drawer
                             title={`日志（${store.logList.getData.title}）`}
                             placement="right"
@@ -287,6 +219,7 @@ class Detail extends Component {
                                 changePage={this.changePage}
                             />
                         </Drawer>
+
                     </div>
                 </div>
             </Provider>
@@ -294,7 +227,7 @@ class Detail extends Component {
     }
 }
 
-export default Detail
+export default ESB
 
 const style = {
     searchPanel: {
