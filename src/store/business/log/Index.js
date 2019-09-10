@@ -6,7 +6,7 @@
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
-// import common from '@/utils/common';
+import common from '@/utils/common';
 import publicUtils from '@/utils/publicUtils'
 import logService from '@/api/business/logService'
 
@@ -27,7 +27,9 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { time1: '', time2: '', module: '', businessType: '', category: '' }
+            query: {
+                startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), logGrade: '', takeTimes: '', tradeNo: '', clusterSign: '', hostIp: '', content: ''
+            }
         },
         get getData() {
             return toJS(this.data)
@@ -64,7 +66,9 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { time1: '', time2: '', module: '', businessType: '', category: '' }
+            query: {
+                startTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), logGrade: '', takeTimes: '', tradeNo: '', clusterSign: '', hostIp: '', content: ''
+            }
         })
     }
 
@@ -77,13 +81,12 @@ class store {
         this.list.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
 
-        let pageNum = res.data.pageList.sum === 0 ? this.list.getData.sum : ++res.data.pageList.curPageNO;
+        let pageNum = res.data.pageList.sum === 0 ? 1 : ++res.data.pageList.curPageNO;
         let total = res.data.pageList.sum;
         let dataSource = res.data.pageList.resultList;
         this.list.updateData('pageNum', pageNum);
         this.list.updateData('total', total);
         this.list.updateData('dataSource', dataSource);
-
     }
 }
 export default new store

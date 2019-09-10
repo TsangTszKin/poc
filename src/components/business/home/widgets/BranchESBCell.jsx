@@ -28,17 +28,8 @@ class BranchESBCell extends Component {
                     }
                     <p style={{ width: '1px', height: '30px', border: '1.5px solid #ec7c31', margin: '0 auto', backgroundColor: '#ec7c31' }}></p>
                 </div>
-                <div style={{ width: '180px', cursor: 'pointer' }}
-                    onClick={() => {
-                        let query = this.props.store.logList.getData.query;
-                        query.hostIp = this.props.ip;
-                        query.logFile = this.props.name;
-                        this.props.store.logList.updateData('query', query);
-
-                        this.props.store.getLogForApi(this.props.type);
-                        this.props.store.logList.updateData('title', this.props.name)
-                    }}
-                    title="点击查看节点日志信息">
+                <div style={{ width: '180px' }}
+                    title="点击查看节点更多信息">
                     <div style={style.title} className="ellipsis-1" title={this.props.name}>
                         {this.props.name}
                     </div>
@@ -79,20 +70,6 @@ export default BranchESBCell;
 
 
 const style = {
-    // linker_cell: {
-    //     width: '80px', height: '96px', float: 'left'
-    // },
-    // linker_cell2: {
-    //     width: '80px', height: '96px', float: 'left',
-    //     border: '2px solid rgb(236, 124, 49)',
-    //     borderTop: 'none',
-    //     borderRight: 'none',
-    //     marginTop: '-46px',
-    //     position: 'relative'
-    // },
-    // linker: {
-    //     margin: '0', width: '100%', position: 'relative', top: '50%', border: '1.5px solid #ec7c31'
-    // },
     title: {
         width: '120px', height: '50px', lineHeight: '50px', textAlign: 'center', borderRadius: '50%', border: '1px solid #ec7c31', boxShadow: '0 0 10px #ec7c31', margin: '0 auto'
     },

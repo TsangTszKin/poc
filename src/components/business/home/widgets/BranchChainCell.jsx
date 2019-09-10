@@ -45,7 +45,7 @@ class BranchCell extends Component {
                         : ''
 
                 }
-                <div style={style.title} title={this.props.name} className="ellipsis-1">
+                <div style={style.title} title={this.props.name} className="ellipsis-1" title={this.props.title}>
                     {this.props.title}
                 </div>
                 <div style={style.data_cell}>
@@ -90,10 +90,10 @@ const style = {
         margin: '0', width: '100%', position: 'relative', top: '50%', border: '1.5px solid #ec7c31'
     },
     title: {
-        width: '75px', height: '75px', lineHeight: '75px', textAlign: 'center', borderRadius: '50%', border: '1px solid #ec7c31', float: 'left', marginTop: '11px', boxShadow: '0 0 10px #ec7c31'
+        width: '120px', height: '65px', lineHeight: '65px', textAlign: 'center', borderRadius: '50%', border: '1px solid #ec7c31', float: 'left', marginTop: '17px', boxShadow: '0 0 10px #ec7c31'
     },
     data_cell: {
-        width: '150px', float: 'left', margin: '38px 20px 0px 10px'
+        width: '150px', float: 'left', margin: '41px 20px 0px 10px'
     },
     _5: {
         position: 'absolute', left: '50px', top: '24%', borderRadius: '50%', cursor: 'pointer'

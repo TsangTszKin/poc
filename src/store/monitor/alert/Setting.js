@@ -6,46 +6,20 @@
  * @Description: 
  */
 import { observable, toJS, action } from 'mobx'
-// import common from '@/utils/common';
+import common from '@/utils/common';
 import publicUtils from '@/utils/publicUtils'
 import alertService from '@/api/business/alertService'
+import { message } from 'antd';
 
 class store {
     constructor() {
         this.reset = this.reset.bind(this);
-        this.getAlerSettingtListForApi = this.getAlerSettingtListForApi.bind(this);
-    }
-
-    /**
-     *列表公共参数
-     */
-    @observable list = {
-        data: {
-            dataSource: [],
-            pageNum: 1,
-            pageSize: 10,
-            total: 0,
-            loading: true,
-            selectedRowKeys: [],
-            query: {  },
-            timeUnit: 60
-        },
-        get getData() {
-            return toJS(this.data)
-        },
-        setData(value) {
-            this.data = value
-        },
-        updateData(key, value) {
-            this.data[key] = value
-        }
+        this.getAlertSettingForApi = this.getAlertSettingForApi.bind(this);
+        this.saveAlertSettingForApi = this.saveAlertSettingForApi.bind(this);
     }
 
     @observable detail = {
-        data: {
-            log: '',
-            visible: false
-        },
+        data: [],
         get getData() {
             return toJS(this.data)
         },
@@ -58,34 +32,46 @@ class store {
     }
 
     reset() {
-        this.list.setData({
-            dataSource: [],
-            pageNum: 1,
-            pageSize: 10,
-            total: 0,
-            loading: true,
-            selectedRowKeys: [],
-            query: { },
-            timeUnit: 60
-        })
+        this.detail.setData([])
     }
 
-    getAlerSettingtListForApi() {
-        this.list.updateData('loading', true);
-        alertService.getAlerSettingtList(this.list.getData.pageNum, this.list.getData.pageSize, this.list.getData.query).then(this.getAlerSettingtListForApiCallBack)
+    getAlertSettingForApi() {
+        alertService.getAlertSetting().then(this.getAlertSettingForApiCallBack)
     }
-    @action.bound getAlerSettingtListForApiCallBack(res) {
-        console.log("res", res)
-        this.list.updateData('loading', false);
+    @action.bound getAlertSettingForApiCallBack(res) {
         if (!publicUtils.isOk(res)) return
+        this.detail.setData(res.data.result);
 
-        let pageNum = res.data.pageList.sum === 0 ? this.list.getData.sum : ++res.data.pageList.curPageNO;
-        let total = res.data.pageList.sum;
-        let dataSource = res.data.pageList.resultList;
-        this.list.updateData('pageNum', pageNum);
-        this.list.updateData('total', total);
-        this.list.updateData('dataSource', dataSource);
+    }
+
+    saveAlertSettingForApi() {
+        common.loading.show();
+        alertService.saveAlertSetting(this.detail.getData).then(this.saveAlertSettingForApiCallBack).catch(re => common.loading.hide())
+    }
+    @action.bound saveAlertSettingForApiCallBack(res) {
+        common.loading.hide();
+        if (!publicUtils.isOk(res)) return
+        message.success('修改成功');
+        this.getAlertSettingForApi()
 
     }
 }
 export default new store
+
+const dataDemo = [
+    {
+        indicator: 1,
+        thresholdValue: null,
+        indicatorName: '1分钟交易量'
+    },
+    {
+        indicator: 2,
+        thresholdValue: null,
+        indicatorName: '1分钟平均耗时'
+    },
+    {
+        indicator: 3,
+        thresholdValue: null,
+        indicatorName: '1分钟最大耗时'
+    }
+]

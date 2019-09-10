@@ -24,9 +24,9 @@ class Home extends Component {
         this.state = {
             breadcrumbName: ''
         }
-        this.init_jiaoyiliang = this.init_jiaoyiliang.bind(this);
-        this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
-        this.getGroupChartsForApi = this.getGroupChartsForApi.bind(this);
+        // this.init_jiaoyiliang = this.init_jiaoyiliang.bind(this);
+        // this.init_pingjunhaoshi = this.init_pingjunhaoshi.bind(this);
+        // this.getGroupChartsForApi = this.getGroupChartsForApi.bind(this);
     }
 
     componentDidMount() {
@@ -36,8 +36,8 @@ class Home extends Component {
     init() {
         store.reset();
         store.getPayGroupDataForApi();
-        store.getESBServicesForApi();
-        this.getGroupChartsForApi();
+        // store.getESBServicesForApi();
+        // this.getGroupChartsForApi();
     }
 
     getGroupChartsForApi() {
@@ -128,10 +128,9 @@ class Home extends Component {
                                 <span style={style.searchTitle}>统计周期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment(store.helper.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    value={[moment(store.helper.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
                                     format={'YYYY-MM-DD'}
                                     onChange={(date, dateString) => {
-                                        console.log('date, dateString', date, dateString)
                                         let query = { startTime: `${dateString[0]} 00:00`, endTime: `${dateString[1]} 00:00` }
                                         store.helper.updateData('query', query);
                                     }}
@@ -140,7 +139,7 @@ class Home extends Component {
                             <div className="clearfix" style={style.searchShell}>
                                 <Button size="small" type="primary" onClick={()=> {
                                     store.getPayGroupDataForApi();
-                                    this.getGroupChartsForApi();
+                                    // this.getGroupChartsForApi();
                                 }}>查询</Button>
                             </div>
                         </div>
@@ -149,7 +148,7 @@ class Home extends Component {
                             <DiagramPay />
                         </Spin>
 
-                        <Row>
+                        {/* <Row>
                             <Col span={24}>
                                 <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
                                     store.helper.updateData('timeUnit', value);
@@ -168,7 +167,7 @@ class Home extends Component {
                                     <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
                                 </Col>
                             </Row>
-                        </Spin>
+                        </Spin> */}
                     </div>
                 </div>
             </Provider>
@@ -180,7 +179,7 @@ export default Home
 
 const style = {
     searchPanel: {
-        marginBottom: '40px'
+        marginBottom: '100px'
     },
     searchShell: {
         margin: '0px 30px 10px 0px',

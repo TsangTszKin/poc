@@ -25,13 +25,13 @@ class CellPayMonitor extends Component {
                         onClick={() => {
                             switch (this.props.type) {
                                 case 'pre':
-                                    this.props.history.push('/business/pay/pre')
+                                    this.props.history.push('/monitor/pay/pre')
                                     break;
                                 case 'unit':
-                                    this.props.history.push('/business/pay/unit')
+                                    this.props.history.push('/monitor/pay/unit')
                                     break;
                                 case 'esb':
-                                    this.props.history.push('/business/pay/esb')
+                                    this.props.history.push('/monitor/pay/esb')
                                     break;
                                 default:
                                     break;
@@ -72,7 +72,7 @@ const style = {
         height: '75px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '36.5px', position: 'relative'
     },
     cell1_btn: {
-        position: 'absolute', top: '15px', right: '10px', cursor: 'pointer'
+        position: 'absolute', top: '15px', right: '10px', cursor: 'pointer', zIndex: '1'
     },
     cell2: {
         height: '34px', border: '1px solid rgba(201, 201, 201, 1)', lineHeight: '34px'

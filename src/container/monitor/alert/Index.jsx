@@ -4,12 +4,12 @@ import React, { Component, Fragment } from 'react'
 import { observer, Provider } from 'mobx-react'
 import { withRouter } from 'react-router-dom'
 import store from '@/store/monitor/alert/Index'
-import { Table, Spin, Drawer, DatePicker, Input, Button, Divider, Select, Tag } from 'antd'
+import { Table, Spin, Drawer, DatePicker, Input, Button, Divider, Select, Tag, message } from 'antd'
 import common from '@/utils/common';
 import Paging from '@/components/Paging';
-import Code from '@/components/Code';
+import publicUtils from '@/utils/publicUtils';
 import moment from 'moment';
-import DiagramChainSms from '@/components/business/home/DiagramChainSms'
+import alertService from '@/api/business/alertService';
 
 @withRouter @observer
 class Index extends Component {
@@ -22,11 +22,12 @@ class Index extends Component {
 
     componentDidMount() {
         this.init();
+
     }
 
     init() {
         store.reset();
-        store.getAlertListForApi()
+        store.getAlertSelectionForApi()
     }
 
     changePage = (pageNum, pageSize) => {
@@ -57,10 +58,9 @@ class Index extends Component {
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm:ss'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm:s')]}
+                                    value={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm:ss'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm:s')]}
                                     format={'YYYY-MM-DD'}
                                     onChange={(date, dateString) => {
-                                        console.log('date, dateString', date, dateString)
                                         let query = store.list.getData.query;
                                         query.startTime = `${dateString[0]} 00:00:00`
                                         query.endTime = `${dateString[1]} 00:00:00`
@@ -73,10 +73,16 @@ class Index extends Component {
                                 <Select dropdownMatchSelectWidth={false} allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请选择"
                                     value={store.list.getData.query.level}
                                     onChange={(value) => {
+                                        if (value === undefined) value = ''
                                         let query = store.list.getData.query;
                                         query.level = value
                                         store.list.updateData('query', query);
                                     }}>
+                                    {
+                                        store.helper.getData.alarmLevel.map((item, i) =>
+                                            <Select.Option key={i} value={item.value}>{item.name}</Select.Option>
+                                        )
+                                    }
                                 </Select>
                             </div>
                             <div className="clearfix" style={style.searchShell}>
@@ -84,10 +90,16 @@ class Index extends Component {
                                 <Select allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请选择"
                                     value={store.list.getData.query.status}
                                     onChange={(value) => {
+                                        if (value === undefined) value = ''
                                         let query = store.list.getData.query;
                                         query.status = value
                                         store.list.updateData('query', query);
                                     }}>
+                                    {
+                                        store.helper.getData.alarmStatus.map((item, i) =>
+                                            <Select.Option key={i} value={item.value}>{item.name}</Select.Option>
+                                        )
+                                    }
                                 </Select>
                             </div>
                             <div className="clearfix" style={style.searchShell}>
@@ -118,9 +130,20 @@ class Index extends Component {
                                     dataSource.forEach((el, i) => {
                                         el.index = i + 1;
                                         el.action = <Fragment>
-                                            <a onClick={() => {
-                                                // store.getChainDetailForApi(el.tradeNo)
-                                            }}>设为已处理</a>
+                                            {
+                                                el.status === '1' ?
+                                                    <a>已处理</a>
+                                                    :
+                                                    <a onClick={() => {
+                                                        common.loading.show();
+                                                        alertService.handleAlert(el.id).then(res => {
+                                                            common.loading.hide();
+                                                            if (!publicUtils.isOk(res)) return
+                                                            message.success('操作成功')
+                                                            store.getAlertListForApi();
+                                                        }).catch(res => common.loading.hide())
+                                                    }}>设为已处理</a>
+                                            }
                                         </Fragment>
                                     })
                                     return dataSource
@@ -152,7 +175,7 @@ const columns = [
     },
     {
         title: '告警产生时间',
-        dataIndex: 'time',
+        dataIndex: 'date',
         key: 'time.',
         sorter: (a, b) => {
             return a.time.localeCompare(b.time)
@@ -165,8 +188,8 @@ const columns = [
     },
     {
         title: '告警级别',
-        dataIndex: 'level',
-        key: 'level',
+        dataIndex: 'levelName',
+        key: 'levelName',
         render: (value) => {
             switch (value) {
                 case '紧急':
@@ -183,8 +206,8 @@ const columns = [
     },
     {
         title: '告警状态',
-        dataIndex: 'status',
-        key: 'status',
+        dataIndex: 'statusName',
+        key: 'statusName',
         render: (value) => {
             switch (value) {
                 case '已处理':
@@ -199,8 +222,8 @@ const columns = [
     },
     {
         title: '告警消息',
-        dataIndex: 'content',
-        key: 'content'
+        dataIndex: 'msgBody',
+        key: 'msgBody'
     },
     {
         title: '操作',

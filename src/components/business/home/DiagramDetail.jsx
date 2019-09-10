@@ -37,7 +37,8 @@ class DiagramDetail extends Component {
                                 }
                                 <div className="clearfix" style={{ float: 'left' }}>
                                     <CellDetail key={i} {...item} type={this.props.type} style={{ marginBottom: '40px' }}
-                                        nodeKey={i}
+                                        callbackfn={this.props.callbackfn}
+                                        extType={this.props.extType}
                                     />
                                 </div>
                             </Fragment>
@@ -53,6 +54,8 @@ class DiagramDetail extends Component {
 DiagramDetail.propTypes = {
     data: PropTypes.array,
     type: PropTypes.oneOf(['front', 'online', 'sms']),
+    extType: PropTypes.oneOf(['monitor', 'query']),
+    callbackfn: PropTypes.func
 };
 DiagramDetail.defaultProps = {
     data: [
@@ -63,7 +66,9 @@ DiagramDetail.defaultProps = {
             ip: ''
         }
     ],
-    type: ''
+    type: '',
+    extType: 'query',
+    callbackfn: () => { }
 }
 
 export default DiagramDetail;

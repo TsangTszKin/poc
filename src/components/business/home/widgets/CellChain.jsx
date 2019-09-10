@@ -53,7 +53,7 @@ const style = {
         height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '31.5px', position: 'relative'
     },
     cell1_btn: {
-        position: 'absolute', top: '15px', right: '10px', cursor: 'pointer'
+        position: 'absolute', top: '15px', right: '10px', cursor: 'pointer', zIndex: '1'
     },
     cell2: {
         height: '34px', border: '1px solid rgba(201, 201, 201, 1)', lineHeight: '34px'

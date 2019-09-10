@@ -49,19 +49,19 @@ class DiagramChainPay extends Component {
                             <Tag color={this.hasLog('1') ? '#2db7f5' : '#DCDCDC'} style={style._1} title="点击查看日志"
                                 onClick={() => {
                                     if (this.hasLog('1')) this.props.callbackfn(1)
-                                    else message.warning('此处日志信息')
+                                    else message.warning('此处无日志信息')
                                 }}
                             >1</Tag>
                             <Tag color={this.hasLog('2') ? '#87d068' : '#DCDCDC'} style={style._2} title="点击查看日志"
                                 onClick={() => {
                                     if (this.hasLog('2')) this.props.callbackfn(2)
-                                    else message.warning('此处日志信息')
+                                    else message.warning('此处无日志信息')
                                 }}
                             >2</Tag>
                             <Tag color={this.hasLog('3') ? '#108ee9' : '#DCDCDC'} style={style._3} title="点击查看日志"
                                 onClick={() => {
                                     if (this.hasLog('3')) this.props.callbackfn(3)
-                                    else message.warning('此处日志信息')
+                                    else message.warning('此处无日志信息')
                                 }}
                             >3</Tag>
 
@@ -70,7 +70,7 @@ class DiagramChainPay extends Component {
                                 style={style._4} title="点击查看日志"
                                 onClick={() => {
                                     if (this.hasLog('4')) this.props.callbackfn(4)
-                                    else message.warning('此处日志信息')
+                                    else message.warning('此处无日志信息')
                                 }}
                             >4</Tag>
 
@@ -91,7 +91,7 @@ class DiagramChainPay extends Component {
                             style={style._5} title="点击查看日志"
                             onClick={() => {
                                 if (this.hasLog('5')) this.props.callbackfn(5)
-                                else message.warning('此处日志信息')
+                                else message.warning('此处无日志信息')
                             }}
                         >5</Tag>
                         {

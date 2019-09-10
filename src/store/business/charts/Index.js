@@ -77,7 +77,7 @@ class store {
         this.list.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
 
-        let pageNum = res.data.pageList.sum === 0 ? this.list.getData.sum : ++res.data.pageList.curPageNO;
+        let pageNum = res.data.pageList.sum === 0 ? 1 : ++res.data.pageList.curPageNO;
         let total = res.data.pageList.sum;
         let dataSource = res.data.pageList.resultList;
         this.list.updateData('pageNum', pageNum);

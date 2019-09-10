@@ -12,7 +12,7 @@ import common from '@/utils/common';
 import echarts from 'echarts'
 import { Row, Col, DatePicker, Button, Empty, Drawer, Spin } from 'antd'
 import moment from 'moment';
-import DiagramDetail from '@/components/business/home/DiagramDetail'
+import DiagramDetailSms from '@/components/business/home/DiagramDetailSms'
 import Code from '@/components/Code';
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 import smsService from '@/api/business/smsService'
@@ -83,7 +83,7 @@ class Index extends Component {
 
         let option = {
             title: {
-                text: '交易量'
+                text: 'Realtime交易量'
             },
             dataZoom: [{
             }, {
@@ -115,7 +115,7 @@ class Index extends Component {
 
         let option = {
             title: {
-                text: '平均耗时'
+                text: 'Realtime平均耗时'
             },
             dataZoom: [{
             }, {
@@ -149,7 +149,7 @@ class Index extends Component {
                                 <span style={style.searchTitle}>统计周期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment(store.helper.getData.query.beginTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    value={[moment(store.helper.getData.query.beginTime, 'YYYY-MM-DD hh:mm'), moment(store.helper.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
                                     format={'YYYY-MM-DD'}
                                     onChange={(date, dateString) => {
                                         console.log('date, dateString', date, dateString)
@@ -167,7 +167,7 @@ class Index extends Component {
                         </div>
 
                         <Spin spinning={store.helper.getData.loading} size="large" >
-                            <DiagramDetail
+                            <DiagramDetailSms
                                 type="sms"
                                 data={(() => {
                                     let data = [];
@@ -235,7 +235,7 @@ export default Index
 
 const style = {
     searchPanel: {
-        marginBottom: '40px'
+        marginBottom: '100px'
     },
     searchShell: {
         margin: '0px 30px 10px 0px',

@@ -7,16 +7,18 @@
  * @Description: 
  */
 import React, { Component, Fragment } from 'react';
-import store from '@/store/monitor/alert/Index'
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import { Row, Col, Table, Tag } from 'antd'
-// import Diagram from '@/components/business/home/Diagram'
-// import 'echarts/theme/dark'
-import PageHeader from '@/components/PageHeader';
+import { Row, Col, Table, Tag, Button } from 'antd'
+import { withRouter } from 'react-router-dom';
+import homeService from '@/api/business/homeService';
+import alertService from '@/api/business/alertService';
+import publicUtils from '@/utils/publicUtils';
 
-@observer
+let timer
+
+@withRouter @observer
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -27,17 +29,54 @@ class Home extends Component {
         this.init_2 = this.init_2.bind(this);
         this.init_3 = this.init_3.bind(this);
         this.init_4 = this.init_4.bind(this);
+        this.getHomeDataForApi = this.getHomeDataForApi.bind(this);
+
+        this.state = {
+            top: {
+                tradeCount: {
+                    value: 0,
+                    name: '交易量'
+                },
+                avgTime: {
+                    value: 0,
+                    name: '交易耗时'
+                },
+                logCountsVo: {
+                    value: 0,
+                    name: '日志采集数量'
+                },
+                alarmCountVo: {
+                    value: 0,
+                    name: '告警数量'
+                }
+            },
+            alarmRecords: [],
+            alarmDistribution: [
+                {
+                    level: '2',
+                    name: '紧急',
+                    value: 0,
+                },
+                {
+                    level: '1',
+                    name: '重要',
+                    value: 0,
+                },
+                {
+                    level: '0',
+                    name: '提示',
+                    value: 0,
+                }
+            ],
+            logCountChart: {
+                logCounts: [],
+                dates: [],
+
+            }
+        }
     }
 
     componentDidMount() {
-
-        setInterval(() => {
-            if (!common.isEmpty(window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar"))) {
-                window.document.querySelector("#business-home-header-info div.ant-tabs-top-bar").style.width = '50%';
-            }
-
-            // $("#business-home-header-info span.ant-tabs-tab-next").addClass("ant-tabs-tab-arrow-show").removeClass("ant-tabs-tab-btn-disabled");
-        }, 300)
 
         this.init()
     }
@@ -48,8 +87,15 @@ class Home extends Component {
         this.init_3()
         this.init_4()
 
-        store.reset();
-        store.getAlertListForApi()
+        this.getHomeDataForApi();
+
+        timer = setInterval(() => {
+            this.getHomeDataForApi();
+        }, 60000);
+    }
+
+    componentWillUnmount() {
+        window.clearInterval(timer)
     }
 
     init_1() {
@@ -69,19 +115,15 @@ class Home extends Component {
                 {
                     name: '数量',
                     type: 'gauge',
+                    max: 2000,
                     detail: { formatter: '{value}' },
-                    data: [{ value: 50, name: '数量' }],
+                    data: [{ value: this.state.top.tradeCount.value, name: '数量' }],
                     center: ['50%', '60%'],
                 }
             ]
         };
 
         myChart.setOption(option);
-
-        setInterval(function () {
-            option.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
-            myChart.setOption(option, true);
-        }, 2000);
     }
 
     init_2() {
@@ -102,7 +144,7 @@ class Home extends Component {
                     name: '数量',
                     type: 'gauge',
                     detail: { formatter: '{value}' },
-                    data: [{ value: 50, name: '数量' }],
+                    data: [{ value: this.state.top.avgTime.value, name: '数量' }],
                     center: ['50%', '60%'],
                 }
             ]
@@ -114,6 +156,16 @@ class Home extends Component {
 
 
     init_3() {
+
+        const { alarmDistribution } = this.state
+        const nameList = (() => {
+            let rs = []
+            alarmDistribution.forEach(el => {
+                rs.push(el.name)
+            })
+            return rs
+        })()
+
         var myChart = echarts.init(this._3);
         // 绘制图表
 
@@ -130,7 +182,7 @@ class Home extends Component {
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data: ['提示', '重要', '紧急']
+                data: nameList
             },
             series: [
                 {
@@ -138,11 +190,7 @@ class Home extends Component {
                     type: 'pie',
                     radius: '55%',
                     center: ['50%', '60%'],
-                    data: [
-                        { value: 135, name: '提示' },
-                        { value: 1548, name: '重要' },
-                        { value: 1948, name: '紧急' }
-                    ],
+                    data: alarmDistribution,
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,
@@ -173,13 +221,13 @@ class Home extends Component {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: this.state.logCountChart.dates
             },
             yAxis: {
                 type: 'value'
             },
             series: [{
-                data: [820, 932, 1500, 934, 1290, 1330, 1320],
+                data: this.state.logCountChart.logCounts,
                 type: 'line',
                 center: ['50%', '60%']
             }]
@@ -192,83 +240,133 @@ class Home extends Component {
 
 
 
+    getHomeDataForApi() {
+        homeService.getHomeData().then(res => {
+            if (!publicUtils.isOk(res)) return
+            const { top, alarmRecords, alarmDistribution, logCountChart } = res.data.result
+            if (top) {
+                this.setState({
+                    top
+                })
+            }
+            if (alarmRecords) {
+                this.setState({
+                    alarmRecords
+                })
+            }
+            if (alarmDistribution) {
+                this.setState({
+                    alarmDistribution
+                })
+            }
+            if (logCountChart) {
+                this.setState({
+                    logCountChart
+                })
+            }
+
+            this.init_1()
+            this.init_2()
+            this.init_3()
+            this.init_4()
+
+        }).catch(() => { })
+    }
+
+
     render() {
         return (
-            <Provider store={store}>
-                <div className='panel'>
-                    {/* <PageHeader meta={this.props.meta} /> */}
-                    <div className="pageContent charts-main">
-                        <Row style={{ marginBottom: '40px' }} gutter={16}>
-                            <Col span={6}>
-                                <div
-                                    style={style.top_cell_1}
-                                >
-                                    <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>统一支付系统实时交易量</p>
-                                    <p style={{ fontSize: '14px', position: 'relative', top: '10px' }}>（实时借记业务）</p>
-                                    <p style={{ fontSize: '20px', position: 'relative', top: '20px' }}>450笔/分钟</p>
-                                </div>
-                            </Col>
-                            <Col span={6}>
-                                <div
-                                    style={style.top_cell_2}
-                                >
-                                    <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>统一支付系统实时交易耗时</p>
-                                    <p style={{ fontSize: '14px', position: 'relative', top: '10px' }}>（实时借记业务）</p>
-                                    <p style={{ fontSize: '20px', position: 'relative', top: '20px' }}>200毫秒/笔</p>
-                                </div>
-                            </Col>
-                            <Col span={6}>
-                                <div
-                                    style={style.top_cell_3}
-                                >
-                                    <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>告警数量</p>
-                                    <p style={{ fontSize: '28px', fontWeight: 'bold', position: 'relative', top: '25px' }}>20</p>
-                                </div>
-                            </Col>
-                            <Col span={6}>
-                                <div
-                                    style={style.top_cell_4}
-                                >
-                                    <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>实时日志采集数量</p>
-                                    <p style={{ fontSize: '20px', fontWeight: 'bold', position: 'relative', top: '30px' }}>5000条/分钟</p>
-                                </div>
-                            </Col>
-                        </Row>
-                        <Row style={{ margin: '60px 0' }}>
-                            <Col span={6}>
-                                <div ref={el => this._1 = el} style={{ width: '100%', height: '300px' }}></div>
-                            </Col>
-                            <Col span={6}>
-                                <div ref={el => this._2 = el} style={{ width: '100%', height: '300px' }}></div>
-                            </Col>
-                            <Col span={6}>
-                                <div ref={el => this._3 = el} style={{ width: '100%', height: '300px' }}></div>
-                            </Col>
-                            <Col span={6}>
-                                <div ref={el => this._4 = el} style={{ width: '100%', height: '300px' }}></div>
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom: '40px' }} gutter={16}>
-                            <Col span={24} >
-                                <Table size="small"
-                                    dataSource={(() => {
-                                        let dataSource = common.deepClone(store.list.getData.dataSource);
-                                        dataSource.forEach((el, i) => {
-                                            el.index = i + 1;
-                                            el.action = <Fragment>
-                                                <a onClick={() => {
-                                                    // store.getChainDetailForApi(el.tradeNo)
-                                                }}>设为已处理</a>
-                                            </Fragment>
-                                        })
-                                        return dataSource
-                                    })()}
-                                    columns={columns} pagination={false} />
-                            </Col>
-                        </Row>
-                    </div>
+            <div className='panel'>
+                {/* <PageHeader meta={this.props.meta} /> */}
+                <div className="pageContent charts-main">
+                    <Row style={{ marginBottom: '40px' }} gutter={16}>
+                        <Col span={6}>
+                            <div
+                                style={style.top_cell_1}
+                            >
+                                <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>统一支付系统实时交易量</p>
+                                <p style={{ fontSize: '14px', position: 'relative', top: '10px' }}>（实时借记业务）</p>
+                                <p style={{ fontSize: '20px', position: 'relative', top: '20px' }}>{this.state.top.tradeCount.value}笔/分钟</p>
+                            </div>
+                        </Col>
+                        <Col span={6}>
+                            <div
+                                style={style.top_cell_2}
+                            >
+                                <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>统一支付系统实时交易耗时</p>
+                                <p style={{ fontSize: '14px', position: 'relative', top: '10px' }}>（实时借记业务）</p>
+                                <p style={{ fontSize: '20px', position: 'relative', top: '20px' }}>{this.state.top.avgTime.value}毫秒/笔</p>
+                            </div>
+                        </Col>
+                        <Col span={6}>
+                            <div
+                                style={style.top_cell_3}
+                            >
+                                <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>告警数量</p>
+                                <p style={{ fontSize: '28px', fontWeight: 'bold', position: 'relative', top: '25px' }}>{this.state.top.alarmCountVo.value}</p>
+                            </div>
+                        </Col>
+                        <Col span={6}>
+                            <div
+                                style={style.top_cell_4}
+                            >
+                                <p style={{ fontSize: '12px', position: 'relative', top: '10px' }}>实时日志采集数量</p>
+                                <p style={{ fontSize: '20px', fontWeight: 'bold', position: 'relative', top: '30px' }}>{this.state.top.logCountsVo.value}条/分钟</p>
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ margin: '60px 0' }}>
+                        <Col span={6}>
+                            <div ref={el => this._1 = el} style={{ width: '100%', height: '300px' }}></div>
+                        </Col>
+                        <Col span={6}>
+                            <div ref={el => this._2 = el} style={{ width: '100%', height: '300px' }}></div>
+                        </Col>
+                        <Col span={6}>
+                            <div ref={el => this._3 = el} style={{ width: '100%', height: '300px' }}></div>
+                        </Col>
+                        <Col span={6}>
+                            <div ref={el => this._4 = el} style={{ width: '100%', height: '300px' }}></div>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: '40px' }} gutter={16}>
+                        <Col span={24} >
+                            <Table size="small"
+                                scroll={{ x: this.state.alarmRecords.length > 0 ? 1100 : 'auto' }}
+                                dataSource={(() => {
+                                    let dataSource = common.deepClone(this.state.alarmRecords);
+                                    dataSource.forEach((el, i) => {
+                                        el.index = i + 1;
+                                        el.action = <Fragment>
+                                            {
+                                                el.status === '1' ?
+                                                    <a>已处理</a>
+                                                    :
+                                                    <a onClick={() => {
+                                                        common.loading.show();
+                                                        alertService.handleAlert(el.id).then(res => {
+                                                            common.loading.hide();
+                                                            if (!publicUtils.isOk(res)) return
+                                                            message.success('操作成功')
+                                                            this.getHomeDataForApi();
+                                                        }).catch(res => common.loading.hide())
+                                                    }}>设为已处理</a>
+
+                                            }
+                                        </Fragment>
+                                    })
+                                    return dataSource
+                                })()}
+                                columns={columns} pagination={false} />
+                            <Button type="dashed" block style={{ marginTop: '10px' }}
+                                onClick={() => this.props.history.push('/monitor/alert/index')}
+                            >
+                                查看更多
+                                </Button>
+                        </Col>
+                    </Row>
                 </div>
-            </Provider>
+            </div>
         )
     }
 }
@@ -323,7 +421,7 @@ const columns = [
     },
     {
         title: '告警产生时间',
-        dataIndex: 'time',
+        dataIndex: 'date',
         key: 'time.',
         sorter: (a, b) => {
             return a.time.localeCompare(b.time)
@@ -336,8 +434,8 @@ const columns = [
     },
     {
         title: '告警级别',
-        dataIndex: 'level',
-        key: 'level',
+        dataIndex: 'levelName',
+        key: 'levelName',
         render: (value) => {
             switch (value) {
                 case '紧急':
@@ -354,8 +452,8 @@ const columns = [
     },
     {
         title: '告警状态',
-        dataIndex: 'status',
-        key: 'status',
+        dataIndex: 'statusName',
+        key: 'statusName',
         render: (value) => {
             switch (value) {
                 case '已处理':
@@ -370,8 +468,8 @@ const columns = [
     },
     {
         title: '告警消息',
-        dataIndex: 'content',
-        key: 'content'
+        dataIndex: 'msgBody',
+        key: 'msgBody'
     },
     {
         title: '操作',

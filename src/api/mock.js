@@ -18,27 +18,26 @@ var logList = Mock.mock(`${http.gwApiPrefix}/api/log/list`, {
         "pageCount": 5,
         "sum": 100,
         "resultList|10": [{
-            'id': '@natural',
-            'name': '@name', //中文名称
-            'module': '@cname', //中文名称
-            'org': '@cname', //中文名称
-            'type|1': [
-                "转账",
-                "对账",
-                "查询"
+            'logId': '@natural',
+            'logFile': '@name', //中文名称
+            'clusterSign|1': [
+                "esb",
+                "front",
+                "online",
+                "message"
             ],
-            'category|1': [
+            'logGrade|1': [
                 "正常",
                 "错误",
                 "警告",
                 "成功",
                 "失败"
             ],
-            'account': '@natural', //中文名称
-            'custNo': '@natural', //中文名称
-            'cardNo': '@natural', //中文名称
-            'time': '@date("yyyy-MM-dd")', //日期
-            'log': '@paragraph(10)'
+            'takeTimes': '@float(60, 100, 3, 5)', //中文名称
+            'tradeNo': '@natural', //中文名称
+            'hostIp': '192.168.0.1', //中文名称
+            'logCrdate': '@date("yyyy-MM-dd")', //日期
+            'content': '@paragraph(10)'
         }]
     }
 });
@@ -86,7 +85,7 @@ var smsChainList = Mock.mock(`${http.gwApiPrefix}/bpc/msg/call/chain`, {
     }
 });
 
-var alertList = Mock.mock(`${http.gwApiPrefix}/api/alert/list`, {
+var alertList = Mock.mock(`${http.gwApiPrefix}/alarm/info/page`, {
     "resultCode": 1000,
     "resultMessage": "操作成功",
     "pageList": {
@@ -96,58 +95,43 @@ var alertList = Mock.mock(`${http.gwApiPrefix}/api/alert/list`, {
         "sum": 100,
         "resultList|10": [{
             'id': '@natural',
-            'time': '@datetime', //日期
-            'level|1': [
+            'date': '@datetime', //日期
+            'levelName|1': [
                 "紧急",
                 "重要",
                 "提示"
             ],
-            'status|1': [
+            'statusName|1': [
                 "未处理",
                 "已处理"
             ],
-            'content': '@cparagraph'
+            'msgBody': '@cparagraph'
         }]
     }
 });
 
 
-var alertSettingList = Mock.mock(`${http.gwApiPrefix}/api/alertSetting/list`, {
-    "resultCode": 1000,
-    "resultMessage": "操作成功",
-    "pageList": {
-        "curPageNO": 0,
-        "offset": 10,
-        "pageCount": 5,
-        "sum": 100,
-        "resultList|10": [{
-            'id': '@natural',
-            'index|1': [
-                "1分钟交易量",
-                "5分钟交易量",
-                "1小时交易量",
-                "1天交易量",
-                "1分钟时延",
-                "5分钟时延",
-                "1小时时延",
-                "1天时延",
-            ],
-            "target|1": [
-                "前置集群",
-                "前置节点1",
-                "联机集群",
-                "联机节点1",
-            ],
-            "threshold|1-100": 100,
-            "level|1": [
-                "紧急",
-                "重要",
-                "提示"
-            ],
-            'message': '@cparagraph'
-        }]
-    }
-});
+// var alertSetting = Mock.mock(`${http.gwApiPrefix}/alarm/threshold/setting`, {
+//     "resultCode": 1000,
+//     "resultMessage": "操作成功",
+//     "result": [
+//         {
+//             indicator: 1,
+//             thresholdValue: null,
+//             indicatorName: '1分钟交易量测试'
+//         },
+//         {
+//             indicator: 2,
+//             thresholdValue: null,
+//             indicatorName: '1分钟平均耗时测试'
+//         },
+//         {
+//             indicator: 3,
+//             thresholdValue: null,
+//             indicatorName: '1分钟最大耗时测试'
+//         }
+//     ]
+// });
 
 var login = Mock.mock(`${http.gwApiPrefix}/api/auth/login`, {
     "resultCode": 1000,
@@ -371,19 +355,19 @@ var getLeftMenu = Mock.mock(`${http.gwApiPrefix}/api/system/admin/resource/leftm
                 "icon": "message",
                 "method": "ALL"
             },
-            {
-                "id": 54,
-                "appId": 1,
-                "parentId": 1,
-                "actions": {},
-                "child": [],
-                "level": 1,
-                "name": "日志查询检索",
-                "label": "business-log-index",
-                "url": "/business/log/index",
-                "icon": "file-text",
-                "method": ""
-            }
+            // {
+            //     "id": 54,
+            //     "appId": 1,
+            //     "parentId": 1,
+            //     "actions": {},
+            //     "child": [],
+            //     "level": 1,
+            //     "name": "日志查询检索",
+            //     "label": "business-log-index",
+            //     "url": "/business/log/index",
+            //     "icon": "file-text",
+            //     "method": ""
+            // }
         ],
         '2': [
             {
@@ -624,15 +608,15 @@ var getPayGroupMonitorData = Mock.mock(`${http.gwApiPrefix}/api/streaming/loadCl
     "result": [
         {
             clusterName: 'front',
-            tradeCount: 100,
-            totalTime: 200,
-            avgTime: 300
+            tradeCount: 0,
+            totalTime: 0,
+            avgTime: 0
         },
         {
             clusterName: 'td1',
-            tradeCount: 100,
-            totalTime: 200,
-            avgTime: 300
+            tradeCount: 0,
+            totalTime: 0,
+            avgTime: 0
         }
     ]
 });
@@ -670,5 +654,52 @@ var getPayGroupData_TD = Mock.mock(`${http.gwApiPrefix}/BPC/streaming/loadCluste
     ]
 });
 
-export { logList, payChainList, smsChainList, login, getAuthAction, getTopMenu, getLeftMenu, alertList, alertSettingList, payFindByTradeNoList, getLog, getPayGroupMonitorData, getSmsAllData, getPayGroupData_TD }
+// var getAlertSelection = Mock.mock(`${http.gwApiPrefix}/alarm/info/select`, {
+//     "resultCode": 1000,
+//     "resultMessage": "操作成功",
+//     "result": {
+//         alarmStatus: [
+//             {
+//                 name: '已处理',
+//                 value: '1'
+//             },
+//             {
+//                 name: '未处理',
+//                 value: '0'
+//             }
+//         ],
+//         alarmLevel: [
+//             {
+//                 name: '紧急',
+//                 value: '2'
+//             },
+//             {
+//                 name: '重要',
+//                 value: '1'
+//             },
+//             {
+//                 name: '提示',
+//                 value: '0'
+//             }
+//         ]
+//     }
+// });
+
+export {
+    logList,
+    payChainList,
+    smsChainList,
+    login,
+    getAuthAction,
+    getTopMenu,
+    getLeftMenu,
+    alertList,
+    // alertSetting,
+    payFindByTradeNoList,
+    getLog,
+    getPayGroupMonitorData,
+    getSmsAllData,
+    getPayGroupData_TD,
+    // getAlertSelection
+}
 

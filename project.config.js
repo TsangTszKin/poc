@@ -120,7 +120,7 @@ switch (process.env.type) {
         httpResult = test2;
         break;
     case 'production':
-        httpResult = production;
+        httpResult = poc_yuefei;
         break;
 
     default:

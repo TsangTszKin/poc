@@ -1,10 +1,10 @@
 /* eslint-disable no-this-before-super */
 /* eslint-disable react/display-name */
 import React, { Component, Fragment } from 'react'
-import { observer, Provider } from 'mobx-react'
+import { observer, Provider, PropTypes } from 'mobx-react'
 import { withRouter } from 'react-router-dom'
 import store from '@/store/monitor/alert/Setting'
-import { Table, Spin, Drawer, DatePicker, Input, Button, Divider, Select } from 'antd'
+import { Table, Spin, Drawer, InputNumber, Input, Button, Divider, Select, Modal } from 'antd'
 import common from '@/utils/common';
 import Paging from '@/components/Paging';
 import Code from '@/components/Code';
@@ -18,6 +18,7 @@ class Setting extends Component {
         super(props)
         this.init = this.init.bind(this);
         this.changePage = this.changePage.bind(this);
+        this.changeData = this.changeData.bind(this);
     }
 
     componentDidMount() {
@@ -26,7 +27,7 @@ class Setting extends Component {
 
     init() {
         store.reset();
-        store.getAlerSettingtListForApi()
+        store.getAlertSettingForApi()
     }
 
     changePage = (pageNum, pageSize) => {
@@ -34,55 +35,32 @@ class Setting extends Component {
         console.log("分页回调：获取条数" + pageSize);
         store.list.updateData('pageNum', pageNum);
         store.list.updateData('pageSize', pageSize);
-        store.getAlerSettingtListForApi();
+        store.getAlertSettingForApi();
+    }
+
+    changeData(index, value) {
+        let data = store.detail.getData;
+        data[index].thresholdValue = value
+        store.detail.setData(data)
     }
 
 
     render() {
-        // const rowSelection = {
-        //     selectedRowKeys: store.list.getData.selectedRowKeys,
-        //     onChange: (selectedRowKeys) => {
-        //         console.log('selectedRowKeys changed: ', selectedRowKeys);
-        //         store.list.updateData('selectedRowKeys', selectedRowKeys)
-        //     }
-        // };
         return (
             <Provider store={store}>
                 <div className='panel'>
-                    {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
+                        {
+                            store.detail.getData.map((item, i) =>
+                                <FormItem label={item.indicatorName} key={i}>
+                                    <InputNumber placeholder="请输入" min={0} style={{ float: 'left', width: '200px' }} value={item.thresholdValue} onChange={(value) => this.changeData(i, value)} />
+                                </FormItem>
+                            )
+                        }
+                        <Button type="primary" style={{ margin: '10px 0 0 120px' }}
+                            onClick={() => store.saveAlertSettingForApi()}
+                        >保存</Button>
 
-                        <Button size="small" type="primary" style={{ float: 'right', marginBottom: '20px' }}>新增</Button>
-
-
-                        <Spin spinning={store.list.getData.loading} size="large">
-                            <Table
-                                scroll={{ x: store.list.getData.dataSource.length > 0 ? 1100 : 'auto' }}
-                                // rowSelection={rowSelection}
-                                columns={columns}
-                                dataSource={(() => {
-                                    let dataSource = common.deepClone(store.list.getData.dataSource);
-                                    dataSource.forEach((el, i) => {
-                                        el.number = i + 1;
-                                        el.action = <Fragment>
-                                            <a onClick={() => {
-                                            }}>编辑</a>
-                                            <Divider type="vertical" />
-                                            <a onClick={() => {
-                                            }}>删除</a>
-                                        </Fragment>
-                                    })
-                                    return dataSource
-                                })()}
-                                pagination={false} />
-                        </Spin>
-
-                        <Paging
-                            pageNum={store.list.getData.pageNum}
-                            total={store.list.getData.total}
-                            showPageSize={store.list.getData.pageSize}
-                            changePage={this.changePage}
-                        />
                     </div>
 
                 </div>
@@ -93,6 +71,31 @@ class Setting extends Component {
 }
 
 export default Setting
+
+class FormItem extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div className="clearfix" style={this.props.style}>
+                <span style={{ display: 'inline-block', width: '120px', height: '32px', float: 'left', lineHeight: '32px', textAlign: 'right', paddingRight: '10px' }}>{this.props.label}：</span>
+                {this.props.children}
+            </div>
+        )
+    }
+}
+FormItem.propTypes = {
+    label: PropTypes.string,
+    style: PropTypes.object
+}
+FormItem.defaultProps = {
+    label: '',
+    style: {
+        marginBottom: '20px'
+    }
+}
 
 const columns = [
     {

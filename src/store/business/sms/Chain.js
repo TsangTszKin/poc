@@ -29,7 +29,7 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { beginTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), phone: '', templateId: '' },
+            query: { beginTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), phone: '' },
             timeUnit: 60
         },
         get getData() {
@@ -68,7 +68,7 @@ class store {
             total: 0,
             loading: true,
             selectedRowKeys: [],
-            query: { beginTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), phone: '', templateId: '' },
+            query: { beginTime: common.getCurrentMonthStartTime(), endTime: common.getCurrentMonthEndTime(), phone: '' },
             timeUnit: 60
         })
     }
@@ -86,7 +86,7 @@ class store {
         this.list.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
 
-        let pageNum = res.data.pageList.sum === 0 ? this.list.getData.sum : res.data.pageList.curPageNO;
+        let pageNum = res.data.pageList.sum === 0 ? 1 : res.data.pageList.curPageNO;
         let total = res.data.pageList.sum;
         let dataSource = res.data.pageList.resultList;
         this.list.updateData('pageNum', pageNum);

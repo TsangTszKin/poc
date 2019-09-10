@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react'
 import { Row, Col, Button } from 'antd'
 import { withRouter } from 'react-router-dom'
+import common from '@/utils/common';
 
-@withRouter @inject('store') @observer
+@withRouter @inject('store', 'GlobalStore') @observer
 class CellPay extends Component {
     render() {
         return (
@@ -15,24 +16,30 @@ class CellPay extends Component {
             >
                 <div style={style.cell1}>
                     <span style={style.cell1_title} title={this.props.title}>{this.props.title}</span>
-                    <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
-                        style={style.cell1_btn}
-                        onClick={() => {
-                            switch (this.props.type) {
-                                case 'pre':
-                                    this.props.history.push('/business/pay/pre')
-                                    break;
-                                case 'unit':
-                                    this.props.history.push('/business/pay/unit')
-                                    break;
-                                case 'esb':
-                                    this.props.history.push('/business/pay/esb')
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }}
-                    />
+                    {
+                        this.props.type !== 'esb-detail' ?
+                            <Button type="primary" shape="circle" icon="profile" title="点击查看详情"
+                                style={style.cell1_btn}
+                                onClick={() => {
+                                    let timeParams = [this.props.store.helper.getData.query.startTime, this.props.store.helper.getData.query.endTime]
+                                    sessionStorage.timeParams = JSON.stringify(timeParams)
+                                    switch (this.props.type) {
+                                        case 'pre':
+                                            this.props.history.push('/business/pay/pre')
+                                            break;
+                                        case 'unit':
+                                            this.props.history.push('/business/pay/unit')
+                                            break;
+                                        case 'esb':
+                                            this.props.history.push('/business/pay/esb')
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }}
+                            />
+                            : ''
+                    }
                 </div>
                 <Row style={style.cell2}>
                     <Col span={12} style={style.cell2_l} className="ellipsis-1" title={this.props.count}>交易笔数：{this.props.count}</Col>
@@ -48,7 +55,7 @@ CellPay.propTypes = {
     title: PropTypes.string,
     count: PropTypes.number,
     time: PropTypes.number,
-    type: PropTypes.oneOf(['pre', 'unit', 'esb'])
+    type: PropTypes.oneOf(['pre', 'unit', 'esb', 'esb-detail'])
 };
 CellPay.defaultProps = {
     style: {},
@@ -67,7 +74,7 @@ const style = {
         height: '63px', border: '1px solid rgba(201, 201, 201, 1)', borderBottom: 'none', lineHeight: '63px', position: 'relative'
     },
     cell1_btn: {
-        position: 'absolute', top: '15px', right: '10px', cursor: 'pointer'
+        position: 'absolute', top: '15px', right: '10px', cursor: 'pointer', zIndex: '1'
     },
     cell2: {
         height: '34px', border: '1px solid rgba(201, 201, 201, 1)', lineHeight: '34px'

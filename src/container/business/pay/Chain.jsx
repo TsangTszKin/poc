@@ -66,10 +66,9 @@ class Chain extends Component {
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    value={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
                                     format={'YYYY-MM-DD'}
                                     onChange={(date, dateString) => {
-                                        console.log('date, dateString', date, dateString)
                                         let query = store.list.getData.query;
                                         query.startTime = `${dateString[0]} 00:00`
                                         query.endTime = `${dateString[1]} 00:00`
@@ -100,6 +99,17 @@ class Chain extends Component {
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
+                                <span style={style.searchTitle}>关联流水号 :</span>
+                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.tradeNo}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.tradeNo = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
+                            </div>
+                            <div className="clearfix" style={style.searchShell}>
                                 <Button size="small" type="primary" onClick={store.getChainListForApi}>查询</Button>
                             </div>
                         </div>
@@ -113,7 +123,6 @@ class Chain extends Component {
                                     let dataSource = common.deepClone(store.list.getData.dataSource);
                                     dataSource.forEach((el, i) => {
                                         el.index = i + 1;
-                                        el.time = `${el.beginDate}到${el.endDate}`;
                                         el.action = <Fragment>
                                             <a onClick={() => {
                                                 store.detail.updateData('visible', true)
@@ -139,7 +148,7 @@ class Chain extends Component {
                         closable={true}
                         onClose={() => store.detail.updateData('visible', false)}
                         visible={store.detail.getData.visible}
-                        width={1200}
+                        width={1210}
                         id="log-detail"
                     >
                         <DiagramChainPay
@@ -175,9 +184,17 @@ const columns = [
         key: 'index',
     },
     {
-        title: '时间',
-        dataIndex: 'time',
-        key: 'time.'
+        title: '开始时间',
+        dataIndex: 'beginDate',
+        key: 'beginDate'
+    },
+    {
+        title: '耗时',
+        dataIndex: 'takeTimes',
+        key: 'takeTimes',
+        render: (value) => {
+            return  `${value}毫秒`
+        }
     },
     {
         title: '业务代码',

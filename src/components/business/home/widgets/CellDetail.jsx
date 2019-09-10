@@ -12,34 +12,44 @@ class CellDetail extends Component {
                     return Object.assign(this.props.style, style.main)
                 })()}
                 onClick={() => {
-                    let query = this.props.store.logList.getData.query;
-                    query.hostIp = this.props.ip;
-                    query.logFile = '';
-                    this.props.store.logList.updateData('query', query);
-                    this.props.store.logList.updateData('pageNum', 1);
+                    this.props.store.logList.updateData('visible', true)
 
-                    console.log('this.props.store.logList.getData.pageNum', this.props.store.logList.getData.pageNum)
+                    setTimeout(() => {
+                        let query = this.props.store.logList.getData.query;
+                        query.hostIp = this.props.ip;
+                        query.logFile = '';
+                        this.props.store.logList.updateData('query', query);
+                        this.props.store.logList.updateData('pageNum', 1);
 
+                        let type = '';
+                        if (this.props.type === 'sms') {
 
-                    let type = '';
-                    switch (this.props.title) {
-                        case 'MQ':
-                            type = '1';
-                            break;
-                        case 'Front':
-                            type = '2';
-                            break;
-                        case 'Realtime':
-                            type = '3';
-                            break;
-                        default:
-                            break;
-                    }
+                            switch (this.props.title) {
+                                case 'MQ':
+                                    type = '1';
+                                    break;
+                                case 'Front':
+                                    type = '2';
+                                    break;
+                                case 'Realtime':
+                                    type = '3';
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } else {
+                            type = this.props.type
+                        }
 
-                    this.props.store.getLogForApi(type);
-                    this.props.store.logList.updateData('title', this.props.title)
+                        if (this.props.extType === 'query')
+                            this.props.store.getLogForApi(type);
+
+                        this.props.store.logList.updateData('title', this.props.title)
+                        this.props.callbackfn(this.props.ip);
+                    }, 300);
+
                 }}
-                title="点击查看节点日志信息"
+                title="点击查看节点更多信息"
             >
                 <div style={(() => {
                     return Object.assign(style.cell1, { lineHeight: this.props.type === 'sms' ? '63px' : '31.5px' })
@@ -63,8 +73,9 @@ CellDetail.propTypes = {
     time: PropTypes.number,
     ip: PropTypes.string,
     type: PropTypes.oneOf(['front', 'online', 'sms']),
-    nodeKey: PropTypes.number,
     content: PropTypes.string,
+    callbackfn: PropTypes.func,
+    extType: PropTypes.oneOf(['monitor', 'query']),
 };
 CellDetail.defaultProps = {
     style: {
@@ -74,8 +85,9 @@ CellDetail.defaultProps = {
     time: 0,
     ip: '',
     type: '',
-    nodeKey: 0,
-    content: ''
+    content: '',
+    callbackfn: () => { },
+    extType: 'query',
 }
 
 export default CellDetail;

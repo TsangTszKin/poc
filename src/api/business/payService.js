@@ -107,8 +107,13 @@ export default {
         }
         return axios.get(`${http.gwApiPrefix}${url}?${params}`).catch(errorHandler)
     },
-    getDetailMonitorCharts(sign = 'front') {
-        return axios.post(`${http.gwApiPrefix}/api/streaming/loadSonCharts?sign=${sign}`).catch(errorHandler)
+    getDetailMonitorCharts(query = {}) {
+        let params = [];
+        for (const key in query) {
+            params.push(`${key}=${query[key]}`)
+        }
+        params = params.join('&')
+        return axios.post(`${http.gwApiPrefix}/api/streaming/loadSonCharts?${params}`).catch(errorHandler)
     },
     getESBServices(query = {}) {
         let params = [];
@@ -154,6 +159,6 @@ export default {
         }
         params = params.join('&')
         // return axios.get(`${http.gwApiPrefix}/api/streaming/loadClusters`).catch(errorHandler)
-        return axios.get(`${http.gwApiPrefix}/BPC/stats/result?${params}`).catch(errorHandler)
+        return axios.get(`${http.gwApiPrefix}/BPC/stats/result`).catch(errorHandler)
     },
 }

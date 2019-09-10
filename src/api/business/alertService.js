@@ -29,18 +29,23 @@ export default {
             params.push(`${key}=${query[key]}`)
         }
         params = params.join('&')
-        return axios.get(`${http.gwApiPrefix}/api/alert/list`).catch(errorHandler)
+        console.log('params', params)
+        // return axios.get(`${http.gwApiPrefix}/alarm/info/page`).catch(errorHandler)
+        return axios.get(`${http.gwApiPrefix}/alarm/info/page?${params}`).catch(errorHandler)
+    },
+    getAlertSetting() {
+        return axios.get(`${http.gwApiPrefix}/alarm/threshold/setting`).catch(errorHandler)
         // return axios.post(`${http.gwApiPrefix}/api/callChain/findAll?${params}`).catch(errorHandler)
     },
-    getAlerSettingtList(page, size, query = {}) {
-        let params = [];
-        params.push(`page=${page}`)
-        params.push(`size=${size}`)
-        for (const key in query) {
-            params.push(`${key}=${query[key]}`)
-        }
-        params = params.join('&')
-        return axios.get(`${http.gwApiPrefix}/api/alertSetting/list`).catch(errorHandler)
+    saveAlertSetting(params) {
+        return axios.put(`${http.gwApiPrefix}/alarm/threshold/setting`, params).catch(errorHandler)
+    },
+    handleAlert(id) {
+        return axios.put(`${http.gwApiPrefix}/alarm/info/page/${id}`).catch(errorHandler)
+        // return axios.post(`${http.gwApiPrefix}/api/callChain/findAll?${params}`).catch(errorHandler)
+    },
+    getAlertSelection() {
+        return axios.get(`${http.gwApiPrefix}/alarm/info/select`).catch(errorHandler)
         // return axios.post(`${http.gwApiPrefix}/api/callChain/findAll?${params}`).catch(errorHandler)
     },
 }

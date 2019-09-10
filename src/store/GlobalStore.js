@@ -120,6 +120,12 @@ class GlobalStore {
         this.authAction.setData(res.data.result);
         localStorage.authAction = res.data.result
     }
+
+    @observable time = {
+        data: [],
+        get getData() { return toJS(this.data) },
+        setData(value) { this.data = value }
+    }
 }
 
 export default new GlobalStore

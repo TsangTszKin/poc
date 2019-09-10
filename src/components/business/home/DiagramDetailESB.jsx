@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react'
 import PropTypes from 'prop-types'
-import CellPayMonitor from '@/components/business/home/widgets/CellPayMonitor'
+import CellPay from '@/components/business/home/widgets/CellPay'
 import BranchESB from '@/components/business/home/widgets/BranchESB'
 
 @inject('store') @observer
@@ -15,24 +15,31 @@ class DiagramDetailESB extends Component {
                             <div
                                 className="clearfix" style={{ margin: '0 auto' }}
                                 onClick={() => {
-                                    let query = this.props.store.logList.getData.query;
-                                    query.hostIp = item.ip;
-                                    query.logFile = '';
-                                    this.props.store.logList.updateData('query', query);
+                                    this.props.store.logList.updateData('visible', true)
 
-                                    this.props.store.getLogForApi('esb');
-                                    this.props.store.logList.updateData('title', item.title)
+                                    setTimeout(() => {
+                                        let query = this.props.store.logList.getData.query;
+                                        query.hostIp = item.ip;
+                                        query.logFile = '';
+                                        this.props.store.logList.updateData('query', query);
+
+                                        if (this.props.type === 'query')
+                                            this.props.store.getLogForApi('esb');
+                                            
+                                        this.props.store.logList.updateData('title', item.title)
+                                        this.props.callbackfn(item.ip);
+                                    }, 300);
                                 }}
                             >
-                                <CellPayMonitor
-                                    style={{ margin: '0 auto' }}
+                                <CellPay
+                                    style={{ margin: '0 auto', cursor: 'pointer' }}
                                     title={item.title}
                                     count={item.count}
                                     time={item.time}
                                     ip={item.ip}
-                                    type="esb"
-                                    isESB={true}
+                                    type="esb-detail"
                                 />
+
                                 <div style={style.linker_cell_v}>
                                     <p style={style.linker_v}></p>
                                 </div>
@@ -47,7 +54,9 @@ class DiagramDetailESB extends Component {
 }
 
 DiagramDetailESB.propTypes = {
-    data: PropTypes.array
+    data: PropTypes.array,
+    callbackfn: PropTypes.func,
+    type: PropTypes.oneOf(['query', 'monitor'])
 };
 DiagramDetailESB.defaultProps = {
     data: [
@@ -58,7 +67,9 @@ DiagramDetailESB.defaultProps = {
             ip: '',
             service: []
         }
-    ]
+    ],
+    callbackfn: () => { },
+    type: 'query'
 }
 
 export default DiagramDetailESB;

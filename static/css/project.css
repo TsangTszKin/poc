@@ -324,6 +324,59 @@ body {
     }
 }
 
+.pay-lefttop-to-rightbottom-chain-rowup {
+    width: 10px;
+    height: 10px;
+    background: #ec7c31;
+    -webkit-animation: 0.4s pay_lefttop_to_rightbottom_chain_rowup linear infinite normal;
+    animation: 0.4s pay_lefttop_to_rightbottom_chain_rowup linear infinite normal;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes pay_lefttop_to_rightbottom_chain_rowup {
+    0% {
+        background: #ec7c31;
+        left: -10px;
+        top: 43px;
+    }
+
+    100% {
+        background: #ec7c31;
+        left: 190px;
+        top: 140px;
+    }
+}
+
+.pay-rightbottom-to-lefttop-chain-rowup {
+    width: 10px;
+    height: 10px;
+    background: #ec7c31;
+    -webkit-animation: 0.4s pay_rightbottom_to_lefttop_chain_rowup linear infinite normal;
+    animation: 0.4s pay_rightbottom_to_lefttop_chain_rowup linear infinite normal;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+@keyframes pay_rightbottom_to_lefttop_chain_rowup {
+    0% {
+        background: #ec7c31;
+        left: -10px;
+        bottom: 43px;
+    }
+
+    100% {
+        background: #ec7c31;
+        left: 190px;
+        bottom: 140px;
+    }
+}
+
+
 /* 粒子动画 end */
 
 
@@ -345,5 +398,44 @@ body {
     -webkit-transform: rotate(90deg);
     /* Safari 和 Chrome */
     -o-transform: rotate(90deg);
+    /* Opera */
+}
+
+.transform-135deg {
+    /* Rotate div */
+    transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    /* Internet Explorer */
+    -moz-transform: rotate(135deg);
+    /* Firefox */
+    -webkit-transform: rotate(135deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(135deg);
+    /* Opera */
+}
+
+.transform-26deg {
+    /* Rotate div */
+    transform: rotate(26deg);
+    -ms-transform: rotate(26deg);
+    /* Internet Explorer */
+    -moz-transform: rotate(26deg);
+    /* Firefox */
+    -webkit-transform: rotate(26deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(26deg);
+    /* Opera */
+}
+
+.transform-154deg {
+    /* Rotate div */
+    transform: rotate(154deg);
+    -ms-transform: rotate(154deg);
+    /* Internet Explorer */
+    -moz-transform: rotate(154deg);
+    /* Firefox */
+    -webkit-transform: rotate(154deg);
+    /* Safari 和 Chrome */
+    -o-transform: rotate(154deg);
     /* Opera */
 }

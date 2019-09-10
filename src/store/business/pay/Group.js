@@ -106,19 +106,19 @@ export default new store
 const dataDemo = [
     {
         "clusterName": "online",
-        "tradeCount": 0,
+        "totalTrade": 0,
         "avgTime": 0,
         "esbservices": null
     },
     {
         "clusterName": "front",
-        "tradeCount": 0,
+        "totalTrade": 0,
         "avgTime": 0,
         "esbservices": null
     },
     {
         "clusterName": "esb",
-        "tradeCount": 0,
+        "totalTrade": 0,
         "avgTime": 0,
         "esbservices": null
     }

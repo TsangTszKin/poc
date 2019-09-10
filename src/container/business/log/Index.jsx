@@ -4,7 +4,7 @@ import React, { Component, Fragment } from 'react'
 import { observer, Provider } from 'mobx-react'
 import { withRouter } from 'react-router-dom'
 import store from '@/store/business/log/Index'
-import { Table, Spin, Divider, Tag, Drawer, DatePicker, Select, Button } from 'antd'
+import { Table, Spin, Input, Tag, Drawer, DatePicker, Select, Button, InputNumber, Tabs } from 'antd'
 import PageHeader from '@/components/PageHeader';
 import common from '@/utils/common';
 import Paging from '@/components/Paging';
@@ -18,6 +18,9 @@ class Index extends Component {
         super(props)
         this.init = this.init.bind(this);
         this.changePage = this.changePage.bind(this);
+        this.state = {
+            defaultActiveKey: 'front'
+        }
     }
 
     componentDidMount() {
@@ -56,8 +59,15 @@ class Index extends Component {
                             <div className="clearfix" style={style.searchShell}>
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
-                                    defaultValue={[moment('2015/01/01', 'YYYY/MM/DD'), moment('2015/01/01', 'YYYY/MM/DD')]}
-                                    format={'YYYY/MM/DD'}
+                                    allowClear={false}
+                                    value={[moment(store.list.getData.query.startTime, 'YYYY-MM-DD hh:mm'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    format={'YYYY-MM-DD'}
+                                    onChange={(date, dateString) => {
+                                        let query = store.list.getData.query;
+                                        query.startTime = `${dateString[0]} 00:00`
+                                        query.endTime = `${dateString[1]} 00:00`
+                                        store.list.updateData('query', query);
+                                    }}
                                 />
                             </div>
                             <div className="clearfix" style={style.searchShell}>
@@ -68,24 +78,19 @@ class Index extends Component {
                                     style={{ minWidth: '100px', width: 'fit-content' }}
                                     dropdownMatchSelectWidth={false}
                                     placeholder="请选择"
+
+                                    value={store.list.getData.query.clusterSign}
+                                    onChange={(value) => {
+                                        if (value === undefined) value = ''
+                                        let query = store.list.getData.query;
+                                        query.clusterSign = value
+                                        store.list.updateData('query', query);
+                                    }}
                                 >
-                                    <Select.Option value="test1">test1</Select.Option>
-                                    <Select.Option value="test2">test2</Select.Option>
-                                    <Select.Option value="test3">test3</Select.Option>
-                                </Select>
-                            </div>
-                            <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>业务类型 :</span>
-                                <Select
-                                    size="small"
-                                    style={{ minWidth: '100px', width: 'fit-content' }}
-                                    dropdownMatchSelectWidth={false}
-                                    placeholder="请选择"
-                                >
-                                    <Select.Option value="test0">所有</Select.Option>
-                                    <Select.Option value="test1">转账</Select.Option>
-                                    <Select.Option value="test2">对账</Select.Option>
-                                    <Select.Option value="test3">查询</Select.Option>
+                                    <Select.Option value="front">前置</Select.Option>
+                                    <Select.Option value="online">联机</Select.Option>
+                                    <Select.Option value="esb">ESB</Select.Option>
+                                    <Select.Option value="message">短信</Select.Option>
                                 </Select>
                             </div>
                             <div className="clearfix" style={style.searchShell}>
@@ -95,6 +100,14 @@ class Index extends Component {
                                     style={{ minWidth: '100px', width: 'fit-content' }}
                                     dropdownMatchSelectWidth={false}
                                     placeholder="请选择"
+
+                                    value={store.list.getData.query.logGrade}
+                                    onChange={(value) => {
+                                        if (value === undefined) value = ''
+                                        let query = store.list.getData.query;
+                                        query.logGrade = value
+                                        store.list.updateData('query', query);
+                                    }}
                                 >
                                     <Select.Option value="test0">所有</Select.Option>
                                     <Select.Option value="test1">正常</Select.Option>
@@ -105,32 +118,88 @@ class Index extends Component {
                                 </Select>
                             </div>
                             <div className="clearfix" style={style.searchShell}>
+                                <span style={style.searchTitle}>主机IP :</span>
+                                <Input size="small"
+                                    style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.hostIp}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.hostIp = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
+                            </div>
+                            <div className="clearfix" style={style.searchShell}>
+                                <span style={style.searchTitle}>交易流水号 :</span>
+                                <Input size="small"
+                                    style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.tradeNo}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.tradeNo = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
+                            </div>
+                            <div className="clearfix" style={style.searchShell}>
+                                <span style={style.searchTitle}>耗时 :</span>
+                                <InputNumber size="small"
+                                    style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.takeTimes}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.takeTimes = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
+                            </div>
+                            <div className="clearfix" style={style.searchShell}>
+                                <span style={style.searchTitle}>日志内容关键字 :</span>
+                                <Input size="small"
+                                    style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
+                                    value={store.list.getData.query.content}
+                                    onChange={(e) => {
+                                        let query = store.list.getData.query;
+                                        query.content = e.target.value
+                                        store.list.updateData('query', query);
+                                    }}
+                                />
+                            </div>
+                            <div className="clearfix" style={style.searchShell}>
                                 <Button size="small" type="primary">查询</Button>
                             </div>
                         </div>
 
-                        <Spin spinning={store.list.getData.loading} size="large">
-                            <Table
-                                scroll={{ x: store.list.getData.dataSource.length > 0 ? 1100 : 'auto' }}
-                                rowSelection={rowSelection}
-                                columns={columns}
-                                dataSource={(() => {
-                                    let dataSource = common.deepClone(store.list.getData.dataSource);
-                                    dataSource.forEach((el, i) => {
-                                        el.index = i + 1;
-                                        el.action = <Fragment>
-                                            <a onClick={() => {
-                                                store.detail.updateData('visible', true)
-                                                store.detail.updateData('log', el.log)
-                                            }}>查看</a>
-                                            <Divider type="vertical" />
-                                            <a>下载</a>
-                                        </Fragment>
-                                    })
-                                    return dataSource
-                                })()}
-                                pagination={false} />
-                        </Spin>
+                        <Tabs defaultActiveKey={this.state.defaultActiveKey} onChange={(defaultActiveKey) => this.setState({ defaultActiveKey })} >
+                            {
+                                tabList.map((item, i) =>
+                                    <Tabs.TabPane tab={item.label} key={item.value}>
+                                        <Spin spinning={store.list.getData.loading} size="large">
+                                            <Table
+                                                scroll={{ x: store.list.getData.dataSource.length > 0 ? 1100 : 'auto' }}
+                                                // rowSelection={rowSelection}  
+                                                columns={columns}
+                                                dataSource={(() => {
+                                                    let dataSource = common.deepClone(store.list.getData.dataSource);
+                                                    dataSource.forEach((el, i) => {
+                                                        el.index = i + 1;
+                                                        el.action = <Fragment>
+                                                            <a onClick={() => {
+                                                                store.detail.updateData('visible', true)
+                                                                store.detail.updateData('log', el.log)
+                                                            }}>查看</a>
+                                                        </Fragment>
+                                                    })
+                                                    return dataSource
+                                                })()}
+                                                pagination={false} />
+                                        </Spin>
+                                    </Tabs.TabPane>
+                                )
+                            }
+                        </Tabs>
+
+
                         <Paging
                             pageNum={store.list.getData.pageNum}
                             total={store.list.getData.total}
@@ -162,86 +231,109 @@ class Index extends Component {
 
 export default Index
 
-const columns = [{
-    title: '序号',
-    dataIndex: 'index',
-    key: 'index',
-}, {
-    title: '日志ID',
-    dataIndex: 'id',
-    key: 'id'
-}, {
-    title: '日志名称',
-    dataIndex: 'name',
-    key: 'name'
-}, {
-    title: '时间',
-    dataIndex: 'time',
-    key: 'time.',
-    sorter: (a, b) => {
-        return a.time.localeCompare(b.time)
+const tabList = [
+    {
+        label: '前置',
+        value: 'front'
+    },
+    {
+        label: '联机',
+        value: 'online'
+    },
+    {
+        label: 'ESB',
+        value: 'esb'
+    },
+    {
+        label: '短信',
+        value: 'message'
     }
-}, {
-    title: '所属系统及模块',
-    dataIndex: 'module',
-    key: 'module'
-}, {
-    title: '所属机构',
-    dataIndex: 'org',
-    key: 'org'
-}, {
-    title: '业务类型',
-    dataIndex: 'type',
-    key: 'type',
-    render: (value) => {
-        return <Tag>{value}</Tag>
-    }
-},
-{
-    title: '日志类型',
-    dataIndex: 'category',
-    key: 'category',
-    render: (value) => {
-        switch (value) {
-            case '正常':
-                return <Tag color="blue">{value}</Tag>
-            case '错误':
-                return <Tag color="red">{value}</Tag>
-            case '警告':
-                return <Tag color="orange">{value}</Tag>
-            case '成功':
-                return <Tag color="green">{value}</Tag>
-            case '失败':
-                return <Tag color="#f50">{value}</Tag>
+]
 
-            default:
-                break;
+const columns = [
+    {
+        title: '序号',
+        dataIndex: 'index',
+        key: 'index',
+    },
+    {
+        title: '日志ID',
+        dataIndex: 'logId',
+        key: 'logId '
+    },
+    {
+        title: '日志类型',
+        dataIndex: 'logGrade',
+        key: 'logGrade',
+        render: (value) => {
+            switch (value) {
+                case '正常':
+                    return <Tag color="blue">{value}</Tag>
+                case '错误':
+                    return <Tag color="red">{value}</Tag>
+                case '警告':
+                    return <Tag color="orange">{value}</Tag>
+                case '成功':
+                    return <Tag color="green">{value}</Tag>
+                case '失败':
+                    return <Tag color="#f50">{value}</Tag>
+                default:
+                    break;
+            }
+            return <Tag>{value}</Tag>
         }
-        return <Tag>{value}</Tag>
-    }
-},
-{
-    title: '账号',
-    dataIndex: 'account',
-    key: 'account'
-},
-{
-    title: '客户号',
-    dataIndex: 'custNo',
-    key: 'custNo'
-},
-{
-    title: '卡号',
-    dataIndex: 'cardNo',
-    key: 'cardNo'
-},
-{
-    title: '操作',
-    dataIndex: 'action',
-    key: 'action',
-    fixed: 'right',
-    width: 100
-}];
+    },
+    {
+        title: '日志生成时间',
+        dataIndex: 'logCrdate',
+        key: 'logCrdate.',
+        sorter: (a, b) => {
+            return a.logCrdate.localeCompare(b.logCrdate)
+        }
+    },
+    {
+        title: '耗时',
+        dataIndex: 'takeTimes',
+        key: 'takeTimes.',
+        sorter: (a, b) => {
+            return a.takeTimes.localeCompare(b.takeTimes)
+        },
+        render: (value) => {
+            return `${value}毫秒`
+        }
+    },
+    {
+        title: '交易流水号',
+        dataIndex: 'tradeNo',
+        key: 'tradeNo'
+    },
+    {
+        title: '所属系统',
+        dataIndex: 'clusterSign',
+        key: 'clusterSign'
+    },
+    {
+        title: '主机IP',
+        dataIndex: 'hostIp',
+        key: 'hostIp'
+    },
+    {
+        title: '日志名称',
+        dataIndex: 'logFile',
+        key: 'logFile'
+    },
+    {
+        title: '日志内容',
+        dataIndex: 'content',
+        key: 'content'
+    },
+    {
+        title: '操作',
+        dataIndex: 'action',
+        key: 'action',
+        fixed: 'right',
+        width: 50
+    }];
 
 const style = {
     searchPanel: {

@@ -58,7 +58,7 @@ class Chain extends Component {
                                 <span style={style.searchTitle}>日期 :</span>
                                 <DatePicker.RangePicker size="small"
                                     allowClear={false}
-                                    defaultValue={[moment(store.list.getData.query.beginTime, 'YYYY-MM-DD hh:mm'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
+                                    value={[moment(store.list.getData.query.beginTime, 'YYYY-MM-DD hh:mm'), moment(store.list.getData.query.endTime, 'YYYY-MM-DD hh:mm')]}
                                     format={'YYYY-MM-DD'}
                                     onChange={(date, dateString) => {
                                         console.log('date, dateString', date, dateString)
@@ -76,17 +76,6 @@ class Chain extends Component {
                                     onChange={(e) => {
                                         let query = store.list.getData.query;
                                         query.phone = e.target.value
-                                        store.list.updateData('query', query);
-                                    }}
-                                />
-                            </div>
-                            <div className="clearfix" style={style.searchShell}>
-                                <span style={style.searchTitle}>模板ID :</span>
-                                <Input allowClear={true} size="small" style={{ minWidth: '100px', width: 'fit-content' }} placeholder="请输入"
-                                    value={store.list.getData.query.templateId}
-                                    onChange={(e) => {
-                                        let query = store.list.getData.query;
-                                        query.templateId = e.target.value
                                         store.list.updateData('query', query);
                                     }}
                                 />
@@ -190,11 +179,11 @@ const columns = [
             return a.time.localeCompare(b.time)
         }
     },
-    {
-        title: '模板ID',
-        dataIndex: 'templateId',
-        key: 'templateId'
-    },
+    // {
+    //     title: '模板ID',
+    //     dataIndex: 'templateId',
+    //     key: 'templateId'
+    // },
     {
         title: '手机号码',
         dataIndex: 'phone',

@@ -22,7 +22,6 @@ const SmsChain = Loadable({ loader: () => import('@/routers/business/sms/Chain')
 // 数据查询 > 日志查询检索
 const Log = Loadable({ loader: () => import('@/routers/business/log/Index'), loading: DelayLoading, delay: 0 });
 // 数据查询 > 指标统计与展示
-const Charts = Loadable({ loader: () => import('@/routers/business/charts/Index'), loading: DelayLoading, delay: 0 });
 // 监控告警
 // 监控告警 > 统一支付
 const PayGroup_monitor = Loadable({ loader: () => import('@/routers/monitor/pay/Group'), loading: DelayLoading, delay: 3000 });
@@ -42,15 +41,6 @@ export default [
             'title': '监控告警',
             'descript': '这里是监控告警',
             'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '监控告警', 'path': null }]
-        }
-    },
-    {
-        'path': '/business/charts/index',
-        'component': Charts,
-        'meta': {
-            'title': '指标统计与展示',
-            'descript': '这里是指标统计与展示',
-            'nav': [{ 'name': '数据查询', 'path': '/business/home' }, { 'name': '指标统计与展示', 'path': null }]
         }
     },
     {

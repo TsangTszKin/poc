@@ -14,6 +14,7 @@ class store {
     constructor() {
         this.reset = this.reset.bind(this);
         this.getAlertListForApi = this.getAlertListForApi.bind(this);
+        this.getAlertSelectionForApi = this.getAlertSelectionForApi.bind(this);
     }
 
     /**
@@ -57,6 +58,22 @@ class store {
         }
     }
 
+    @observable helper = {
+        data: {
+            alarmStatus: [],
+            alarmLevel: []
+        },
+        get getData() {
+            return toJS(this.data)
+        },
+        setData(value) {
+            this.data = value
+        },
+        updateData(key, value) {
+            this.data[key] = value
+        }
+    }
+
     reset() {
         this.list.setData({
             dataSource: [],
@@ -78,13 +95,25 @@ class store {
         this.list.updateData('loading', false);
         if (!publicUtils.isOk(res)) return
 
-        let pageNum = res.data.pageList.sum === 0 ? this.list.getData.sum : ++res.data.pageList.curPageNO;
+        let pageNum = res.data.pageList.sum === 0 ? 1 : res.data.pageList.curPageNO;
         let total = res.data.pageList.sum;
         let dataSource = res.data.pageList.resultList;
         this.list.updateData('pageNum', pageNum);
         this.list.updateData('total', total);
         this.list.updateData('dataSource', dataSource);
+    }
 
+    getAlertSelectionForApi() {
+        this.list.updateData('loading', true);
+        alertService.getAlertSelection().then(this.getAlertSelectionForApiCallBack)
+    }
+    @action.bound getAlertSelectionForApiCallBack(res) {
+        this.list.updateData('loading', false);
+        if (!publicUtils.isOk(res)) return
+        let { alarmStatus, alarmLevel } = res.data.result
+        if (alarmStatus) this.helper.updateData('alarmStatus', alarmStatus)
+        if (alarmLevel) this.helper.updateData('alarmLevel', alarmLevel)
+        this.getAlertListForApi()
     }
 }
 export default new store

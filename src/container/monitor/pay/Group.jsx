@@ -17,6 +17,8 @@ import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 import publicUtils from '@/utils/publicUtils'
 import payService from '@/api/business/payService'
 
+let timer
+
 @observer
 class Home extends Component {
     constructor(props) {
@@ -31,15 +33,19 @@ class Home extends Component {
 
     componentDidMount() {
         this.init()
-        setInterval(() => {
+        timer = setInterval(() => {
             this.init()
         }, 60000);
+    }
+
+    componentWillUnmount() {
+        window.clearInterval(timer)
     }
 
     init() {
         store.reset();
         store.getPayGroupDataForApi();
-        this.getGroupChartsForApi();
+        // this.getGroupChartsForApi();
     }
 
     getGroupChartsForApi() {
@@ -123,35 +129,20 @@ class Home extends Component {
         return (
             <Provider store={store}>
                 <div className='panel'>
-                    {/* <PageHeader meta={this.props.meta} /> */}
                     <div className="pageContent charts-main">
 
-                        <PageHeader title="统一支付系统监控" subTitle="数据统计周期：1分钟" style={{ padding: '0 0 150px 0' }} />
+                        <PageHeader title="统一支付系统监控" subTitle="数据统计周期：1分钟" style={{ padding: '0 0 200px 0' }} />
 
-                        <Spin spinning={store.helper.getData.loading} size="large">
-                            <DiagramPayMonitor />
-                        </Spin>
+                        <DiagramPayMonitor />
 
-                        <Row>
-                            <Col span={24}>
-                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
-                                    store.helper.updateData('timeUnit', value);
-                                    //todo 调接口
-                                    this.getGroupChartsForApi();
-                                }} />
+                        {/* <Row style={{ margin: '40px 0 0 0' }}>
+                            <Col span={12}>
+                                <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
                             </Col>
-                        </Row>
-
-                        <Spin spinning={store.helper.getData.loading2} size="large">
-                            <Row>
-                                <Col span={12}>
-                                    <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
-                                </Col>
-                                <Col span={12}>
-                                    <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
-                                </Col>
-                            </Row>
-                        </Spin>
+                            <Col span={12}>
+                                <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
+                            </Col>
+                        </Row> */}
                     </div>
                 </div>
             </Provider>

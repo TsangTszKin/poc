@@ -16,18 +16,17 @@ class DiagramPay extends Component {
                     <div className="clearfix" style={{ float: 'left' }}>
                         <CellPay
                             title='支付系统前置集群'
-                            count={front.tradeCount}
+                            count={front.totalTrade}
                             time={front.avgTime}
                             type="pre"
                         />
                         <div style={style.linker_cell2}>
                             <p style={style.linker2}></p>
                             <span className="pay-up-to-dowm-rowup"></span>
-                            {/* <span className="pay-dowm-to-up-rowup"></span> */}
                         </div>
                         <CellPay
                             title='支付系统联机集群'
-                            count={online.tradeCount}
+                            count={online.totalTrade}
                             time={online.avgTime}
                             type="unit"
                         />
@@ -42,7 +41,7 @@ class DiagramPay extends Component {
                         <CellPay
                             style={{ float: 'left' }}
                             title='ESB集群'
-                            count={esb.tradeCount}
+                            count={esb.totalTrade}
                             time={esb.avgTime}
                             type="esb"
                         />

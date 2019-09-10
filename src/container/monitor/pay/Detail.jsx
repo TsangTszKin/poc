@@ -10,7 +10,7 @@ import store from '@/store/monitor/pay/Detail';
 import { observer, Provider } from 'mobx-react';
 import common from '@/utils/common';
 import echarts from 'echarts'
-import { Row, Col, Empty, Button, Drawer, Spin, PageHeader } from 'antd'
+import { Row, Col, Empty, Spin, Drawer, PageHeader } from 'antd'
 import moment from 'moment';
 import DiagramDetail from '@/components/business/home/DiagramDetail'
 import DiagramDetailESB from '@/components/business/home/DiagramDetailESB'
@@ -19,7 +19,9 @@ import { withRouter } from 'react-router-dom'
 import TimeUnit from '@/components/business/home/widgets/TimeUnit';
 import publicUtils from '@/utils/publicUtils'
 import payService from '@/api/business/payService'
-import Paging from '@/components/Paging';
+import CellDetail from '@/components/business/home/widgets/CellDetail'
+
+let timer
 
 @withRouter
 @observer
@@ -34,11 +36,14 @@ class Detail extends Component {
         this.getData = this.getData.bind(this);
         this.getDetailChartsForApi = this.getDetailChartsForApi.bind(this);
         this.changePage = this.changePage.bind(this);
+        this.init_1 = this.init_1.bind(this);
+        this.init_2 = this.init_2.bind(this);
+        this.getDetailChartsOneForApi = this.getDetailChartsOneForApi.bind(this);
     }
 
     componentDidMount() {
         this.init();
-        setInterval(() => {
+        timer = setInterval(() => {
             this.init()
         }, 60000);
     }
@@ -46,6 +51,10 @@ class Detail extends Component {
     init() {
         this.getData()
         this.getDetailChartsForApi();
+    }
+
+    componentWillUnmount() {
+        window.clearInterval(timer)
     }
 
     getData() {
@@ -76,7 +85,7 @@ class Detail extends Component {
                 break;
         }
 
-        payService.getDetailMonitorCharts(type).then(res => {
+        payService.getDetailMonitorCharts({ sign: type }).then(res => {
             store.helper.updateData('loading2', false);
             if (!publicUtils.isOk(res)) return
             this.init_jiaoyiliang(res.data.result.keys, res.data.result.trades)
@@ -128,6 +137,9 @@ class Detail extends Component {
             }, {
                 type: 'inside'
             }],
+            tooltip: {
+                trigger: 'axis'
+            },
             xAxis: {
                 type: 'category',
                 data: x
@@ -165,12 +177,98 @@ class Detail extends Component {
         store.getLogForApi(type);
     }
 
+    getDetailChartsOneForApi(hostIp) {
+        store.helper.updateData('loading3', true);
+
+        let type = ''
+        switch (this.props.match.path) {
+            case '/monitor/pay/pre':
+                type = 'front'
+                break;
+            case '/monitor/pay/unit':
+                type = 'online'
+                break;
+            default:
+                break;
+        }
+
+        payService.getDetailMonitorCharts({ hostIp: hostIp, sign: type }).then(res => {
+            store.helper.updateData('loading3', false);
+            if (!publicUtils.isOk(res)) return
+            this.init_1(res.data.result.keys, res.data.result.trades)
+            this.init_2(res.data.result.keys, res.data.result.times)
+        })
+    }
+
+    init_1(x = [], data = []) {
+        var myChart = echarts.init(this._1);
+        // 绘制图表
+
+        let option = {
+            title: {
+                text: '交易量'
+            },
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: x
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: data,
+                type: 'line'
+            }],
+            color: '#ec7c31'
+        };
+
+        myChart.setOption(option);
+    }
+
+    init_2(x = [], data = []) {
+        var myChart = echarts.init(this._2);
+        // 绘制图表
+
+        let option = {
+            title: {
+                text: '平均耗时(ms)'
+            },
+            dataZoom: [{
+            }, {
+                type: 'inside'
+            }],
+            xAxis: {
+                type: 'category',
+                data: x
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: data,
+                type: 'line'
+            }],
+            color: '#ec7c31'
+        };
+
+        myChart.setOption(option);
+    }
+
+
+
     render() {
         return (
             <Provider store={store}>
                 <div className='panel'>
                     {/* <PageHeader meta={this.props.meta} /> */}
-                    <div className="pageContent charts-main">
+                    <div className="pageContent charts-main" >
 
                         <PageHeader
                             title={`${(() => {
@@ -189,7 +287,7 @@ class Detail extends Component {
                             style={{ padding: '0 0 30px 0' }}
                         />
 
-                        <Spin spinning={store.helper.getData.loading} size="large" >
+                        <div style={{ margin: '100px 0' }}>
                             <DiagramDetail
                                 data={(() => {
                                     let data = [];
@@ -207,8 +305,8 @@ class Detail extends Component {
                                         }
                                         data.push({
                                             title: el.hostIp,
-                                            count: el.totalTrades,
-                                            time: el.avgTimes,
+                                            count: el.totalTrade,
+                                            time: el.avgTime,
                                             ip: el.hostIp
                                         })
                                     })
@@ -228,36 +326,25 @@ class Detail extends Component {
                                     }
                                     return type
                                 })()}
+                                callbackfn={this.getDetailChartsOneForApi}
+                                extType="monitor"
                             />
-                            {
-                                common.isEmpty(store.data.getData) ?
-                                    <Empty />
-                                    :
-                                    ''
-                            }
-                        </Spin>
+                        </div>
+                        {
+                            common.isEmpty(store.data.getData) ?
+                                <Empty />
+                                :
+                                ''
+                        }
 
                         <Row style={{ marginBottom: '40px' }}>
-                            <Col span={24}>
-                                <TimeUnit value={store.helper.getData.timeUnit} callBack={(value) => {
-                                    store.helper.updateData('timeUnit', value);
-                                    //todo 调接口
-                                    this.getDetailChartsForApi();
-                                }} />
-                            </Col>
 
                             <Row style={{ margin: '10px 0 40px 0' }} gutter={10}>
                                 <Col span={12}>
-                                    <Spin spinning={store.helper.getData.loading2} size="large">
-                                        <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
-
-                                    </Spin>
+                                    <div ref={el => this.jiaoyiliang = el} style={{ width: '100%', height: '300px' }}></div>
                                 </Col>
                                 <Col span={12}>
-                                    <Spin spinning={store.helper.getData.loading2} size="large">
-                                        <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
-
-                                    </Spin>
+                                    <div ref={el => this.pingjunhaoshi = el} style={{ width: '100%', height: '300px' }}></div>
                                 </Col>
                             </Row>
 
@@ -265,20 +352,74 @@ class Detail extends Component {
                         </Row>
 
                         <Drawer
-                            title={`日志（${store.logList.getData.title}）`}
+                            title={store.logList.getData.title}
                             placement="right"
                             closable={true}
                             onClose={() => store.logList.updateData('visible', false)}
                             visible={store.logList.getData.visible}
                             width={1200}
                         >
-                            <Code sqlCode={store.logList.getData.dataSource} type={1} />
-                            <Paging
-                                pageNum={store.logList.getData.pageNum}
-                                total={store.logList.getData.total}
-                                showPageSize={store.logList.getData.pageSize}
-                                changePage={this.changePage}
-                            />
+                            <Spin spinning={store.helper.getData.loading3} size="large">
+                                <div className="clearfix" style={{ margin: '40px auto', width: 'fit-content' }}>
+                                    <DiagramDetail
+                                        data={(() => {
+                                            let target = store.data.getData.find(el => el.hostIp === store.logList.getData.title)
+                                            if (!target) target = []
+                                            else target = [target]
+                                            let data = [];
+                                            target.forEach((el, i) => {
+                                                let title = '';
+                                                switch (this.props.match.path) {
+                                                    case '/monitor/pay/pre':
+                                                        title = `支付系统前置节点${i + 1}`
+                                                        break;
+                                                    case '/monitor/pay/unit':
+                                                        title = `支付系统联机节点${i + 1}`
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                                data.push({
+                                                    title: el.hostIp,
+                                                    count: el.totalTrade,
+                                                    time: el.avgTime,
+                                                    ip: el.hostIp
+                                                })
+                                            })
+                                            return data
+                                        })()}
+                                        type={(() => {
+                                            let type = ''
+                                            switch (this.props.match.path) {
+                                                case '/monitor/pay/pre':
+                                                    type = `front`
+                                                    break;
+                                                case '/monitor/pay/unit':
+                                                    type = `online`
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                            return type
+                                        })()}
+                                        callbackfn={this.getDetailChartsOneForApi}
+                                        extType="monitor"
+                                    />
+                                </div>
+                            </Spin>
+
+                            <Row style={{ margin: '10px 0 40px 0' }} gutter={10}>
+                                <Col span={12}>
+                                    <Spin spinning={store.helper.getData.loading3} size="large">
+                                        <div ref={el => this._1 = el} style={{ width: '100%', height: '300px' }}></div>
+                                    </Spin>
+                                </Col>
+                                <Col span={12}>
+                                    <Spin spinning={store.helper.getData.loading3} size="large">
+                                        <div ref={el => this._2 = el} style={{ width: '100%', height: '300px' }}></div>
+                                    </Spin>
+                                </Col>
+                            </Row>
                         </Drawer>
                     </div>
                 </div>
