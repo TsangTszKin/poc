@@ -149,7 +149,7 @@ export default {
             params.push(`${key}=${query[key]}`)
         }
         params = params.join('&')
-        return axios.post(`${http.gwApiPrefix}/api/streaming/loadClusters`).catch(errorHandler)
+        return axios.post(`${http.gwApiPrefix}/api/streaming/loadClusters?${params}`).catch(errorHandler)
         // return axios.get(`${http.gwApiPrefix}/api/stats/result?${params}`).catch(errorHandler)
     },
     getPayGroupData_TD(query = {}) {

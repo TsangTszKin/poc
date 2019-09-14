@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react'
 import PropTypes from 'prop-types'
 import CellPay from '@/components/business/home/widgets/CellPay'
 import BranchESB from '@/components/business/home/widgets/BranchESB'
+import common from '@/utils/common'
 
 @inject('store') @observer
 class DiagramDetailESB extends Component {
@@ -25,7 +26,7 @@ class DiagramDetailESB extends Component {
 
                                         if (this.props.type === 'query')
                                             this.props.store.getLogForApi('esb');
-                                            
+
                                         this.props.store.logList.updateData('title', item.title)
                                         this.props.callbackfn(item.ip);
                                     }, 300);
@@ -39,10 +40,13 @@ class DiagramDetailESB extends Component {
                                     ip={item.ip}
                                     type="esb-detail"
                                 />
-
-                                <div style={style.linker_cell_v}>
-                                    <p style={style.linker_v}></p>
-                                </div>
+                                {
+                                    !common.isEmpty(item.service) ?
+                                        <div style={style.linker_cell_v}>
+                                            <p style={style.linker_v}></p>
+                                        </div>
+                                        : ''
+                                }
                             </div>
                             <BranchESB data={item.service} />
                         </div>

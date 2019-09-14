@@ -20,7 +20,7 @@ class DiagramPayMonitor extends Component {
                     <div className="clearfix" style={{ float: 'left' }}>
                         <CellPayMonitor
                             title='支付系统前置集群'
-                            count={front.tradeCount}
+                            count={front.totalTrade}
                             time={front.avgTime}
                             type="pre"
                         />
@@ -31,7 +31,7 @@ class DiagramPayMonitor extends Component {
                         </div>
                         <CellPayMonitor
                             title='支付系统联机集群'
-                            count={online.tradeCount}
+                            count={online.totalTrade}
                             time={online.avgTime}
                             type="unit"
                         />
@@ -41,7 +41,7 @@ class DiagramPayMonitor extends Component {
                         <div style={{ position: 'absolute', bottom: '150px', left: '-50%' }}>
                             <CellPayMonitorTD
                                 title='网络流量统计'
-                                count={td1.tradeCount}
+                                count={td1.totalTrade}
                                 time={td1.avgTime}
                             />
                         </div>
@@ -60,7 +60,7 @@ class DiagramPayMonitor extends Component {
                         <CellPayMonitor
                             style={{ float: 'left' }}
                             title='ESB集群'
-                            count={esb.tradeCount}
+                            count={esb.totalTrade}
                             time={esb.avgTime}
                             type="esb"
                         />
@@ -68,7 +68,7 @@ class DiagramPayMonitor extends Component {
                             <div style={{ position: 'absolute', bottom: '150px', left: '-90%' }}>
                                 <CellPayMonitorTD
                                     title='网络流量统计'
-                                    count={td2.tradeCount}
+                                    count={td2.totalTrade}
                                     time={td2.avgTime}
                                 />
                             </div>

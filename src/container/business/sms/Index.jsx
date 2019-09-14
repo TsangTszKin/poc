@@ -121,6 +121,9 @@ class Index extends Component {
             }, {
                 type: 'inside'
             }],
+            tooltip: {
+                trigger: 'axis'
+            },
             xAxis: {
                 type: 'category',
                 data: x

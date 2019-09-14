@@ -168,7 +168,7 @@ export default {
      * @param {string} s
      * @returns
      */
-    testString(s){
+    testString(s) {
         console.log(s)
         var regHg = new RegExp("^[\u4e00-\u9fa5A-Za-z0-9-\_()（）]+$")
         return regHg.test(s)
@@ -179,7 +179,7 @@ export default {
      * @param {string} s
      * @returns
      */
-    testCode(s){
+    testCode(s) {
         console.log(s)
         var regHg = new RegExp("^[a-zA-Z]([-_a-zA-Z0-9])+$")
         return regHg.test(s)
@@ -245,16 +245,18 @@ export default {
         let D = '01 ';
         let h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
         let m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-        return Y + M + D + h + m
+        return Y + M + D + '00:00'
     },
     getCurrentMonthEndTime() {
         var date = new Date();
+        date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
+
         let Y = date.getFullYear() + '-';
         let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
         let D = date.getDate() < 10 ? '0' + date.getDate() + ' ' : date.getDate() + ' ';
         let h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
         let m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-        return Y + M + D + h + m
+        return Y + M + D + '00:00'
     },
     /**
      * 字符串限制长度，超出部分显示为省略号，默认最大长度20
@@ -337,7 +339,7 @@ export default {
             onChange = () => { },
             required = true,
         } = {}) {
-            let defaultValueInput = <Input placeholder="请输入" onChange={ e => onChange(e.target.value) }/>,
+            let defaultValueInput = <Input placeholder="请输入" onChange={e => onChange(e.target.value)} />,
                 defaultValueRules = [...rules];
             if (required) defaultValueRules.push({ required: true, message: `不能为空!` });
 
@@ -361,8 +363,8 @@ export default {
                     </Select>);
                     break;
                 case 'time': // 时间类型, value 类型为 moment 对象，所以在提交服务器前需要预处理。 value[name].format('YYYY-MM-DD HH:mm:ss')
-                    defaultValueInput = <DatePicker showTime onChange={ (time, timeString) => onChange({ time, timeString }) } placeholder="选择时间" />;
-                    initialValue = initialValue ? moment(initialValue): '';
+                    defaultValueInput = <DatePicker showTime onChange={(time, timeString) => onChange({ time, timeString })} placeholder="选择时间" />;
+                    initialValue = initialValue ? moment(initialValue) : '';
                     break;
             }
             options = {
